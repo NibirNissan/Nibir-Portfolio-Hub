@@ -7,7 +7,7 @@ import nightImg from "@assets/WhatsApp_Image_2026-02-28_at_3.16.26_AM_1775426721
 const stats = [
   {
     icon: Code2,
-    value: "2+",
+    value: "4",
     label: "Years in Web Dev",
     color: "text-indigo-400",
     bg: "bg-indigo-500/10",
