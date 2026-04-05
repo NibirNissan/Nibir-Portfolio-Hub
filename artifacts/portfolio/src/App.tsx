@@ -5,6 +5,7 @@ import Skills from "@/components/Skills";
 import Projects from "@/components/Projects";
 import Services from "@/components/Services";
 import Subscription from "@/components/Subscription";
+import Ecosystem from "@/components/Ecosystem";
 import Vision from "@/components/Vision";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -24,6 +25,8 @@ function App() {
       <Services />
       <div className="section-line h-px w-full opacity-30" />
       <Subscription />
+      <div className="section-line h-px w-full opacity-30" />
+      <Ecosystem />
       <div className="section-line h-px w-full opacity-30" />
       <Vision />
       <div className="section-line h-px w-full opacity-30" />
