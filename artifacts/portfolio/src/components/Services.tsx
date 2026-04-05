@@ -1,4 +1,4 @@
-import { Bot, Code2, Video, ShoppingBag, Zap } from "lucide-react";
+import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp } from "lucide-react";
 
 const services = [
   {
@@ -36,6 +36,18 @@ const services = [
     border: "border-sky-500/20",
     glow: "hover:border-sky-500/40 hover:shadow-sky-500/10",
     tag: "Creative",
+  },
+  {
+    icon: TrendingUp,
+    title: "Results-Driven Digital Marketing",
+    description:
+      "Data-backed marketing campaigns that generate real leads and scale brands. From Meta Ads automation to full-funnel strategy — performance you can measure.",
+    features: ["Meta Ads & Automation", "Google Ads Campaigns", "Lead Generation Funnels", "Brand Scaling Strategy"],
+    color: "text-rose-400",
+    bg: "bg-rose-500/10",
+    border: "border-rose-500/20",
+    glow: "hover:border-rose-500/40 hover:shadow-rose-500/10",
+    tag: "Growth",
   },
   {
     icon: ShoppingBag,

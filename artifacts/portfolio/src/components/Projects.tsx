@@ -1,4 +1,4 @@
-import { ExternalLink, Users, Droplets, FileText, ShoppingBag, Briefcase } from "lucide-react";
+import { ExternalLink, Users, Droplets, FileText, ShoppingBag, Briefcase, GraduationCap } from "lucide-react";
 
 const projects = [
   {
@@ -40,6 +40,16 @@ const projects = [
     tags: ["E-commerce", "Branding", "Logistics"],
     accent: "orange",
     status: "Live",
+  },
+  {
+    icon: GraduationCap,
+    title: "College ERP System",
+    subtitle: "Comprehensive Educational Management Platform",
+    description:
+      "A role-based ERP for educational institutions with dedicated portals for Admins, Department Heads, Teachers, and Students. Features automated attendance tracking, fine management (20tk per missed class), and dynamic mark entry.",
+    tags: ["Role-Based Access", "PHP/Node.js", "Database Design"],
+    accent: "teal",
+    status: "Built",
   },
   {
     icon: Briefcase,
@@ -88,6 +98,13 @@ const accentMap: Record<string, { border: string; bg: string; text: string; badg
     text: "text-violet-400",
     badge: "bg-violet-500/15 text-violet-300 border-violet-500/20",
     status: "bg-violet-500/20 text-violet-300",
+  },
+  teal: {
+    border: "border-teal-500/30",
+    bg: "bg-teal-500/10",
+    text: "text-teal-400",
+    badge: "bg-teal-500/15 text-teal-300 border-teal-500/20",
+    status: "bg-teal-500/20 text-teal-300",
   },
 };
 

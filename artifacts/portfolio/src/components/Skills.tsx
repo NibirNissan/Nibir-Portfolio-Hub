@@ -1,4 +1,4 @@
-import { Code2, Figma, Bot, Video, Layers } from "lucide-react";
+import { Code2, Figma, Bot, Video, Layers, TrendingUp } from "lucide-react";
 
 const skillGroups = [
   {
@@ -36,6 +36,15 @@ const skillGroups = [
     border: "border-sky-500/20",
     glow: "hover:shadow-sky-500/20",
     skills: ["CapCut", "Adobe Premiere Pro", "Social Media Ads", "Motion Graphics"],
+  },
+  {
+    icon: TrendingUp,
+    label: "Digital Marketing",
+    color: "text-rose-400",
+    bg: "bg-rose-500/10",
+    border: "border-rose-500/20",
+    glow: "hover:shadow-rose-500/20",
+    skills: ["Meta Ads", "Google Ads", "SEO", "Content Strategy", "Analytics"],
   },
 ];
 
