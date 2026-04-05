@@ -1,4 +1,4 @@
-import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp } from "lucide-react";
+import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard } from "lucide-react";
 
 const services = [
   {
@@ -63,6 +63,45 @@ const services = [
   },
 ];
 
+const glassServices = [
+  {
+    icon: Globe,
+    title: "High-Conversion WordPress Development",
+    tagline: "Scalable & SEO-Optimized Websites",
+    description:
+      "Professional WordPress sites engineered to turn visitors into customers. Expert in custom theme customization, page builders, and WooCommerce — with a relentless focus on speed and SEO.",
+    features: [
+      { label: "Custom Theme Customization", detail: "Pixel-perfect designs tailored to your brand" },
+      { label: "Elementor / Divi Expert", detail: "Advanced page builder mastery for rapid delivery" },
+      { label: "WooCommerce Setup", detail: "Full e-commerce store configuration & optimization" },
+      { label: "Page Speed Optimization", detail: "Core Web Vitals & Lighthouse score improvement" },
+    ],
+    color: "text-cyan-400",
+    glow: "rgba(34, 211, 238, 0.12)",
+    glowBorder: "rgba(34, 211, 238, 0.25)",
+    tag: "WordPress",
+    tagColor: "text-cyan-300 bg-cyan-500/10 border-cyan-500/25",
+  },
+  {
+    icon: LayoutDashboard,
+    title: "Web App & SaaS Product Development",
+    tagline: "Building the Future of Digital Tools",
+    description:
+      "Leveraging ERP system architecture and proven subscription models to build robust, scalable SaaS platforms. From admin dashboards to full multi-tenant logic — built to grow.",
+    features: [
+      { label: "Custom Dashboard Design", detail: "Data-rich UIs that make complex info intuitive" },
+      { label: "Multi-user Role Management", detail: "Admin / User / Department access control" },
+      { label: "API Integration", detail: "Third-party services wired seamlessly into your app" },
+      { label: "Subscription-based Logic", detail: "Billing, gating, and renewal flows built-in" },
+    ],
+    color: "text-violet-400",
+    glow: "rgba(139, 92, 246, 0.12)",
+    glowBorder: "rgba(139, 92, 246, 0.25)",
+    tag: "Most Requested",
+    tagColor: "text-violet-300 bg-violet-500/10 border-violet-500/25",
+  },
+];
+
 export default function Services() {
   return (
     <section id="services" className="py-20 md:py-28 relative">
@@ -81,7 +120,8 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        {/* Standard service cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
           {services.map((service) => (
             <div
               key={service.title}
@@ -95,10 +135,8 @@ export default function Services() {
                   {service.tag}
                 </span>
               </div>
-
               <h3 className="text-base sm:text-lg font-bold text-white mb-3 leading-snug">{service.title}</h3>
               <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-5">{service.description}</p>
-
               <ul className="space-y-2">
                 {service.features.map((f) => (
                   <li key={f} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-300">
@@ -107,6 +145,68 @@ export default function Services() {
                   </li>
                 ))}
               </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Glassmorphism premium cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {glassServices.map((service) => (
+            <div
+              key={service.title}
+              className="relative rounded-2xl card-hover overflow-hidden"
+              style={{
+                background: "rgba(15, 23, 42, 0.6)",
+                backdropFilter: "blur(24px)",
+                WebkitBackdropFilter: "blur(24px)",
+                border: `1px solid ${service.glowBorder}`,
+                boxShadow: `0 0 40px ${service.glow}, inset 0 1px 0 rgba(255,255,255,0.05)`,
+              }}
+            >
+              {/* Inner glow blob */}
+              <div
+                className="absolute top-0 right-0 w-48 h-48 rounded-full pointer-events-none opacity-20"
+                style={{ background: `radial-gradient(circle, ${service.glow.replace("0.12", "1")}, transparent 70%)`, filter: "blur(40px)" }}
+              />
+
+              <div className="relative p-6 sm:p-8">
+                <div className="flex items-start justify-between mb-5">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: service.glow, border: `1px solid ${service.glowBorder}` }}
+                  >
+                    <service.icon className={`w-6 h-6 ${service.color}`} />
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${service.tagColor}`}>
+                    {service.tag}
+                  </span>
+                </div>
+
+                <p className={`text-xs font-semibold tracking-widest uppercase ${service.color} mb-1`}>
+                  {service.tagline}
+                </p>
+                <h3 className="text-lg sm:text-xl font-black text-white mb-3 leading-snug">
+                  {service.title}
+                </h3>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6">
+                  {service.description}
+                </p>
+
+                <ul className="space-y-3">
+                  {service.features.map((f) => (
+                    <li key={f.label} className="flex items-start gap-3">
+                      <span
+                        className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5"
+                        style={{ background: service.glow.replace("0.12", "1").replace("rgba", "rgb").replace(", 1)", ")") }}
+                      />
+                      <div>
+                        <span className="text-xs sm:text-sm font-semibold text-white">{f.label}</span>
+                        <span className="text-slate-500 text-xs"> — {f.detail}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           ))}
         </div>
