@@ -1,4 +1,8 @@
 import { Code2, Figma, Video, Bot, Star } from "lucide-react";
+import aboutImg from "@assets/WhatsApp_Image_2026-02-28_at_3.21.31_AM_1775426721378.jpeg";
+import bwImg from "@assets/edb565d71d70ceba8f9cf9b19979ae50_1775426775549.webp";
+import outdoorImg from "@assets/nibir_1775426721380.jpg";
+import nightImg from "@assets/WhatsApp_Image_2026-02-28_at_3.16.26_AM_1775426721379.jpeg";
 
 const stats = [
   {
@@ -35,12 +39,18 @@ const stats = [
   },
 ];
 
+const galleryPhotos = [
+  { src: bwImg, alt: "Nibir Nissan - Studio" },
+  { src: outdoorImg, alt: "Nibir Nissan - Outdoor" },
+  { src: nightImg, alt: "Nibir Nissan - Night" },
+];
+
 export default function About() {
   return (
     <section id="about" className="py-28 relative">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row gap-16 items-center">
-          <div className="flex-1">
+        <div className="flex flex-col lg:flex-row gap-16 items-center">
+          <div className="flex-1 order-2 lg:order-1">
             <div className="inline-flex items-center gap-2 text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-4">
               <Star className="w-4 h-4" />
               About Me
@@ -82,21 +92,53 @@ export default function About() {
                 </span>
               ))}
             </div>
+
+            <div className="mt-10 grid grid-cols-2 gap-4">
+              {stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className={`p-5 rounded-2xl border ${stat.border} ${stat.bg} card-hover`}
+                >
+                  <div className={`w-9 h-9 rounded-xl ${stat.bg} border ${stat.border} flex items-center justify-center mb-3`}>
+                    <stat.icon className={`w-4 h-4 ${stat.color}`} />
+                  </div>
+                  <div className={`text-2xl font-black ${stat.color} mb-0.5`}>{stat.value}</div>
+                  <div className="text-slate-400 text-xs font-medium">{stat.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="flex-1 grid grid-cols-2 gap-4">
-            {stats.map((stat) => (
+          <div className="flex-shrink-0 order-1 lg:order-2 w-full max-w-sm lg:max-w-none lg:w-auto">
+            <div className="relative">
               <div
-                key={stat.label}
-                className={`p-6 rounded-2xl border ${stat.border} ${stat.bg} card-hover`}
-              >
-                <div className={`w-10 h-10 rounded-xl ${stat.bg} border ${stat.border} flex items-center justify-center mb-4`}>
-                  <stat.icon className={`w-5 h-5 ${stat.color}`} />
-                </div>
-                <div className={`text-3xl font-black ${stat.color} mb-1`}>{stat.value}</div>
-                <div className="text-slate-400 text-sm font-medium">{stat.label}</div>
+                className="absolute -inset-4 rounded-3xl opacity-20 blur-3xl"
+                style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
+              />
+              <div className="relative w-full lg:w-80 aspect-[3/4] rounded-3xl overflow-hidden border border-indigo-500/20 shadow-2xl">
+                <img
+                  src={aboutImg}
+                  alt="Nibir Nissan at the waterfront"
+                  className="w-full h-full object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
               </div>
-            ))}
+
+              <div className="mt-3 grid grid-cols-3 gap-3">
+                {galleryPhotos.map((photo) => (
+                  <div
+                    key={photo.alt}
+                    className="aspect-square rounded-xl overflow-hidden border border-white/10 card-hover"
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-500"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
