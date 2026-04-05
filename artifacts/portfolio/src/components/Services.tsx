@@ -1,4 +1,4 @@
-import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard } from "lucide-react";
+import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard, Rocket } from "lucide-react";
 
 const services = [
   {
@@ -60,6 +60,18 @@ const services = [
     border: "border-violet-500/20",
     glow: "hover:border-violet-500/40 hover:shadow-violet-500/10",
     tag: "Business",
+  },
+  {
+    icon: Rocket,
+    title: "Web App & SaaS Development",
+    description:
+      "Building custom SaaS platforms and web applications with complex logic, user dashboards, and subscription-based ecosystems.",
+    features: ["Custom Dashboard Design", "Multi-user Role Management", "API & Payment Integration", "Scalable Architecture"],
+    color: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/20",
+    glow: "hover:border-amber-500/40 hover:shadow-amber-500/10",
+    tag: "Most Requested",
   },
 ];
 
