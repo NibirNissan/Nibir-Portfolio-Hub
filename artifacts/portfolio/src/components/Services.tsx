@@ -17,7 +17,7 @@ const services = [
     icon: Code2,
     title: "Web Development & UI/UX Design",
     description:
-      "From Figma prototypes to production-ready React applications. I handle the full stack — design systems, component libraries, and responsive frontends.",
+      "From Figma prototypes to production-ready React applications. Full stack — design systems, component libraries, and responsive frontends.",
     features: ["Figma Prototyping", "React Development", "Tailwind CSS", "Responsive Design"],
     color: "text-indigo-400",
     bg: "bg-indigo-500/10",
@@ -29,7 +29,7 @@ const services = [
     icon: Video,
     title: "Professional Video Editing",
     description:
-      "High-impact video content for social media, ads, and brand campaigns. Specializing in short-form content that converts, from raw footage to polished deliverables.",
+      "High-impact video content for social media, ads, and brand campaigns. Short-form content that converts, from raw footage to polished deliverables.",
     features: ["Social Media Reels", "Ad Creatives", "Premiere Pro", "CapCut"],
     color: "text-sky-400",
     bg: "bg-sky-500/10",
@@ -53,44 +53,44 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-28 relative">
+    <section id="services" className="py-20 md:py-28 relative">
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
-      <div className="max-w-6xl mx-auto px-6 relative">
-        <div className="text-center mb-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
+        <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-4">
             <Zap className="w-4 h-4" />
             Services
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
             What I <span className="text-gradient">Offer</span>
           </h2>
-          <p className="text-slate-400 text-lg max-w-xl mx-auto">
+          <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
             Comprehensive digital services that turn ideas into scalable, profitable outcomes.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {services.map((service) => (
             <div
               key={service.title}
-              className={`p-8 rounded-2xl border ${service.border} bg-slate-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
+              className={`p-6 sm:p-8 rounded-2xl border ${service.border} bg-slate-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
             >
               <div className="flex items-start justify-between mb-5">
-                <div className={`w-12 h-12 rounded-xl ${service.bg} border ${service.border} flex items-center justify-center`}>
-                  <service.icon className={`w-6 h-6 ${service.color}`} />
+                <div className={`w-11 h-11 rounded-xl ${service.bg} border ${service.border} flex items-center justify-center`}>
+                  <service.icon className={`w-5 h-5 ${service.color}`} />
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${service.bg} ${service.color} border ${service.border}`}>
                   {service.tag}
                 </span>
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-3 leading-snug">{service.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-5">{service.description}</p>
+              <h3 className="text-base sm:text-lg font-bold text-white mb-3 leading-snug">{service.title}</h3>
+              <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-5">{service.description}</p>
 
               <ul className="space-y-2">
                 {service.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2.5 text-sm text-slate-300">
-                    <span className={`w-1.5 h-1.5 rounded-full ${service.color.replace("text-", "bg-")}`} />
+                  <li key={f} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-300">
+                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${service.color.replace("text-", "bg-")}`} />
                     {f}
                   </li>
                 ))}

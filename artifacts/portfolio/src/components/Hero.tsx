@@ -7,41 +7,38 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden grid-bg pt-20 pb-16">
       <div className="absolute inset-0 pointer-events-none">
         <div
-          className="hero-blob absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-20"
+          className="hero-blob absolute top-1/3 left-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full opacity-20"
           style={{ background: "radial-gradient(circle, #6366f1, #4338ca)" }}
         />
         <div
-          className="hero-blob-2 absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-15"
+          className="hero-blob-2 absolute bottom-1/3 right-1/4 w-56 h-56 md:w-80 md:h-80 rounded-full opacity-15"
           style={{ background: "radial-gradient(circle, #8b5cf6, #7c3aed)" }}
-        />
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5"
-          style={{ background: "radial-gradient(circle, #38bdf8, transparent)" }}
         />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
-          <div className="flex-1 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-sm font-medium mb-8 animate-float">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 w-full">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
+
+          <div className="flex-1 text-center lg:text-left w-full">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-sm font-medium mb-6 animate-float">
               <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse-slow" />
               Available for freelance work
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-black tracking-tight mb-6 leading-none">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight mb-5 leading-none">
               <span className="text-white">Nibir</span>{" "}
               <span className="text-gradient">Nissan</span>
               <br />
-              <span className="text-3xl md:text-4xl font-bold text-slate-300 mt-3 block">
+              <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-300 mt-3 block">
                 Entrepreneur &amp;{" "}
                 <span className="text-gradient-blue">Developer</span>
               </span>
             </h1>
 
-            <p className="text-slate-400 text-lg max-w-xl mb-10 leading-relaxed">
+            <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
               CST student turned{" "}
               <span className="text-indigo-300 font-medium">full-stack developer</span> &amp;{" "}
               <span className="text-violet-300 font-medium">AI automation expert</span>.
@@ -49,22 +46,22 @@ export default function Hero() {
               premium visual experiences — from code to brand.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-8">
               <button
                 onClick={() => scrollToSection("projects")}
-                className="px-8 py-3.5 rounded-xl font-semibold bg-indigo-500 text-white hover:bg-indigo-400 transition-all duration-200 glow-blue hover:scale-105"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold bg-indigo-500 text-white hover:bg-indigo-400 transition-all duration-200 glow-blue hover:scale-105 text-sm sm:text-base"
               >
                 View My Work
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
-                className="px-8 py-3.5 rounded-xl font-semibold border border-white/15 text-white hover:bg-white/5 hover:border-indigo-500/50 transition-all duration-200"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold border border-white/15 text-white hover:bg-white/5 hover:border-indigo-500/50 transition-all duration-200 text-sm sm:text-base"
               >
                 Let's Talk
               </button>
             </div>
 
-            <div className="flex items-center justify-center lg:justify-start gap-4">
+            <div className="flex items-center justify-center lg:justify-start gap-3">
               <a
                 href="https://github.com"
                 target="_blank"
@@ -92,13 +89,13 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="relative flex-shrink-0">
-            <div className="relative w-72 h-80 lg:w-80 lg:h-96">
+          <div className="flex-shrink-0 w-full max-w-[260px] sm:max-w-[300px] lg:max-w-none lg:w-auto mx-auto lg:mx-0">
+            <div className="relative">
               <div
                 className="absolute inset-0 rounded-3xl opacity-40 blur-2xl"
                 style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
               />
-              <div className="relative w-full h-full rounded-3xl overflow-hidden border border-indigo-500/30 shadow-2xl shadow-indigo-500/20">
+              <div className="relative w-full lg:w-72 xl:w-80 aspect-[3/4] rounded-3xl overflow-hidden border border-indigo-500/30 shadow-2xl shadow-indigo-500/20">
                 <img
                   src={heroImg}
                   alt="Nibir Nissan"
@@ -106,20 +103,21 @@ export default function Hero() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
               </div>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-2xl border border-violet-500/40 bg-violet-500/10 backdrop-blur-sm flex flex-col items-center justify-center shadow-lg">
-                <span className="text-2xl font-black text-violet-300">2k+</span>
-                <span className="text-xs text-slate-400 font-medium text-center leading-tight">Active Users</span>
+
+              <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-violet-500/40 bg-violet-500/10 backdrop-blur-sm flex flex-col items-center justify-center shadow-lg">
+                <span className="text-xl sm:text-2xl font-black text-violet-300">2k+</span>
+                <span className="text-[10px] sm:text-xs text-slate-400 font-medium text-center leading-tight">Active Users</span>
               </div>
-              <div className="absolute -top-4 -left-4 w-20 h-20 rounded-2xl border border-indigo-500/40 bg-indigo-500/10 backdrop-blur-sm flex flex-col items-center justify-center shadow-lg">
-                <span className="text-xl font-black text-indigo-300">n8n</span>
-                <span className="text-xs text-slate-400 font-medium">Expert</span>
+              <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-indigo-500/40 bg-indigo-500/10 backdrop-blur-sm flex flex-col items-center justify-center shadow-lg">
+                <span className="text-base sm:text-xl font-black text-indigo-300">n8n</span>
+                <span className="text-[10px] sm:text-xs text-slate-400 font-medium">Expert</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
         <button
           onClick={() => scrollToSection("about")}
           className="text-slate-500 hover:text-indigo-400 transition-colors animate-bounce"

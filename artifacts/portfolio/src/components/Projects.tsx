@@ -9,7 +9,6 @@ const projects = [
       "A fully operational subscription management platform scaling to 2000+ active users. Handles digital product delivery, user management, and automated subscription renewals.",
     tags: ["Web App", "Automation", "2000+ Users"],
     accent: "indigo",
-    metrics: "2,000+ Users",
     status: "Live",
   },
   {
@@ -20,7 +19,6 @@ const projects = [
       "A life-saving platform connecting blood donors with patients in need. Features donor matching, real-time availability tracking, and hospital integration.",
     tags: ["Web App", "Healthcare", "React"],
     accent: "red",
-    metrics: "Healthcare",
     status: "Active",
   },
   {
@@ -31,7 +29,6 @@ const projects = [
       "A comprehensive medical report generation system supporting multiple users simultaneously. Streamlines documentation for healthcare professionals with automated formatting.",
     tags: ["Multi-user", "Healthcare", "Automation"],
     accent: "sky",
-    metrics: "Multi-user",
     status: "Deployed",
   },
   {
@@ -42,7 +39,6 @@ const projects = [
       "End-to-end e-commerce brand setup including visual identity, product photography direction, logistics pipeline, and digital marketing strategy.",
     tags: ["E-commerce", "Branding", "Logistics"],
     accent: "orange",
-    metrics: "Full Brand",
     status: "Live",
   },
   {
@@ -53,7 +49,6 @@ const projects = [
       "A niche e-commerce brand built from scratch with community-first approach. Includes brand identity, product catalog, social media presence, and fulfilment workflow.",
     tags: ["E-commerce", "Community", "Brand"],
     accent: "violet",
-    metrics: "Brand Launch",
     status: "Active",
   },
 ];
@@ -98,43 +93,41 @@ const accentMap: Record<string, { border: string; bg: string; text: string; badg
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-28">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
+    <section id="projects" className="py-20 md:py-28">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-4">
             <ExternalLink className="w-4 h-4" />
             Projects
           </div>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
             Work that <span className="text-gradient">Ships</span>
           </h2>
-          <p className="text-slate-400 text-lg max-w-xl mx-auto">
+          <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
             Real products used by real people — from digital platforms to brand ecosystems.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {projects.map((project) => {
             const a = accentMap[project.accent];
             return (
               <div
                 key={project.title}
-                className={`group relative p-6 rounded-2xl border ${a.border} bg-slate-900/70 card-hover cursor-pointer flex flex-col`}
+                className={`group relative p-5 sm:p-6 rounded-2xl border ${a.border} bg-slate-900/70 card-hover cursor-pointer flex flex-col`}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`w-12 h-12 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center`}>
-                    <project.icon className={`w-6 h-6 ${a.text}`} />
+                  <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center`}>
+                    <project.icon className={`w-5 h-5 ${a.text}`} />
                   </div>
                   <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${a.status}`}>
                     {project.status}
                   </span>
                 </div>
 
-                <h3 className="text-lg font-bold text-white mb-1 group-hover:text-white">
-                  {project.title}
-                </h3>
-                <p className={`text-sm font-medium ${a.text} mb-3`}>{project.subtitle}</p>
-                <p className="text-slate-400 text-sm leading-relaxed flex-1 mb-4">
+                <h3 className="text-base sm:text-lg font-bold text-white mb-1">{project.title}</h3>
+                <p className={`text-xs sm:text-sm font-medium ${a.text} mb-3`}>{project.subtitle}</p>
+                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed flex-1 mb-4">
                   {project.description}
                 </p>
 
@@ -148,10 +141,6 @@ export default function Projects() {
                     </span>
                   ))}
                 </div>
-
-                <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
-                  style={{ background: `radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(99,102,241,0.04), transparent 60%)` }}
-                />
               </div>
             );
           })}
