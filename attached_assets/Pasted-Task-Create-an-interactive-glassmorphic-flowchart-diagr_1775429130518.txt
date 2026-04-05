@@ -1,0 +1,31 @@
+Task: Create an interactive, glassmorphic flowchart/diagram section within the current portfolio that visualizes my multi-platform digital product ecosystem. The design must match the existing dark purple and neon blue theme.
+
+Core Structure:
+Place a central, larger, multi-colored neon glowing hex/box titled: "Nibir's Digital Product Hub". This is the core 'Web App/SaaS Product' mentioned in the user requirements.
+
+Connecting Nodes (from Central Hub):
+Show directional flow lines (solid, glowing neon green or purple) branching out from the "Central Hub" to secondary, smaller nodes representing services from Image 2 & 3. Each secondary node must be a separate card with an icon.
+
+Specific Nodes (Cards) to Include:
+
+WordPress Development Node: (Use a standard WP icon or similar). Add points: Custom Theme Development, E-commerce, SEO optimized.
+
+SaaS/Web App Node: (Use a rocket or gears icon). Add points: Multi-user dashboards, Subscription Logic, API Integration. (This node is a specialized offering branching from the central platform concept).
+
+Future Vision Node: (Represent this on a further branching path to indicate the next step, using an 'Arrow' or 'Rocket' icon). Titled: "Agency Roadmap". Connect it with a separate dotted flow line. Points: Establish full-service digital agency, AI Automation + high-end development + marketing.
+
+Flowchart Logic:
+
+User visits the central "Digital Product Hub".
+
+Flows to specialized services like WordPress/SaaS.
+
+Directional flow moves towards the "Future Vision: Agency Roadmap" section.
+
+Interactive Effects:
+
+On mouse hover over any node (card), that specific node should slightly enlarge and have a stronger neon glow.
+
+A subtitle should appear on hover, e.g., hover over WordPress -> "Leveraging 4+ years in Web Dev to build high-conversion sites".
+
+Design Notes: Use glassmorphism on all nodes (cards). Ensure the layout is responsive (cards stack vertically on smaller screens, keeping flow vertical). Add a very slow pulsating neon border animation to the "Central Hub" node only.
