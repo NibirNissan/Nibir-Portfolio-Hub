@@ -81,7 +81,7 @@ export default function Subscription() {
               key={card.title}
               className={`reveal-card relative p-7 rounded-2xl border ${card.border} card-hover overflow-hidden`}
               style={{
-                background: "rgba(10, 10, 10, 0.6)",
+                background: "rgba(var(--theme-surface-rgb), 0.6)",
                 backdropFilter: "blur(20px)",
                 WebkitBackdropFilter: "blur(20px)",
               }}
@@ -109,7 +109,7 @@ export default function Subscription() {
               key={h.title}
               className={`reveal-card relative p-5 rounded-2xl border ${h.border} card-hover overflow-hidden`}
               style={{
-                background: "rgba(10, 10, 10, 0.5)",
+                background: "rgba(var(--theme-surface-rgb), 0.5)",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
               }}

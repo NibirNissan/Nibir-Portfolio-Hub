@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Sparkles } from "lucide-react";
 
-type ThemeKey = "emerald-stealth" | "cyber-amber" | "midnight-royal" | "mono-chrome";
+type ThemeKey = "emerald-stealth" | "cyber-amber" | "midnight-royal" | "mono-chrome" | "liquid-glass";
 
 interface ThemeConfig {
   label: string;
@@ -16,6 +16,10 @@ interface ThemeConfig {
   text: string;
   grain: string;
   preview: string;
+  surfaceRgb: string;
+  heading: string;
+  body: string;
+  muted: string;
 }
 
 const themes: Record<ThemeKey, ThemeConfig> = {
@@ -32,6 +36,10 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     text: "#e5e7eb",
     grain: "0.035",
     preview: "#10b981",
+    surfaceRgb: "10, 10, 10",
+    heading: "#ffffff",
+    body: "#d1d5db",
+    muted: "#737373",
   },
   "cyber-amber": {
     label: "Cyber Amber",
@@ -46,6 +54,10 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     text: "#e5e7eb",
     grain: "0.035",
     preview: "#f59e0b",
+    surfaceRgb: "10, 10, 10",
+    heading: "#ffffff",
+    body: "#d1d5db",
+    muted: "#737373",
   },
   "midnight-royal": {
     label: "Midnight Royal",
@@ -60,6 +72,10 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     text: "#e5e7eb",
     grain: "0.03",
     preview: "#8b5cf6",
+    surfaceRgb: "10, 10, 10",
+    heading: "#ffffff",
+    body: "#d1d5db",
+    muted: "#737373",
   },
   "mono-chrome": {
     label: "Mono Chrome",
@@ -74,6 +90,28 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     text: "#ffffff",
     grain: "0.06",
     preview: "#ffffff",
+    surfaceRgb: "10, 10, 10",
+    heading: "#ffffff",
+    body: "#d1d5db",
+    muted: "#737373",
+  },
+  "liquid-glass": {
+    label: "iPhone Liquid Glass",
+    bg: "#f9f9f9",
+    accent: "#313131",
+    accentLight: "#4b5563",
+    accentLighter: "#6b7280",
+    accentRgb: "49, 49, 49",
+    secondary: "#a1c4fd",
+    secondaryLight: "#c3dafe",
+    secondaryRgb: "161, 196, 253",
+    text: "#1c1c1c",
+    grain: "0.015",
+    preview: "linear-gradient(135deg, #e0e7ff, #f9f9f9, #dbeafe)",
+    surfaceRgb: "255, 255, 255",
+    heading: "#1c1c1c",
+    body: "#4b5563",
+    muted: "#9ca3af",
   },
 };
 
@@ -93,6 +131,11 @@ function applyTheme(key: ThemeKey) {
   s.setProperty("--theme-secondary-rgb", t.secondaryRgb);
   s.setProperty("--theme-text", t.text);
   s.setProperty("--theme-grain", t.grain);
+  s.setProperty("--theme-surface-rgb", t.surfaceRgb);
+  s.setProperty("--theme-heading", t.heading);
+  s.setProperty("--theme-body", t.body);
+  s.setProperty("--theme-muted", t.muted);
+  s.setProperty("--theme-accent-fg", key === "liquid-glass" ? "#ffffff" : "#000000");
   document.documentElement.setAttribute("data-theme", key);
   localStorage.setItem(STORAGE_KEY, key);
 }
@@ -178,12 +221,14 @@ export default function ThemeSwitcher() {
               style={{
                 background: previewTheme
                   ? previewTheme.bg
-                  : "rgba(10, 10, 10, 0.85)",
+                  : `rgba(var(--theme-surface-rgb), 0.85)`,
                 backdropFilter: "blur(24px) saturate(180%)",
                 WebkitBackdropFilter: "blur(24px) saturate(180%)",
                 border: `1px solid rgba(${borderAccentRgb}, 0.25)`,
                 boxShadow: previewTheme
-                  ? `0 8px 32px rgba(0,0,0,0.6), 0 0 40px rgba(${previewTheme.accentRgb}, 0.15)`
+                  ? previewTheme.bg === "#f9f9f9"
+                    ? `0 8px 32px rgba(0,0,0,0.08), 0 0 40px rgba(${previewTheme.secondaryRgb}, 0.1)`
+                    : `0 8px 32px rgba(0,0,0,0.6), 0 0 40px rgba(${previewTheme.accentRgb}, 0.15)`
                   : `0 8px 32px rgba(0,0,0,0.5), 0 0 30px rgba(var(--theme-accent-rgb), 0.08)`,
                 animation: "theme-menu-in 0.25s ease-out",
                 transition: "background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
@@ -216,7 +261,9 @@ export default function ThemeSwitcher() {
                         ? t.accentLight
                         : isActive
                           ? t.accentLight
-                          : "rgba(255,255,255,0.55)",
+                          : previewTheme
+                            ? (previewTheme.bg === "#f9f9f9" ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.55)")
+                            : `var(--theme-muted)`,
                     }}
                   >
                     <span
@@ -224,9 +271,11 @@ export default function ThemeSwitcher() {
                       style={{
                         background: t.preview,
                         boxShadow: isActive || isHovered
-                          ? `0 0 0 2px ${previewTheme?.bg || "rgba(10,10,10,0.9)"}, 0 0 0 4px ${t.preview}, 0 0 10px ${t.preview}`
+                          ? `0 0 0 2px ${previewTheme?.bg || themes[current].bg}, 0 0 0 4px ${t.preview.startsWith("linear") ? "#c3dafe" : t.preview}, 0 0 10px ${t.preview.startsWith("linear") ? "#a1c4fd" : t.preview}`
                           : "none",
-                        border: `1px solid rgba(255,255,255,0.15)`,
+                        border: t.preview.startsWith("linear")
+                          ? `1px solid rgba(0,0,0,0.1)`
+                          : `1px solid rgba(255,255,255,0.15)`,
                       }}
                     />
                     <span>{t.label}</span>

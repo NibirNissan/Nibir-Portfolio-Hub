@@ -70,7 +70,7 @@ export default function Hero() {
               <button
                 onClick={() => scrollToSection("projects")}
                 className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold transition-all duration-200 glow-emerald hover:scale-105 text-sm sm:text-base"
-                style={{ backgroundColor: "var(--theme-accent)", color: "#000" }}
+                style={{ backgroundColor: "var(--theme-accent)", color: "var(--theme-accent-fg, #000)" }}
               >
                 View My Work
               </button>

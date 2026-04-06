@@ -243,7 +243,7 @@ export default function ServicePage() {
                 <div
                   className="p-8 sm:p-10 rounded-2xl border relative overflow-hidden"
                   style={{
-                    background: "rgba(10, 10, 10, 0.7)",
+                    background: "rgba(var(--theme-surface-rgb), 0.7)",
                     backdropFilter: "blur(24px)",
                     borderColor: `rgba(${service.rgb}, 0.2)`,
                     boxShadow: `0 0 60px rgba(${service.rgb}, 0.06)`,
@@ -350,7 +350,7 @@ export default function ServicePage() {
                     className="block text-center px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 hover:scale-105"
                     style={{
                       background: tier.highlight ? `rgba(${service.rgb}, 1)` : `rgba(${service.rgb}, 0.12)`,
-                      color: tier.highlight ? "#000" : `rgba(${service.rgb}, 1)`,
+                      color: tier.highlight ? "var(--theme-accent-fg, #000)" : `rgba(${service.rgb}, 1)`,
                       border: `1px solid rgba(${service.rgb}, ${tier.highlight ? 1 : 0.3})`,
                     }}
                   >

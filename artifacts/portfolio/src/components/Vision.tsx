@@ -69,7 +69,7 @@ export default function Vision() {
             className="max-w-3xl mx-auto p-7 sm:p-8 rounded-2xl mb-14 text-left"
             style={{
               border: `1px solid rgba(var(--theme-accent-rgb), 0.15)`,
-              background: "rgba(10, 10, 10, 0.65)",
+              background: "rgba(var(--theme-surface-rgb), 0.65)",
               backdropFilter: "blur(24px)",
               WebkitBackdropFilter: "blur(24px)",
               boxShadow: `0 0 60px rgba(var(--theme-accent-rgb), 0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
@@ -106,7 +106,7 @@ export default function Vision() {
               key={p.label}
               className={`reveal-card relative p-6 rounded-2xl border ${p.border} card-hover overflow-hidden`}
               style={{
-                background: "rgba(10, 10, 10, 0.55)",
+                background: "rgba(var(--theme-surface-rgb), 0.55)",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
                 boxShadow: "inset 0 1px 0 rgba(255,255,255,0.03)",

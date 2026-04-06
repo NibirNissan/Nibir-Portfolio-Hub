@@ -58,7 +58,7 @@ function FlowNode({ node, isVision = false }: { node: NodeData; isVision?: boole
       <div
         className="relative rounded-2xl p-5 sm:p-6 cursor-pointer overflow-hidden transition-all duration-400"
         style={{
-          background: "rgba(10, 10, 10, 0.6)",
+          background: "rgba(var(--theme-surface-rgb), 0.6)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           border: `1px solid rgba(${node.borderRgb}, ${hovered ? 0.6 : 0.25})`,
@@ -166,7 +166,7 @@ export default function Ecosystem() {
             <div
               className="relative rounded-2xl p-6 sm:p-8 text-center transition-all duration-400"
               style={{
-                background: "rgba(10, 10, 10, 0.7)",
+                background: "rgba(var(--theme-surface-rgb), 0.7)",
                 backdropFilter: "blur(24px)",
                 WebkitBackdropFilter: "blur(24px)",
                 border: "1px solid transparent",

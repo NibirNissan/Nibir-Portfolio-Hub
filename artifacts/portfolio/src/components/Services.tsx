@@ -369,7 +369,7 @@ export default function Services() {
               key={service.title}
               className="reveal-card relative rounded-2xl card-hover overflow-hidden"
               style={{
-                background: "rgba(10, 10, 10, 0.6)",
+                background: "rgba(var(--theme-surface-rgb), 0.6)",
                 backdropFilter: "blur(24px)",
                 WebkitBackdropFilter: "blur(24px)",
                 border: `1px solid ${service.glowBorder}`,

@@ -60,7 +60,7 @@ function HeroMockup({ title, accent }: { title: string; accent: string }) {
         transformStyle: "preserve-3d",
         willChange: "transform",
         borderColor: `rgba(${colors.rgb}, 0.2)`,
-        background: `linear-gradient(135deg, rgba(${colors.rgb}, 0.05), rgba(10, 10, 10, 0.8))`,
+        background: `linear-gradient(135deg, rgba(${colors.rgb}, 0.05), rgba(var(--theme-surface-rgb), 0.8))`,
         boxShadow: `0 20px 60px rgba(${colors.rgb}, 0.1), 0 0 0 1px rgba(${colors.rgb}, 0.08)`,
       }}
     >
@@ -181,7 +181,7 @@ export default function ProjectPage() {
           <ScrollReveal delay={150}>
             <div
               className="p-6 sm:p-8 rounded-2xl border border-neutral-800 relative overflow-hidden"
-              style={{ background: "rgba(10, 10, 10, 0.6)" }}
+              style={{ background: "rgba(var(--theme-surface-rgb), 0.6)" }}
             >
               <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-500/50 to-transparent rounded-full" />
               <p className="text-neutral-300 text-base sm:text-lg leading-relaxed pl-4">
@@ -265,7 +265,7 @@ export default function ProjectPage() {
                 <div
                   className="p-5 sm:p-6 rounded-2xl border transition-all duration-300 hover:scale-[1.02] h-full"
                   style={{
-                    background: "rgba(10, 10, 10, 0.5)",
+                    background: "rgba(var(--theme-surface-rgb), 0.5)",
                     borderColor: `rgba(${colors.rgb}, 0.15)`,
                     boxShadow: `0 0 0 0 rgba(${colors.rgb}, 0)`,
                   }}
@@ -317,7 +317,7 @@ export default function ProjectPage() {
                 <div
                   className="text-center p-6 sm:p-8 rounded-2xl border relative overflow-hidden group"
                   style={{
-                    background: "rgba(10, 10, 10, 0.6)",
+                    background: "rgba(var(--theme-surface-rgb), 0.6)",
                     borderColor: `rgba(${colors.rgb}, 0.15)`,
                   }}
                 >

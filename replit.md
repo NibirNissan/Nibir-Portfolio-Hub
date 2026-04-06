@@ -21,12 +21,13 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 Professional portfolio for Nibir Nissan — CST student, full-stack developer, AI automation expert.
 
 ### Design System
-- **4-Theme Switcher**: `ThemeSwitcher.tsx` — glassmorphism dropdown menu, circular clip-path expand transition, localStorage persistence (`portfolio-theme` key)
+- **5-Theme Switcher**: `ThemeSwitcher.tsx` — glassmorphism dropdown menu, circular clip-path expand transition, localStorage persistence (`portfolio-theme` key)
   - **Emerald Stealth** (default): bg `#0a0a0a`, accent `#10b981`, secondary `#f59e0b`
   - **Cyber Amber**: bg `#0c0a09`, accent `#f59e0b`, secondary `#10b981`
   - **Midnight Royal**: bg `#020617`, accent `#8b5cf6`, secondary `#ec4899`
   - **Mono Chrome**: bg `#000000`, accent `#ffffff`, secondary `#a3a3a3`
-- **CSS Variable System**: All accent colors driven by `--theme-accent`, `--theme-accent-rgb`, `--theme-secondary-rgb`, etc. in `:root`. JS applies theme via `document.documentElement.style.setProperty()`. Utility classes: `accent-text`, `text-gradient`, `glow-emerald`, `nav-capsule`, `icon-duotone` all reference CSS variables.
+  - **iPhone Liquid Glass**: bg `#f9f9f9`, accent `#313131` (Midnight Silver), secondary `#a1c4fd` (Icy Blue). LIGHT theme with 50px backdrop blur on cards, subtle mesh gradient body background, 0.5px matte silver borders. Uses `[data-theme="liquid-glass"]` CSS overrides to flip all dark-mode utility classes (text, bg, borders, glows, gradients).
+- **CSS Variable System**: All accent colors driven by `--theme-accent`, `--theme-accent-rgb`, `--theme-secondary-rgb`, `--theme-surface-rgb`, `--theme-heading`, `--theme-body`, `--theme-muted`, etc. in `:root`. JS applies theme via `document.documentElement.style.setProperty()`. Utility classes: `accent-text`, `text-gradient`, `glow-emerald`, `nav-capsule`, `icon-duotone` all reference CSS variables. Inline card backgrounds use `rgba(var(--theme-surface-rgb), ...)` instead of hardcoded dark values.
 - **Display Font**: Space Grotesk (h1–h4), Inter (body)
 - **Glassmorphism**: `rgba(10, 10, 10, 0.5–0.7)` with `backdrop-filter: blur()`
 - **Grain texture**: CSS `::before` pseudo-element on `.grain-bg` class, opacity controlled by `--theme-grain`
