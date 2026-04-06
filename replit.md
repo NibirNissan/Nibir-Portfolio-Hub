@@ -63,7 +63,8 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 
 ### Custom Cursor & Scroll Effects
 - **CustomCursor**: Replaces system cursor with emerald dot (8px) + semi-transparent ring (25px) with lerp lag. Ring expands to 40px on hover over links/buttons/cards, dot vanishes. Touch devices auto-detected and excluded.
-- **ScrollSkew**: GSAP ScrollTrigger-powered 3D scroll effect. Sections enter with `rotateX(-15deg)` + `opacity: 0` + `scale(0.95)` and animate to flat as they reach viewport center. Exit animation tilts back on scroll-out. Mobile-optimized: lighter angles (-10deg), shorter scrub (0.5), vertical translate (30px) instead of heavy parallax. Active section gets emerald neon glow border via `.scroll-skew-active` class. `prefers-reduced-motion` respected.
+- **ScrollSkew**: GSAP ScrollTrigger "Slide-Scale-Fade" reveal. Initial: `opacity:0, y:100, rotateX:-15deg, scale:0.9`. Animates to flat with `power3.out` ease, `scrub:1`, start `top 90%` → end `top 40%`. Mobile: lighter values (y:60, rotateX:-10, scale:0.93). Active section gets emerald neon glow border via `toggleClass`. `prefers-reduced-motion` respected. Uses `gsap.context` + `ctx.revert()` for clean teardown.
+- **ParallaxBg**: Fixed background layer with 3 blurred radial gradient orbs (emerald + amber). Moves `y: -100px` over full page scroll via GSAP ScrollTrigger for subtle depth parallax. Sections sit above via `z-index: 1`.
 - CSS: `cursor: none` applied via `.custom-cursor-active` class on `<html>`, hover states via `.cursor-hovering`
 - **GSAP dependency**: `gsap` package with `ScrollTrigger` plugin registered globally
 

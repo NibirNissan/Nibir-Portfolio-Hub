@@ -22,41 +22,33 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
     const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: el,
-          start: "top 90%",
-          end: "bottom 10%",
-          scrub: isMobile ? 0.5 : 1,
-          toggleClass: { targets: el, className: "scroll-skew-active" },
-        },
-      });
-
-      tl.fromTo(
+      gsap.fromTo(
         el,
         {
-          rotateX: isMobile ? -10 : -15,
           opacity: 0,
-          scale: isMobile ? 0.97 : 0.95,
-          y: isMobile ? 30 : 0,
+          y: isMobile ? 60 : 100,
+          rotateX: isMobile ? -10 : -15,
+          scale: isMobile ? 0.93 : 0.9,
         },
         {
-          rotateX: 0,
           opacity: 1,
-          scale: 1,
           y: 0,
-          ease: "none",
-          duration: 0.4,
+          rotateX: 0,
+          scale: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 90%",
+            end: "top 40%",
+            scrub: 1,
+            toggleClass: { targets: el, className: "scroll-skew-active" },
+            onEnter: () => { el.style.willChange = "transform, opacity"; },
+            onLeave: () => { el.style.willChange = "auto"; },
+            onEnterBack: () => { el.style.willChange = "transform, opacity"; },
+            onLeaveBack: () => { el.style.willChange = "auto"; },
+          },
         }
       );
-
-      tl.to(el, {
-        rotateX: isMobile ? 8 : 12,
-        opacity: 0.7,
-        scale: isMobile ? 0.98 : 0.96,
-        ease: "none",
-        duration: 0.4,
-      });
     }, el);
 
     return () => ctx.revert();
@@ -70,7 +62,6 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
         perspective: 1000,
         transformStyle: "preserve-3d" as const,
         transformOrigin: "center center",
-        willChange: "transform, opacity",
       }}
     >
       {children}

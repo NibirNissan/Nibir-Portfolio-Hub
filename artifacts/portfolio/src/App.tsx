@@ -14,6 +14,7 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ScanLine from "@/components/ScanLine";
 import ScrollSkew from "@/components/ScrollSkew";
+import ParallaxBg from "@/components/ParallaxBg";
 import CustomCursor from "@/components/CustomCursor";
 import ProjectPage from "@/pages/ProjectPage";
 import ServicePage from "@/pages/ServicePage";
@@ -33,6 +34,7 @@ function HomePage() {
       exit="exit"
       className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative"
     >
+      <ParallaxBg />
       <Nav />
       <Hero />
       <ScanLine />

@@ -296,6 +296,7 @@
 
 .scroll-skew-section {
   position: relative;
+  z-index: 1;
   transition: box-shadow 0.4s ease, border-color 0.4s ease;
   border: 1px solid transparent;
   border-radius: 1rem;
