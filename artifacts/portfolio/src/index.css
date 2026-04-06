@@ -322,6 +322,11 @@
   border-radius: 1rem;
 }
 
+.reveal-card {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
 .scroll-skew-active {
   box-shadow: 0 0 30px rgba(var(--theme-accent-rgb), 0.06), 0 0 60px rgba(var(--theme-accent-rgb), 0.03);
   border-color: rgba(var(--theme-accent-rgb), 0.12);

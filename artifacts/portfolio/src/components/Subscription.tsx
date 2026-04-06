@@ -79,7 +79,7 @@ export default function Subscription() {
           {offerCards.map((card) => (
             <div
               key={card.title}
-              className={`relative p-7 rounded-2xl border ${card.border} card-hover overflow-hidden`}
+              className={`reveal-card relative p-7 rounded-2xl border ${card.border} card-hover overflow-hidden`}
               style={{
                 background: "rgba(10, 10, 10, 0.6)",
                 backdropFilter: "blur(20px)",
@@ -107,7 +107,7 @@ export default function Subscription() {
           {highlights.map((h) => (
             <div
               key={h.title}
-              className={`relative p-5 rounded-2xl border ${h.border} card-hover overflow-hidden`}
+              className={`reveal-card relative p-5 rounded-2xl border ${h.border} card-hover overflow-hidden`}
               style={{
                 background: "rgba(10, 10, 10, 0.5)",
                 backdropFilter: "blur(16px)",

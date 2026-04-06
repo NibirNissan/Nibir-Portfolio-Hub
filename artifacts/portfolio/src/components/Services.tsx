@@ -280,7 +280,7 @@ export default function Services() {
           {services.map((service, idx) => (
             <div
               key={service.title}
-              className={`relative overflow-hidden p-6 sm:p-8 rounded-2xl border ${service.border} bg-neutral-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
+              className={`reveal-card relative overflow-hidden p-6 sm:p-8 rounded-2xl border ${service.border} bg-neutral-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
             >
               <GeoDecor shapes={geoConfigs[idx]} rgb={colorToRgb[service.color]} />
               <div className="relative z-10 flex items-start justify-between mb-5">
@@ -367,7 +367,7 @@ export default function Services() {
           {glassServices.map((service) => (
             <div
               key={service.title}
-              className="relative rounded-2xl card-hover overflow-hidden"
+              className="reveal-card relative rounded-2xl card-hover overflow-hidden"
               style={{
                 background: "rgba(10, 10, 10, 0.6)",
                 backdropFilter: "blur(24px)",

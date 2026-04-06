@@ -27,8 +27,8 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
         {
           opacity: 0,
           y: isMobile ? 60 : 100,
-          rotateX: isMobile ? -10 : -15,
-          scale: isMobile ? 0.93 : 0.9,
+          rotateX: isMobile ? 0 : -15,
+          scale: isMobile ? 1 : 0.9,
         },
         {
           opacity: 1,
@@ -38,7 +38,7 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
           ease: "power3.out",
           scrollTrigger: {
             trigger: el,
-            start: "top 90%",
+            start: "top 95%",
             end: "top 40%",
             scrub: 1,
             toggleClass: { targets: el, className: "scroll-skew-active" },
@@ -49,6 +49,47 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
           },
         }
       );
+
+      const cards = el.querySelectorAll<HTMLElement>(".reveal-card");
+      if (cards.length > 0) {
+        gsap.fromTo(
+          cards,
+          {
+            opacity: 0,
+            y: isMobile ? 40 : 70,
+            rotateX: isMobile ? 0 : -10,
+            scale: isMobile ? 1 : 0.95,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            rotateX: 0,
+            scale: 1,
+            ease: "power3.out",
+            stagger: 0.15,
+            scrollTrigger: {
+              trigger: el,
+              start: "top 85%",
+              end: "top 30%",
+              scrub: 1,
+            },
+          }
+        );
+
+        cards.forEach((card) => {
+          card.style.willChange = "auto";
+        });
+
+        ScrollTrigger.create({
+          trigger: el,
+          start: "top 90%",
+          end: "top 25%",
+          onEnter: () => cards.forEach((c) => { c.style.willChange = "transform, opacity"; }),
+          onLeave: () => cards.forEach((c) => { c.style.willChange = "auto"; }),
+          onEnterBack: () => cards.forEach((c) => { c.style.willChange = "transform, opacity"; }),
+          onLeaveBack: () => cards.forEach((c) => { c.style.willChange = "auto"; }),
+        });
+      }
     }, el);
 
     return () => ctx.revert();
@@ -59,7 +100,7 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
       ref={ref}
       className={`scroll-skew-section ${className}`}
       style={{
-        perspective: 1000,
+        perspective: 1200,
         transformStyle: "preserve-3d" as const,
         transformOrigin: "center center",
       }}

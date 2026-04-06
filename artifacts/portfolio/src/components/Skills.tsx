@@ -70,7 +70,7 @@ export default function Skills() {
           {skillGroups.map((group) => (
             <div
               key={group.label}
-              className={`p-6 sm:p-8 rounded-2xl border ${group.border} bg-neutral-900/60 card-hover hover:shadow-xl ${group.glow}`}
+              className={`reveal-card p-6 sm:p-8 rounded-2xl border ${group.border} bg-neutral-900/60 card-hover hover:shadow-xl ${group.glow}`}
             >
               <div className="flex items-center gap-3 mb-5">
                 <div className={`w-10 h-10 rounded-xl ${group.bg} border ${group.border} flex items-center justify-center`}>

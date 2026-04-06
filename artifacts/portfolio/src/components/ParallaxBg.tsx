@@ -6,20 +6,21 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ParallaxBg() {
   const ref = useRef<HTMLDivElement>(null);
+  const meshRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
+    const mesh = meshRef.current;
     if (!el) return;
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReduced) return;
 
     const isMobile = window.innerWidth < 768;
-    if (isMobile) return;
 
     const ctx = gsap.context(() => {
       gsap.to(el, {
-        y: -100,
+        y: isMobile ? -60 : -150,
         ease: "none",
         scrollTrigger: {
           trigger: document.documentElement,
@@ -28,7 +29,21 @@ export default function ParallaxBg() {
           scrub: 1,
         },
       });
-    }, el);
+
+      if (!isMobile && mesh) {
+        gsap.to(mesh, {
+          y: -80,
+          rotation: 15,
+          ease: "none",
+          scrollTrigger: {
+            trigger: document.documentElement,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1.5,
+          },
+        });
+      }
+    });
 
     return () => ctx.revert();
   }, []);
@@ -50,49 +65,74 @@ export default function ParallaxBg() {
       <div
         style={{
           position: "absolute",
-          top: "10%",
-          left: "15%",
-          width: isMobile ? "50vw" : "40vw",
-          height: isMobile ? "50vw" : "40vw",
-          maxWidth: isMobile ? 300 : 600,
-          maxHeight: isMobile ? 300 : 600,
+          top: "8%",
+          left: "10%",
+          width: isMobile ? "55vw" : "45vw",
+          height: isMobile ? "55vw" : "45vw",
+          maxWidth: isMobile ? 320 : 650,
+          maxHeight: isMobile ? 320 : 650,
           borderRadius: "50%",
-          background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.04) 0%, transparent 70%)`,
-          filter: isMobile ? "blur(40px)" : "blur(80px)",
+          background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.05) 0%, transparent 70%)`,
+          filter: isMobile ? "blur(50px)" : "blur(90px)",
         }}
       />
+
+      <div
+        style={{
+          position: "absolute",
+          bottom: "15%",
+          right: "8%",
+          width: isMobile ? "45vw" : "40vw",
+          height: isMobile ? "45vw" : "40vw",
+          maxWidth: isMobile ? 280 : 550,
+          maxHeight: isMobile ? 280 : 550,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, rgba(var(--theme-secondary-rgb), 0.04) 0%, transparent 70%)`,
+          filter: isMobile ? "blur(40px)" : "blur(85px)",
+        }}
+      />
+
       {!isMobile && (
-        <>
-          <div
-            style={{
-              position: "absolute",
-              bottom: "20%",
-              right: "10%",
-              width: "35vw",
-              height: "35vw",
-              maxWidth: 500,
-              maxHeight: 500,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, rgba(var(--theme-secondary-rgb), 0.03) 0%, transparent 70%)`,
-              filter: "blur(80px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "50vw",
-              height: "50vw",
-              maxWidth: 700,
-              maxHeight: 700,
-              borderRadius: "50%",
-              background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.025) 0%, transparent 60%)`,
-              filter: "blur(100px)",
-            }}
-          />
-        </>
+        <div
+          style={{
+            position: "absolute",
+            top: "45%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "55vw",
+            height: "55vw",
+            maxWidth: 750,
+            maxHeight: 750,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.02) 0%, transparent 55%)`,
+            filter: "blur(110px)",
+          }}
+        />
+      )}
+
+      {!isMobile && (
+        <div
+          ref={meshRef}
+          style={{
+            position: "absolute",
+            top: "25%",
+            left: "30%",
+            width: "50vw",
+            height: "50vw",
+            maxWidth: 700,
+            maxHeight: 700,
+            borderRadius: "50%",
+            background: `conic-gradient(
+              from 0deg,
+              rgba(var(--theme-accent-rgb), 0.015) 0deg,
+              rgba(var(--theme-secondary-rgb), 0.01) 120deg,
+              rgba(var(--theme-accent-rgb), 0.02) 240deg,
+              rgba(var(--theme-accent-rgb), 0.015) 360deg
+            )`,
+            filter: "blur(120px)",
+            willChange: "transform",
+          }}
+        />
       )}
     </div>
   );

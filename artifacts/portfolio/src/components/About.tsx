@@ -135,7 +135,7 @@ export default function About() {
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className={`p-4 sm:p-5 rounded-2xl border ${stat.border} ${stat.bg} card-hover`}
+                  className={`reveal-card p-4 sm:p-5 rounded-2xl border ${stat.border} ${stat.bg} card-hover`}
                 >
                   <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl ${stat.bg} border ${stat.border} flex items-center justify-center mb-3`}>
                     <stat.icon className={`w-4 h-4 ${stat.color}`} />

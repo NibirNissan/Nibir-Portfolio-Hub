@@ -65,8 +65,8 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 
 ### Custom Cursor & Scroll Effects
 - **CustomCursor**: Replaces system cursor with emerald dot (8px) + semi-transparent ring (25px) with lerp lag. Ring expands to 40px on hover over links/buttons/cards, dot vanishes. Touch devices auto-detected and excluded.
-- **ScrollSkew**: GSAP ScrollTrigger "Slide-Scale-Fade" reveal. Initial: `opacity:0, y:100, rotateX:-15deg, scale:0.9`. Animates to flat with `power3.out` ease, `scrub:1`, start `top 90%` → end `top 40%`. Mobile: lighter values (y:60, rotateX:-10, scale:0.93). Active section gets emerald neon glow border via `toggleClass`. `prefers-reduced-motion` respected. Uses `gsap.context` + `ctx.revert()` for clean teardown.
-- **ParallaxBg**: Fixed background layer with 3 blurred radial gradient orbs (emerald + amber). Moves `y: -100px` over full page scroll via GSAP ScrollTrigger for subtle depth parallax. Sections sit above via `z-index: 1`.
+- **ScrollSkew**: GSAP ScrollTrigger "Morph-Fade-Slide" reveal. Section: `opacity:0, y:100, rotateX:-15deg, scale:0.9` → flat via `power3.out`, `scrub:1`, start `top 95%` → end `top 40%`. Cards (`.reveal-card`): staggered sub-reveal (stagger: 0.15), `y:70, rotateX:-10, scale:0.95` → flat, start `top 85%` → end `top 30%`. Perspective: 1200px. Mobile: 3D transforms disabled (no rotateX/scale), only y-slide + fade for performance. `will-change` toggled dynamically. `prefers-reduced-motion` respected.
+- **ParallaxBg**: Fixed background layer with 3 blurred radial gradient orbs + 1 conic gradient mesh orb. Main layer moves `y: -150px` (desktop) / `y: -60px` (mobile). Mesh layer moves `y: -80px` with 15deg rotation at `scrub: 1.5` for depth offset. Sections sit above via `z-index: 1`.
 - CSS: `cursor: none` applied via `.custom-cursor-active` class on `<html>`, hover states via `.cursor-hovering`
 - **GSAP dependency**: `gsap` package with `ScrollTrigger` plugin registered globally
 

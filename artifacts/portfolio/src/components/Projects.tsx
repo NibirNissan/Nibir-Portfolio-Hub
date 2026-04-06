@@ -196,7 +196,7 @@ export default function Projects() {
             return (
               <TiltCard
                 key={project.title}
-                className={`group relative p-5 sm:p-6 rounded-2xl border ${a.border} bg-neutral-900/70 cursor-pointer flex flex-col`}
+                className={`reveal-card group relative p-5 sm:p-6 rounded-2xl border ${a.border} bg-neutral-900/70 cursor-pointer flex flex-col`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center`}>

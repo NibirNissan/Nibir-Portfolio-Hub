@@ -104,7 +104,7 @@ export default function Vision() {
           {pillars.map((p, i) => (
             <div
               key={p.label}
-              className={`relative p-6 rounded-2xl border ${p.border} card-hover overflow-hidden`}
+              className={`reveal-card relative p-6 rounded-2xl border ${p.border} card-hover overflow-hidden`}
               style={{
                 background: "rgba(10, 10, 10, 0.55)",
                 backdropFilter: "blur(16px)",
