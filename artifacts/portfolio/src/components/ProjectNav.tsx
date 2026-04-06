@@ -61,12 +61,12 @@ export default function ProjectNav() {
               onMouseMove={(e) => handleMagnetic(e, idx)}
               onMouseLeave={() => handleMagneticLeave(idx)}
               onClick={() => handleNavClick(link.href)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
-                isActive
-                  ? "text-emerald-400 bg-emerald-500/15"
-                  : "text-neutral-400 hover:text-emerald-300 hover:bg-white/5"
-              }`}
-              style={{ transition: "transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.2s ease, background 0.2s ease" }}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200"
+              style={{
+                transition: "transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.2s ease, background 0.2s ease",
+                color: isActive ? "var(--theme-accent-light)" : "#a3a3a3",
+                backgroundColor: isActive ? `rgba(var(--theme-accent-rgb), 0.15)` : "transparent",
+              }}
             >
               <link.icon className="w-4 h-4" />
               <span className="hidden lg:inline">{link.label}</span>
@@ -81,7 +81,7 @@ export default function ProjectNav() {
             onClick={() => setMobileOpen(true)}
             className="nav-capsule rounded-full px-5 py-3 flex items-center gap-2.5"
           >
-            <Menu className="w-5 h-5 text-emerald-400" />
+            <Menu className="w-5 h-5" style={{ color: "var(--theme-accent-light)" }} />
             <span className="text-sm font-medium text-neutral-300">Navigate</span>
           </button>
         )}
@@ -89,7 +89,7 @@ export default function ProjectNav() {
         {mobileOpen && (
           <div className="nav-capsule rounded-3xl p-3 w-64">
             <div className="flex items-center justify-between px-3 py-2 mb-1">
-              <span className="text-sm font-semibold text-emerald-400 font-[var(--app-font-display)]">Sections</span>
+              <span className="text-sm font-semibold font-[var(--app-font-display)]" style={{ color: "var(--theme-accent-light)" }}>Sections</span>
               <button onClick={() => setMobileOpen(false)} className="text-neutral-400 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
@@ -100,11 +100,11 @@ export default function ProjectNav() {
                 <button
                   key={link.label}
                   onClick={() => handleNavClick(link.href)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
-                    isActive
-                      ? "text-emerald-400 bg-emerald-500/12"
-                      : "text-neutral-400 hover:text-white hover:bg-white/5"
-                  }`}
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all"
+                  style={{
+                    color: isActive ? "var(--theme-accent-light)" : "#a3a3a3",
+                    backgroundColor: isActive ? `rgba(var(--theme-accent-rgb), 0.12)` : "transparent",
+                  }}
                 >
                   <link.icon className="w-4 h-4" />
                   {link.label}

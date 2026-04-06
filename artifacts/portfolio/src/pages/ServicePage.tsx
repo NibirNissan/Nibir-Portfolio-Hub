@@ -60,7 +60,7 @@ export default function ServicePage() {
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}>
         <div className="text-center">
           <h1 className="text-4xl font-black text-white mb-4">Service Not Found</h1>
           <p className="text-neutral-400 mb-8">This service page doesn't exist.</p>
@@ -75,7 +75,7 @@ export default function ServicePage() {
   const c = colorMap[service.color] || colorMap.emerald;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative">
+    <div className="min-h-screen overflow-x-hidden grain-bg relative" style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}>
       <BackButton />
       <ServiceNav />
 
@@ -83,8 +83,8 @@ export default function ServicePage() {
         href={service.ctaLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed right-5 bottom-20 md:bottom-24 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-sm font-bold bg-emerald-500 text-black shadow-lg transition-all duration-300 hover:bg-emerald-400 hover:scale-105 hire-pulse"
-        style={{ boxShadow: "0 0 30px rgba(16, 185, 129, 0.3)" }}
+        className="fixed right-5 bottom-20 md:bottom-24 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-sm font-bold text-black shadow-lg transition-all duration-300 hover:scale-105 hire-pulse"
+        style={{ backgroundColor: "var(--theme-accent)", boxShadow: `0 0 30px rgba(var(--theme-accent-rgb), 0.3)` }}
       >
         <MessageCircle className="w-4 h-4" />
         Get Started
@@ -120,8 +120,8 @@ export default function ServicePage() {
                 href={service.ctaLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 rounded-full bg-emerald-500 text-black font-bold text-base hover:bg-emerald-400 transition-all duration-300 hover:scale-105 inline-flex items-center gap-2"
-                style={{ boxShadow: "0 0 30px rgba(16, 185, 129, 0.25)" }}
+                className="px-8 py-4 rounded-full text-black font-bold text-base transition-all duration-300 hover:scale-105 inline-flex items-center gap-2"
+                style={{ backgroundColor: "var(--theme-accent)", boxShadow: `0 0 30px rgba(var(--theme-accent-rgb), 0.25)` }}
               >
                 <MessageCircle className="w-5 h-5" />
                 Get Started Today
@@ -144,7 +144,7 @@ export default function ServicePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative">
           <ScrollReveal>
             <div className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                 <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
                 Process
               </div>
@@ -195,7 +195,7 @@ export default function ServicePage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
           <ScrollReveal>
             <div className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                 <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
                 Deliverables
               </div>
@@ -254,7 +254,7 @@ export default function ServicePage() {
                     style={{ background: `radial-gradient(circle, rgba(${service.rgb}, 0.08), transparent 70%)`, filter: "blur(40px)" }}
                   />
                   <div className="relative">
-                    <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+                    <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                       <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
                       Case Study
                     </div>
@@ -289,7 +289,7 @@ export default function ServicePage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
           <ScrollReveal>
             <div className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                 <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
                 Packages
               </div>
@@ -369,7 +369,7 @@ export default function ServicePage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 relative">
           <ScrollReveal>
             <div className="text-center mb-14">
-              <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                 <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
                 FAQ
               </div>
@@ -394,8 +394,8 @@ export default function ServicePage() {
                 href={service.ctaLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-emerald-500 text-black font-bold text-base hover:bg-emerald-400 transition-all duration-300 hover:scale-105"
-                style={{ boxShadow: "0 0 30px rgba(16, 185, 129, 0.25)" }}
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full text-black font-bold text-base transition-all duration-300 hover:scale-105"
+                style={{ backgroundColor: "var(--theme-accent)", boxShadow: `0 0 30px rgba(var(--theme-accent-rgb), 0.25)` }}
               >
                 <MessageCircle className="w-5 h-5" />
                 Message Me Directly

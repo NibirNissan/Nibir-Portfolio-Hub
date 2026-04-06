@@ -41,22 +41,22 @@ export default function Vision() {
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full opacity-10"
-          style={{ background: "radial-gradient(ellipse at center top, #10b981, transparent 65%)" }}
+          style={{ background: `radial-gradient(ellipse at center top, var(--theme-accent), transparent 65%)` }}
         />
         <div
           className="absolute bottom-0 left-1/4 w-[500px] h-[300px] rounded-full opacity-8"
-          style={{ background: "radial-gradient(ellipse, #f59e0b, transparent 70%)" }}
+          style={{ background: `radial-gradient(ellipse, var(--theme-secondary), transparent 70%)` }}
         />
         <div
           className="absolute bottom-0 right-1/4 w-[400px] h-[300px] rounded-full opacity-6"
-          style={{ background: "radial-gradient(ellipse, #8b5cf6, transparent 70%)" }}
+          style={{ background: `radial-gradient(ellipse, rgba(var(--theme-accent-rgb), 0.5), transparent 70%)` }}
         />
       </div>
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+          <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
             <span className="icon-duotone"><Rocket className="w-4 h-4" /></span>
             Future Vision
           </div>
@@ -66,30 +66,34 @@ export default function Vision() {
           </h2>
 
           <div
-            className="max-w-3xl mx-auto p-7 sm:p-8 rounded-2xl border border-emerald-500/15 mb-14 text-left"
+            className="max-w-3xl mx-auto p-7 sm:p-8 rounded-2xl mb-14 text-left"
             style={{
+              border: `1px solid rgba(var(--theme-accent-rgb), 0.15)`,
               background: "rgba(10, 10, 10, 0.65)",
               backdropFilter: "blur(24px)",
               WebkitBackdropFilter: "blur(24px)",
-              boxShadow: "0 0 60px rgba(16, 185, 129, 0.06), inset 0 1px 0 rgba(255,255,255,0.03)",
+              boxShadow: `0 0 60px rgba(var(--theme-accent-rgb), 0.06), inset 0 1px 0 rgba(255,255,255,0.03)`,
             }}
           >
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/12 border border-emerald-500/25 flex items-center justify-center">
-                <Rocket className="w-5 h-5 text-emerald-400" />
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: `rgba(var(--theme-accent-rgb), 0.12)`, border: `1px solid rgba(var(--theme-accent-rgb), 0.25)` }}
+              >
+                <Rocket className="w-5 h-5" style={{ color: "var(--theme-accent-light)" }} />
               </div>
-              <span className="text-emerald-300 text-sm font-semibold">Vision Statement</span>
+              <span className="text-sm font-semibold" style={{ color: "var(--theme-accent-light)" }}>Vision Statement</span>
             </div>
-            <blockquote className="text-neutral-300 text-base sm:text-lg leading-relaxed font-medium italic border-l-2 border-emerald-500/40 pl-5">
+            <blockquote className="text-neutral-300 text-base sm:text-lg leading-relaxed font-medium italic pl-5" style={{ borderLeft: `2px solid rgba(var(--theme-accent-rgb), 0.4)` }}>
               "My goal is to establish a world-class Digital Agency that bridges the gap between{" "}
-              <span className="text-emerald-300 not-italic font-semibold">AI Automation</span>,{" "}
+              <span className="not-italic font-semibold" style={{ color: "var(--theme-accent-light)" }}>AI Automation</span>,{" "}
               <span className="text-rose-300 not-italic font-semibold">Marketing</span>, and{" "}
               <span className="text-violet-300 not-italic font-semibold">High-end Development</span>. We are moving from a subscription provider
               to a full-scale digital solution powerhouse."
             </blockquote>
             <div className="mt-5 flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center">
-                <span className="text-[10px] font-black text-emerald-300">N</span>
+              <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: `rgba(var(--theme-accent-rgb), 0.15)`, border: `1px solid rgba(var(--theme-accent-rgb), 0.25)` }}>
+                <span className="text-[10px] font-black" style={{ color: "var(--theme-accent-light)" }}>N</span>
               </div>
               <span className="text-neutral-500 text-sm">Nibir Nissan — Founder</span>
             </div>
@@ -122,14 +126,15 @@ export default function Vision() {
 
         <div className="mt-10 flex justify-center">
           <div
-            className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-emerald-500/15"
+            className="inline-flex items-center gap-3 px-6 py-3 rounded-full"
             style={{
-              background: "rgba(16, 185, 129, 0.06)",
+              border: `1px solid rgba(var(--theme-accent-rgb), 0.15)`,
+              background: `rgba(var(--theme-accent-rgb), 0.06)`,
               backdropFilter: "blur(12px)",
               WebkitBackdropFilter: "blur(12px)",
             }}
           >
-            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-slow" />
+            <div className="w-2 h-2 rounded-full animate-pulse-slow" style={{ backgroundColor: "var(--theme-accent-light)" }} />
             <span className="text-neutral-400 text-sm">From subscription provider → Full-scale digital solution powerhouse</span>
           </div>
         </div>

@@ -9,7 +9,7 @@ export default function NebulaBg({ variant = "green" }: { variant?: "green" | "e
             height: 500,
             top: "10%",
             left: "5%",
-            background: "radial-gradient(circle, rgba(16, 185, 129, 0.08), transparent 65%)",
+            background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.08), transparent 65%)`,
             filter: "blur(60px)",
             animation: "nebula-drift 20s ease-in-out infinite",
           }}
@@ -21,7 +21,7 @@ export default function NebulaBg({ variant = "green" }: { variant?: "green" | "e
             height: 400,
             bottom: "5%",
             right: "10%",
-            background: "radial-gradient(circle, rgba(245, 158, 11, 0.06), transparent 65%)",
+            background: `radial-gradient(circle, rgba(var(--theme-secondary-rgb), 0.06), transparent 65%)`,
             filter: "blur(80px)",
             animation: "nebula-drift-2 25s ease-in-out infinite",
           }}
@@ -34,7 +34,7 @@ export default function NebulaBg({ variant = "green" }: { variant?: "green" | "e
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            background: "radial-gradient(circle, rgba(16, 185, 129, 0.05), transparent 60%)",
+            background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.05), transparent 60%)`,
             filter: "blur(50px)",
             animation: "nebula-drift-3 18s ease-in-out infinite",
           }}
@@ -52,7 +52,7 @@ export default function NebulaBg({ variant = "green" }: { variant?: "green" | "e
           height: 600,
           top: "5%",
           left: "-5%",
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.07), rgba(5, 150, 105, 0.03) 50%, transparent 70%)",
+          background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.07), rgba(var(--theme-accent-rgb), 0.03) 50%, transparent 70%)`,
           filter: "blur(70px)",
           animation: "nebula-drift 22s ease-in-out infinite",
         }}
@@ -64,7 +64,7 @@ export default function NebulaBg({ variant = "green" }: { variant?: "green" | "e
           height: 450,
           bottom: "0%",
           right: "0%",
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.06), transparent 65%)",
+          background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.06), transparent 65%)`,
           filter: "blur(80px)",
           animation: "nebula-drift-2 28s ease-in-out infinite",
         }}
@@ -76,7 +76,7 @@ export default function NebulaBg({ variant = "green" }: { variant?: "green" | "e
           height: 350,
           top: "40%",
           right: "30%",
-          background: "radial-gradient(circle, rgba(6, 78, 59, 0.08), transparent 60%)",
+          background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.04), transparent 60%)`,
           filter: "blur(60px)",
           animation: "nebula-drift-3 16s ease-in-out infinite",
         }}

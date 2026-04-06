@@ -16,6 +16,7 @@ import ScanLine from "@/components/ScanLine";
 import ScrollSkew from "@/components/ScrollSkew";
 import ParallaxBg from "@/components/ParallaxBg";
 import CustomCursor from "@/components/CustomCursor";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 import ProjectPage from "@/pages/ProjectPage";
 import ServicePage from "@/pages/ServicePage";
 
@@ -32,7 +33,8 @@ function HomePage() {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative"
+      className="min-h-screen overflow-x-hidden grain-bg relative"
+      style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}
     >
       <ParallaxBg />
       <Nav />
@@ -90,6 +92,7 @@ function App() {
   return (
     <>
       <CustomCursor />
+      <ThemeSwitcher />
       <AnimatePresence mode="wait">
         <Switch key={location}>
           <Route path="/" component={HomePage} />

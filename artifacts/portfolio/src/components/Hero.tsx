@@ -16,11 +16,11 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none">
         <div
           className="hero-blob absolute top-1/3 left-1/4 w-64 h-64 md:w-96 md:h-96 rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, #10b981, #059669)" }}
+          style={{ background: `radial-gradient(circle, var(--theme-accent), var(--theme-accent))` }}
         />
         <div
           className="hero-blob-2 absolute bottom-1/3 right-1/4 w-56 h-56 md:w-80 md:h-80 rounded-full opacity-10"
-          style={{ background: "radial-gradient(circle, #f59e0b, #d97706)" }}
+          style={{ background: `radial-gradient(circle, var(--theme-secondary), var(--theme-secondary))` }}
         />
       </div>
 
@@ -28,8 +28,23 @@ export default function Hero() {
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10 lg:gap-16">
 
           <div className="flex-1 text-center lg:text-left w-full">
-            <div style={stagger(0.1)} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/8 text-emerald-300 text-sm font-medium mb-6">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-slow" />
+            <div
+              style={stagger(0.1)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6"
+              {...{
+                style: {
+                  ...stagger(0.1),
+                  borderColor: `rgba(var(--theme-accent-rgb), 0.3)`,
+                  backgroundColor: `rgba(var(--theme-accent-rgb), 0.08)`,
+                  color: "var(--theme-accent-light)",
+                  border: `1px solid rgba(var(--theme-accent-rgb), 0.3)`,
+                },
+              }}
+            >
+              <span
+                className="w-2 h-2 rounded-full animate-pulse-slow"
+                style={{ backgroundColor: "var(--theme-accent-light)" }}
+              />
               Available for freelance work
             </div>
 
@@ -45,8 +60,8 @@ export default function Hero() {
 
             <p style={stagger(0.4)} className="text-neutral-400 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
               CST student turned{" "}
-              <span className="text-emerald-300 font-medium">full-stack developer</span> &amp;{" "}
-              <span className="text-amber-300 font-medium">AI automation expert</span>.
+              <span className="font-medium" style={{ color: "var(--theme-accent-light)" }}>full-stack developer</span> &amp;{" "}
+              <span className="font-medium" style={{ color: "var(--theme-secondary-light)" }}>AI automation expert</span>.
               Building digital products, automating workflows with n8n, and crafting
               premium visual experiences — from code to brand.
             </p>
@@ -54,13 +69,17 @@ export default function Hero() {
             <div style={stagger(0.55)} className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-8">
               <button
                 onClick={() => scrollToSection("projects")}
-                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold bg-emerald-500 text-black hover:bg-emerald-400 transition-all duration-200 glow-emerald hover:scale-105 text-sm sm:text-base"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold transition-all duration-200 glow-emerald hover:scale-105 text-sm sm:text-base"
+                style={{ backgroundColor: "var(--theme-accent)", color: "#000" }}
               >
                 View My Work
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
-                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold border border-white/15 text-white hover:bg-white/5 hover:border-emerald-500/50 transition-all duration-200 text-sm sm:text-base"
+                className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-white transition-all duration-200 text-sm sm:text-base"
+                style={{ border: "1px solid rgba(255,255,255,0.15)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = `rgba(var(--theme-accent-rgb), 0.5)`; e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.05)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.backgroundColor = "transparent"; }}
               >
                 Let's Talk
               </button>
@@ -98,9 +117,15 @@ export default function Hero() {
             <div className="relative">
               <div
                 className="absolute inset-0 rounded-3xl opacity-30 blur-2xl"
-                style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}
+                style={{ background: `linear-gradient(135deg, var(--theme-accent), var(--theme-accent))` }}
               />
-              <div className="relative w-full lg:w-72 xl:w-80 aspect-[3/4] rounded-3xl overflow-hidden border border-emerald-500/25 shadow-2xl shadow-emerald-500/15">
+              <div
+                className="relative w-full lg:w-72 xl:w-80 aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl"
+                style={{
+                  border: `1px solid rgba(var(--theme-accent-rgb), 0.25)`,
+                  boxShadow: `0 25px 50px -12px rgba(var(--theme-accent-rgb), 0.15)`,
+                }}
+              >
                 <img
                   src={heroImg}
                   alt="Nibir Nissan"
@@ -109,12 +134,24 @@ export default function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               </div>
 
-              <div className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border border-amber-500/30 bg-amber-500/10 backdrop-blur-sm flex flex-col items-center justify-center shadow-lg">
-                <span className="text-xl sm:text-2xl font-black text-amber-300">2k+</span>
+              <div
+                className="absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl backdrop-blur-sm flex flex-col items-center justify-center shadow-lg"
+                style={{
+                  border: `1px solid rgba(var(--theme-secondary-rgb), 0.3)`,
+                  backgroundColor: `rgba(var(--theme-secondary-rgb), 0.1)`,
+                }}
+              >
+                <span className="text-xl sm:text-2xl font-black" style={{ color: "var(--theme-secondary-light)" }}>2k+</span>
                 <span className="text-[10px] sm:text-xs text-neutral-400 font-medium text-center leading-tight">Active Users</span>
               </div>
-              <div className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 backdrop-blur-sm flex flex-col items-center justify-center shadow-lg">
-                <span className="text-base sm:text-xl font-black text-emerald-300">n8n</span>
+              <div
+                className="absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-16 h-16 sm:w-20 sm:h-20 rounded-2xl backdrop-blur-sm flex flex-col items-center justify-center shadow-lg"
+                style={{
+                  border: `1px solid rgba(var(--theme-accent-rgb), 0.3)`,
+                  backgroundColor: `rgba(var(--theme-accent-rgb), 0.1)`,
+                }}
+              >
+                <span className="text-base sm:text-xl font-black" style={{ color: "var(--theme-accent-light)" }}>n8n</span>
                 <span className="text-[10px] sm:text-xs text-neutral-400 font-medium">Expert</span>
               </div>
             </div>
@@ -125,7 +162,10 @@ export default function Hero() {
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
         <button
           onClick={() => scrollToSection("about")}
-          className="text-neutral-500 hover:text-emerald-400 transition-colors animate-bounce"
+          className="text-neutral-500 transition-colors animate-bounce"
+          style={{ ["--tw-text-opacity" as string]: 1 }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--theme-accent-light)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = ""; }}
         >
           <ArrowDown className="w-6 h-6" />
         </button>

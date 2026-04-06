@@ -56,12 +56,12 @@ export default function Subscription() {
       <div className="absolute inset-0 grid-bg opacity-40 pointer-events-none" />
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full pointer-events-none opacity-8"
-        style={{ background: "radial-gradient(ellipse, #10b981, transparent 70%)" }}
+        style={{ background: `radial-gradient(ellipse, var(--theme-accent), transparent 70%)` }}
       />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+          <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
             <span className="icon-duotone"><Package className="w-4 h-4" /></span>
             The Subspot
           </div>

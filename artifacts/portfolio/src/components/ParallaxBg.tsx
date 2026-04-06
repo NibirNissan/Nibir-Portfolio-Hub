@@ -57,7 +57,7 @@ export default function ParallaxBg() {
           maxWidth: isMobile ? 300 : 600,
           maxHeight: isMobile ? 300 : 600,
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.04) 0%, transparent 70%)",
+          background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.04) 0%, transparent 70%)`,
           filter: isMobile ? "blur(40px)" : "blur(80px)",
         }}
       />
@@ -73,7 +73,7 @@ export default function ParallaxBg() {
               maxWidth: 500,
               maxHeight: 500,
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(245, 158, 11, 0.03) 0%, transparent 70%)",
+              background: `radial-gradient(circle, rgba(var(--theme-secondary-rgb), 0.03) 0%, transparent 70%)`,
               filter: "blur(80px)",
             }}
           />
@@ -88,7 +88,7 @@ export default function ParallaxBg() {
               maxWidth: 700,
               maxHeight: 700,
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(16, 185, 129, 0.025) 0%, transparent 60%)",
+              background: `radial-gradient(circle, rgba(var(--theme-accent-rgb), 0.025) 0%, transparent 60%)`,
               filter: "blur(100px)",
             }}
           />

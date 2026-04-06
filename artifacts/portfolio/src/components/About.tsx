@@ -55,9 +55,9 @@ export default function About() {
             <div className="relative">
               <div
                 className="absolute -inset-4 rounded-3xl opacity-15 blur-3xl"
-                style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}
+                style={{ background: `linear-gradient(135deg, var(--theme-accent), var(--theme-accent))` }}
               />
-              <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden border border-emerald-500/15 shadow-2xl">
+              <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl" style={{ border: `1px solid rgba(var(--theme-accent-rgb), 0.15)` }}>
                 <img
                   src={aboutImg}
                   alt="Nibir Nissan at the waterfront"
@@ -84,7 +84,7 @@ export default function About() {
           </div>
 
           <div className="flex-1 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+            <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
               <span className="icon-duotone"><Star className="w-4 h-4" /></span>
               About Me
             </div>
@@ -101,10 +101,10 @@ export default function About() {
               </p>
               <p>
                 My journey spans{" "}
-                <span className="text-emerald-300 font-medium">web development</span>,{" "}
+                <span className="font-medium" style={{ color: "var(--theme-accent-light)" }}>web development</span>,{" "}
                 <span className="text-violet-300 font-medium">UI/UX design</span>,{" "}
                 <span className="text-sky-300 font-medium">professional video editing</span>, and{" "}
-                <span className="text-amber-300 font-medium">AI-powered automation</span> using
+                <span className="font-medium" style={{ color: "var(--theme-secondary-light)" }}>AI-powered automation</span> using
                 n8n. I don't just write code — I architect systems, design
                 experiences, and build businesses.
               </p>
@@ -119,7 +119,12 @@ export default function About() {
               {["Problem Solver", "Entrepreneur", "Automation Expert", "Creator"].map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-emerald-500/25 bg-emerald-500/8 text-emerald-300"
+                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium"
+                  style={{
+                    border: `1px solid rgba(var(--theme-accent-rgb), 0.25)`,
+                    backgroundColor: `rgba(var(--theme-accent-rgb), 0.08)`,
+                    color: "var(--theme-accent-light)",
+                  }}
                 >
                   {tag}
                 </span>

@@ -112,16 +112,17 @@ export default function ProjectPage() {
   const colors = accentColors[project.accent] || accentColors.indigo;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative">
+    <div className="min-h-screen overflow-x-hidden grain-bg relative" style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}>
       <BackButton />
       <ProjectNav />
 
       {/* NN monogram */}
       <button
         onClick={() => setLocation("/")}
-        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-50 w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all"
+        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-50 w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center transition-all"
+        style={{ backgroundColor: `rgba(var(--theme-accent-rgb), 0.1)`, border: `1px solid rgba(var(--theme-accent-rgb), 0.3)` }}
       >
-        <span className="text-sm sm:text-base font-black text-emerald-400 tracking-tighter font-[var(--app-font-display)]">NN</span>
+        <span className="text-sm sm:text-base font-black tracking-tighter font-[var(--app-font-display)]" style={{ color: "var(--theme-accent-light)" }}>NN</span>
       </button>
 
       {/* Hero Section */}
@@ -130,7 +131,7 @@ export default function ProjectPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
           <ScrollReveal>
             <div className="text-center mb-10">
-              <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                 <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
                 Case Study
               </div>
@@ -169,7 +170,7 @@ export default function ProjectPage() {
       <section id="problem" className="py-16 md:py-24 relative">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <ScrollReveal>
-            <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+            <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
               <span className="icon-duotone"><AlertTriangle className="w-4 h-4" /></span>
               The Problem
             </div>
@@ -198,7 +199,7 @@ export default function ProjectPage() {
         <NebulaBg variant="emerald-amber" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 relative">
           <ScrollReveal>
-            <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+            <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
               <span className="icon-duotone"><Cpu className="w-4 h-4" /></span>
               The Solution
             </div>
@@ -224,11 +225,11 @@ export default function ProjectPage() {
                     key={tech}
                     className="px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-300 hover:scale-105"
                     style={{
-                      background: isCore ? "rgba(16, 185, 129, 0.12)" : `rgba(${colors.rgb}, 0.08)`,
-                      borderColor: isCore ? "rgba(16, 185, 129, 0.35)" : `rgba(${colors.rgb}, 0.2)`,
-                      color: isCore ? "#34d399" : `rgba(${colors.rgb}, 1)`,
+                      background: isCore ? `rgba(var(--theme-accent-rgb), 0.12)` : `rgba(${colors.rgb}, 0.08)`,
+                      borderColor: isCore ? `rgba(var(--theme-accent-rgb), 0.35)` : `rgba(${colors.rgb}, 0.2)`,
+                      color: isCore ? "var(--theme-accent-light)" : `rgba(${colors.rgb}, 1)`,
                       boxShadow: isCore
-                        ? "0 0 16px rgba(16, 185, 129, 0.25), 0 0 4px rgba(16, 185, 129, 0.15)"
+                        ? `0 0 16px rgba(var(--theme-accent-rgb), 0.25), 0 0 4px rgba(var(--theme-accent-rgb), 0.15)`
                         : `0 0 12px rgba(${rgb}, 0.08)`,
                     }}
                   >
@@ -248,7 +249,7 @@ export default function ProjectPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <ScrollReveal>
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                 <span className="icon-duotone"><Zap className="w-4 h-4" /></span>
                 Features
               </div>
@@ -300,7 +301,7 @@ export default function ProjectPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
           <ScrollReveal>
             <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
                 <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
                 Results
               </div>
@@ -352,7 +353,8 @@ export default function ProjectPage() {
             </p>
             <button
               onClick={() => { setLocation("/"); setTimeout(() => { const el = document.getElementById("contact"); if (el) el.scrollIntoView({ behavior: "smooth" }); }, 500); }}
-              className="inline-flex px-8 py-3.5 rounded-full text-sm font-semibold bg-emerald-500 text-black hover:bg-emerald-400 transition-all glow-emerald"
+              className="inline-flex px-8 py-3.5 rounded-full text-sm font-semibold text-black transition-all glow-emerald"
+              style={{ backgroundColor: "var(--theme-accent)" }}
             >
               Get in Touch
             </button>

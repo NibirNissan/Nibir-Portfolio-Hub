@@ -5,11 +5,17 @@ export default function Footer() {
     <footer className="py-8 sm:py-10 border-t border-white/5 relative z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
-            <span className="text-[10px] font-black text-emerald-400">NN</span>
+          <div
+            className="w-7 h-7 rounded-lg flex items-center justify-center"
+            style={{
+              backgroundColor: `rgba(var(--theme-accent-rgb), 0.15)`,
+              border: `1px solid rgba(var(--theme-accent-rgb), 0.3)`,
+            }}
+          >
+            <span className="text-[10px] font-black" style={{ color: "var(--theme-accent-light)" }}>NN</span>
           </div>
           <span className="font-bold text-white text-sm font-[var(--app-font-display)]">
-            Nibir<span className="text-emerald-400">.</span>
+            Nibir<span style={{ color: "var(--theme-accent-light)" }}>.</span>
           </span>
         </div>
         <p className="text-neutral-500 text-xs sm:text-sm flex items-center gap-1.5">

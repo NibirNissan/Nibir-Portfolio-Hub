@@ -135,12 +135,12 @@ export default function Ecosystem() {
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       <div
         className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none opacity-8"
-        style={{ background: "radial-gradient(circle, #10b981, transparent 60%)" }}
+        style={{ background: `radial-gradient(circle, var(--theme-accent), transparent 60%)` }}
       />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-14">
-          <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
+          <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
             <span className="icon-duotone"><LayoutDashboard className="w-4 h-4" /></span>
             Ecosystem
           </div>
@@ -172,12 +172,18 @@ export default function Ecosystem() {
                 border: "1px solid transparent",
                 transform: hubHovered ? "scale(1.03)" : "scale(1)",
                 boxShadow: hubHovered
-                  ? "0 0 50px rgba(16, 185, 129, 0.25), 0 0 100px rgba(16, 185, 129, 0.1)"
-                  : "0 0 30px rgba(16, 185, 129, 0.08), 0 0 60px rgba(16, 185, 129, 0.04)",
+                  ? `0 0 50px rgba(var(--theme-accent-rgb), 0.25), 0 0 100px rgba(var(--theme-accent-rgb), 0.1)`
+                  : `0 0 30px rgba(var(--theme-accent-rgb), 0.08), 0 0 60px rgba(var(--theme-accent-rgb), 0.04)`,
               }}
             >
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4">
-                <LayoutDashboard className="w-7 h-7 text-emerald-400" />
+              <div
+                className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{
+                  background: `linear-gradient(to bottom right, rgba(var(--theme-accent-rgb), 0.2), rgba(var(--theme-accent-rgb), 0.1))`,
+                  border: `1px solid rgba(var(--theme-accent-rgb), 0.3)`,
+                }}
+              >
+                <LayoutDashboard className="w-7 h-7" style={{ color: "var(--theme-accent-light)" }} />
               </div>
               <h3 className="text-lg sm:text-xl font-black text-white mb-1">
                 Nibir's Digital Product Hub
@@ -192,7 +198,7 @@ export default function Ecosystem() {
                   opacity: hubHovered ? 1 : 0,
                 }}
               >
-                <p className="text-[11px] italic text-emerald-300 mt-2">
+                <p className="text-[11px] italic mt-2" style={{ color: "var(--theme-accent-light)" }}>
                   The core SaaS product that connects every service offering
                 </p>
               </div>
