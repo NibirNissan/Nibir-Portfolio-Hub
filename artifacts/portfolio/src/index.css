@@ -65,6 +65,7 @@
   --theme-body: #d1d5db;
   --theme-muted: #737373;
   --theme-accent-fg: #000000;
+  --cursor-dot-color: #10b981;
 }
 
 @layer base {
@@ -83,8 +84,11 @@
   .custom-cursor-active * {
     cursor: none !important;
   }
+  .cursor-dot {
+    opacity: 1 !important;
+  }
   .cursor-dot.cursor-hovering {
-    opacity: 0;
+    opacity: 0 !important;
   }
   .cursor-ring.cursor-hovering {
     border-color: rgba(var(--theme-accent-rgb), 0.3);
@@ -537,9 +541,6 @@
 
 [data-theme="liquid-glass"] .cursor-ring {
   border-color: rgba(49, 49, 49, 0.3) !important;
-}
-[data-theme="liquid-glass"] .cursor-dot {
-  background-color: #313131 !important;
 }
 [data-theme="liquid-glass"] .cursor-ring.cursor-hovering {
   border-color: rgba(161, 196, 253, 0.5) !important;

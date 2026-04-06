@@ -109,10 +109,10 @@ export default function CustomCursor() {
           width: 8,
           height: 8,
           borderRadius: "50%",
-          background: "var(--theme-accent)",
+          background: "var(--cursor-dot-color)",
           pointerEvents: "none",
           zIndex: 9999,
-          transition: "opacity 0.2s ease",
+          transition: "opacity 0.2s ease, background 0.3s ease",
           willChange: "transform",
         }}
       />
@@ -129,7 +129,7 @@ export default function CustomCursor() {
           border: `1.5px solid rgba(var(--theme-accent-rgb), 0.5)`,
           boxShadow: `0 0 10px rgba(var(--theme-accent-rgb), 0.2), 0 0 20px rgba(var(--theme-accent-rgb), 0.08)`,
           pointerEvents: "none",
-          zIndex: 9998,
+          zIndex: 9999,
           transition: "opacity 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
           willChange: "transform",
           transformOrigin: "center center",

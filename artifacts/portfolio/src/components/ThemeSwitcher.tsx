@@ -136,6 +136,14 @@ function applyTheme(key: ThemeKey) {
   s.setProperty("--theme-body", t.body);
   s.setProperty("--theme-muted", t.muted);
   s.setProperty("--theme-accent-fg", key === "liquid-glass" ? "#ffffff" : "#000000");
+  const cursorColors: Record<ThemeKey, string> = {
+    "emerald-stealth": "#10b981",
+    "cyber-amber": "#f59e0b",
+    "midnight-royal": "#8b5cf6",
+    "mono-chrome": "#ffffff",
+    "liquid-glass": "#313131",
+  };
+  s.setProperty("--cursor-dot-color", cursorColors[key]);
   document.documentElement.setAttribute("data-theme", key);
   localStorage.setItem(STORAGE_KEY, key);
 }
