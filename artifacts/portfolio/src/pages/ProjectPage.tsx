@@ -216,20 +216,26 @@ export default function ProjectPage() {
           <ScrollReveal delay={250}>
             <h3 className="text-lg font-bold text-white mb-4">Tech Stack</h3>
             <div className="flex flex-wrap gap-3">
-              {project.techStack.map((tech) => (
-                <span
-                  key={tech}
-                  className="px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-300 hover:scale-105"
-                  style={{
-                    background: `rgba(${colors.rgb}, 0.08)`,
-                    borderColor: `rgba(${colors.rgb}, 0.2)`,
-                    color: `rgba(${colors.rgb}, 1)`,
-                    boxShadow: `0 0 12px rgba(${colors.rgb}, 0.08)`,
-                  }}
-                >
-                  {tech}
-                </span>
-              ))}
+              {project.techStack.map((tech) => {
+                const isCore = ["MongoDB", "n8n"].includes(tech);
+                const rgb = isCore ? "16, 185, 129" : colors.rgb;
+                return (
+                  <span
+                    key={tech}
+                    className="px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-300 hover:scale-105"
+                    style={{
+                      background: isCore ? "rgba(16, 185, 129, 0.12)" : `rgba(${colors.rgb}, 0.08)`,
+                      borderColor: isCore ? "rgba(16, 185, 129, 0.35)" : `rgba(${colors.rgb}, 0.2)`,
+                      color: isCore ? "#34d399" : `rgba(${colors.rgb}, 1)`,
+                      boxShadow: isCore
+                        ? "0 0 16px rgba(16, 185, 129, 0.25), 0 0 4px rgba(16, 185, 129, 0.15)"
+                        : `0 0 12px rgba(${rgb}, 0.08)`,
+                    }}
+                  >
+                    {tech}
+                  </span>
+                );
+              })}
             </div>
           </ScrollReveal>
         </div>

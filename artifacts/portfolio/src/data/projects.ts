@@ -44,8 +44,8 @@ export const projectsData: ProjectData[] = [
     problem:
       "Managing digital subscriptions manually was a nightmare — tracking renewals, delivering products, handling payments, and managing user access across multiple platforms created bottlenecks that cost hours of daily effort. Existing solutions were either too expensive or too generic to fit the specific workflow needed for digital product delivery at scale.",
     solution:
-      "Built a custom end-to-end subscription management system from scratch. The platform automates the entire lifecycle — from user signup and payment processing to automated product delivery and renewal tracking. Every manual touchpoint was identified and replaced with an automated workflow using n8n, creating a system that runs 24/7 without human intervention.",
-    techStack: ["React", "Node.js", "n8n", "WordPress", "WooCommerce", "REST API", "MySQL", "Tailwind CSS", "Zapier"],
+      "The Management System is built with a modern MERN stack (MongoDB, Express, React, Node.js) and powered by n8n for 24/7 automation. It integrates seamlessly with our WordPress & WooCommerce storefront to handle digital product delivery automatically.",
+    techStack: ["React", "Node.js", "MongoDB", "Express", "n8n", "REST API", "Tailwind CSS"],
     features: [
       { title: "Automated Renewal Tracking", description: "Smart renewal system that tracks expiry dates and auto-renews subscriptions with payment processing." },
       { title: "Digital Product Delivery", description: "Instant automated delivery of digital products upon purchase confirmation via webhook triggers." },
