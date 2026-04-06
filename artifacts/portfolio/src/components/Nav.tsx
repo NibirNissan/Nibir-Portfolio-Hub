@@ -1,113 +1,143 @@
-import { useState, useEffect } from "react";
-import { Menu, X, Code2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { User, Briefcase, Code2, Layers, Mail, Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
-  { label: "Projects", href: "#projects" },
-  { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "#about", icon: User },
+  { label: "Skills", href: "#skills", icon: Code2 },
+  { label: "Projects", href: "#projects", icon: Briefcase },
+  { label: "Services", href: "#services", icon: Layers },
+  { label: "Contact", href: "#contact", icon: Mail },
 ];
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const linkRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-
       const sections = navLinks.map((l) => l.href.slice(1));
-      for (const s of sections.reverse()) {
+      for (const s of [...sections].reverse()) {
         const el = document.getElementById(s);
-        if (el && window.scrollY >= el.offsetTop - 120) {
+        if (el && window.scrollY >= el.offsetTop - 200) {
           setActiveSection(s);
           break;
         }
       }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const handleNavClick = (href: string) => {
-    setMenuOpen(false);
+    setMobileOpen(false);
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "nav-glass shadow-lg" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a
-          href="#"
-          className="flex items-center gap-2 group"
-          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-        >
-          <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/40 flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors">
-            <Code2 className="w-4 h-4 text-indigo-400" />
-          </div>
-          <span className="font-bold text-white tracking-tight">
-            Nibir<span className="text-indigo-400">.</span>
-          </span>
-        </a>
+  const handleMagnetic = (e: React.MouseEvent, idx: number) => {
+    const btn = linkRefs.current[idx];
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) * 0.15;
+    const y = (e.clientY - rect.top - rect.height / 2) * 0.15;
+    btn.style.transform = `translate(${x}px, ${y}px)`;
+  };
 
-        <nav className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
+  const handleMagneticLeave = (idx: number) => {
+    const btn = linkRefs.current[idx];
+    if (btn) btn.style.transform = "translate(0, 0)";
+  };
+
+  return (
+    <>
+      {/* Monogram logo — fixed top-left */}
+      <a
+        href="#"
+        onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-50 w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all group"
+      >
+        <span className="text-sm sm:text-base font-black text-emerald-400 tracking-tighter font-[var(--app-font-display)]">NN</span>
+      </a>
+
+      {/* Desktop: floating capsule nav — bottom center */}
+      <nav className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-50 nav-capsule rounded-full px-2 py-2 items-center gap-1">
+        {navLinks.map((link, idx) => {
+          const isActive = activeSection === link.href.slice(1);
+          return (
             <button
               key={link.label}
+              ref={(el) => { linkRefs.current[idx] = el; }}
+              onMouseMove={(e) => handleMagnetic(e, idx)}
+              onMouseLeave={() => handleMagneticLeave(idx)}
               onClick={() => handleNavClick(link.href)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                activeSection === link.href.slice(1)
-                  ? "text-indigo-400 bg-indigo-500/10"
-                  : "text-slate-400 hover:text-white hover:bg-white/5"
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? "text-emerald-400 bg-emerald-500/15"
+                  : "text-neutral-400 hover:text-emerald-300 hover:bg-white/5"
               }`}
+              style={{ transition: "transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.2s ease, background 0.2s ease" }}
             >
-              {link.label}
+              <link.icon className="w-4 h-4" />
+              <span className="hidden lg:inline">{link.label}</span>
             </button>
-          ))}
-          <button
-            onClick={() => handleNavClick("#contact")}
-            className="ml-2 px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-500 text-white hover:bg-indigo-400 transition-colors glow-blue"
-          >
-            Hire Me
-          </button>
-        </nav>
-
+          );
+        })}
         <button
-          className="md:hidden text-slate-400 hover:text-white transition-colors"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => handleNavClick("#contact")}
+          className="ml-1 px-5 py-2.5 rounded-full text-sm font-semibold bg-emerald-500 text-black hover:bg-emerald-400 transition-all glow-emerald"
         >
-          {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          Hire Me
         </button>
-      </div>
+      </nav>
 
-      {menuOpen && (
-        <div className="md:hidden nav-glass border-t border-white/5">
-          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-col gap-1">
-            {navLinks.map((link) => (
-              <button
-                key={link.label}
-                onClick={() => handleNavClick(link.href)}
-                className="text-left px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all"
-              >
-                {link.label}
+      {/* Mobile: floating bottom pill */}
+      <div className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
+        {!mobileOpen && (
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="nav-capsule rounded-full px-5 py-3 flex items-center gap-2.5"
+          >
+            <Menu className="w-5 h-5 text-emerald-400" />
+            <span className="text-sm font-medium text-neutral-300">Menu</span>
+          </button>
+        )}
+
+        {mobileOpen && (
+          <div className="nav-capsule rounded-3xl p-3 w-64">
+            <div className="flex items-center justify-between px-3 py-2 mb-1">
+              <span className="text-sm font-semibold text-emerald-400 font-[var(--app-font-display)]">NN</span>
+              <button onClick={() => setMobileOpen(false)} className="text-neutral-400 hover:text-white">
+                <X className="w-5 h-5" />
               </button>
-            ))}
+            </div>
+            {navLinks.map((link) => {
+              const isActive = activeSection === link.href.slice(1);
+              return (
+                <button
+                  key={link.label}
+                  onClick={() => handleNavClick(link.href)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                    isActive
+                      ? "text-emerald-400 bg-emerald-500/12"
+                      : "text-neutral-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <link.icon className="w-4 h-4" />
+                  {link.label}
+                </button>
+              );
+            })}
             <button
               onClick={() => handleNavClick("#contact")}
-              className="mt-2 px-4 py-3 rounded-lg text-sm font-semibold bg-indigo-500 text-white hover:bg-indigo-400 transition-colors text-left"
+              className="w-full mt-1 px-4 py-3 rounded-xl text-sm font-semibold bg-emerald-500 text-black hover:bg-emerald-400 transition-all text-center"
             >
               Hire Me
             </button>
           </div>
-        </div>
-      )}
-    </header>
+        )}
+      </div>
+    </>
   );
 }

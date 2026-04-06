@@ -120,14 +120,14 @@ export default function Services() {
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-4">
+          <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
             <Zap className="w-4 h-4" />
             Services
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
             What I <span className="text-gradient">Offer</span>
           </h2>
-          <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
+          <p className="text-neutral-400 text-base sm:text-lg max-w-xl mx-auto">
             Comprehensive digital services that turn ideas into scalable, profitable outcomes.
           </p>
         </div>
@@ -137,7 +137,7 @@ export default function Services() {
           {services.map((service) => (
             <div
               key={service.title}
-              className={`p-6 sm:p-8 rounded-2xl border ${service.border} bg-slate-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
+              className={`p-6 sm:p-8 rounded-2xl border ${service.border} bg-neutral-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
             >
               <div className="flex items-start justify-between mb-5">
                 <div className={`w-11 h-11 rounded-xl ${service.bg} border ${service.border} flex items-center justify-center`}>
@@ -148,10 +148,10 @@ export default function Services() {
                 </span>
               </div>
               <h3 className="text-base sm:text-lg font-bold text-white mb-3 leading-snug">{service.title}</h3>
-              <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-5">{service.description}</p>
+              <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-5">{service.description}</p>
               <ul className="space-y-2">
                 {service.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-300">
+                  <li key={f} className="flex items-center gap-2.5 text-xs sm:text-sm text-neutral-300">
                     <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${service.color.replace("text-", "bg-")}`} />
                     {f}
                   </li>
@@ -168,7 +168,7 @@ export default function Services() {
               key={service.title}
               className="relative rounded-2xl card-hover overflow-hidden"
               style={{
-                background: "rgba(15, 23, 42, 0.6)",
+                background: "rgba(10, 10, 10, 0.6)",
                 backdropFilter: "blur(24px)",
                 WebkitBackdropFilter: "blur(24px)",
                 border: `1px solid ${service.glowBorder}`,
@@ -200,7 +200,7 @@ export default function Services() {
                 <h3 className="text-lg sm:text-xl font-black text-white mb-3 leading-snug">
                   {service.title}
                 </h3>
-                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6">
+                <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-6">
                   {service.description}
                 </p>
 
@@ -213,7 +213,7 @@ export default function Services() {
                       />
                       <div>
                         <span className="text-xs sm:text-sm font-semibold text-white">{f.label}</span>
-                        <span className="text-slate-500 text-xs"> — {f.detail}</span>
+                        <span className="text-neutral-500 text-xs"> — {f.detail}</span>
                       </div>
                     </li>
                   ))}

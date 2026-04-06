@@ -12,24 +12,24 @@ import Footer from "@/components/Footer";
 
 function App() {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative">
       <Nav />
       <Hero />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <About />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <Skills />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <Projects />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <Services />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <Subscription />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <Ecosystem />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <Vision />
-      <div className="section-line h-px w-full opacity-30" />
+      <div className="section-line h-px w-full opacity-30 relative z-10" />
       <Contact />
       <Footer />
     </div>

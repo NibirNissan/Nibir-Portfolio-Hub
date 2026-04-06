@@ -9,9 +9,9 @@ const stats = [
     icon: Code2,
     value: "4+",
     label: "Years in Web Dev",
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10",
-    border: "border-indigo-500/20",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/20",
   },
   {
     icon: Figma,
@@ -33,9 +33,9 @@ const stats = [
     icon: Bot,
     value: "n8n",
     label: "AI Expert",
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10",
-    border: "border-emerald-500/20",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/20",
   },
 ];
 
@@ -54,16 +54,16 @@ export default function About() {
           <div className="w-full lg:flex-shrink-0 lg:w-80 xl:w-96 mx-auto max-w-sm lg:max-w-none">
             <div className="relative">
               <div
-                className="absolute -inset-4 rounded-3xl opacity-20 blur-3xl"
-                style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
+                className="absolute -inset-4 rounded-3xl opacity-15 blur-3xl"
+                style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}
               />
-              <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden border border-indigo-500/20 shadow-2xl">
+              <div className="relative w-full aspect-[3/4] rounded-3xl overflow-hidden border border-emerald-500/15 shadow-2xl">
                 <img
                   src={aboutImg}
                   alt="Nibir Nissan at the waterfront"
                   className="w-full h-full object-cover object-top"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
               </div>
 
               <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
@@ -84,7 +84,7 @@ export default function About() {
           </div>
 
           <div className="flex-1 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-4">
+            <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
               <Star className="w-4 h-4" />
               About Me
             </div>
@@ -92,7 +92,7 @@ export default function About() {
               Building the future,{" "}
               <span className="text-gradient">one pixel</span> at a time
             </h2>
-            <div className="space-y-4 text-slate-400 text-sm sm:text-base leading-relaxed">
+            <div className="space-y-4 text-neutral-400 text-sm sm:text-base leading-relaxed">
               <p>
                 I'm <span className="text-white font-semibold">Nibir Nissan</span> — a Computer
                 Science &amp; Technology (CST) student who turned a passion for
@@ -101,10 +101,10 @@ export default function About() {
               </p>
               <p>
                 My journey spans{" "}
-                <span className="text-indigo-300 font-medium">web development</span>,{" "}
+                <span className="text-emerald-300 font-medium">web development</span>,{" "}
                 <span className="text-violet-300 font-medium">UI/UX design</span>,{" "}
                 <span className="text-sky-300 font-medium">professional video editing</span>, and{" "}
-                <span className="text-emerald-300 font-medium">AI-powered automation</span> using
+                <span className="text-amber-300 font-medium">AI-powered automation</span> using
                 n8n. I don't just write code — I architect systems, design
                 experiences, and build businesses.
               </p>
@@ -119,7 +119,7 @@ export default function About() {
               {["Problem Solver", "Entrepreneur", "Automation Expert", "Creator"].map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-indigo-500/30 bg-indigo-500/10 text-indigo-300"
+                  className="px-3 sm:px-4 py-1.5 rounded-full text-xs sm:text-sm font-medium border border-emerald-500/25 bg-emerald-500/8 text-emerald-300"
                 >
                   {tag}
                 </span>
@@ -136,7 +136,7 @@ export default function About() {
                     <stat.icon className={`w-4 h-4 ${stat.color}`} />
                   </div>
                   <div className={`text-xl sm:text-2xl font-black ${stat.color} mb-0.5`}>{stat.value}</div>
-                  <div className="text-slate-400 text-xs font-medium">{stat.label}</div>
+                  <div className="text-neutral-400 text-xs font-medium">{stat.label}</div>
                 </div>
               ))}
             </div>

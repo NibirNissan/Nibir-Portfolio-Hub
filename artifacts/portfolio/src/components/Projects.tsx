@@ -113,14 +113,14 @@ export default function Projects() {
     <section id="projects" className="py-20 md:py-28">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-4">
+          <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
             <ExternalLink className="w-4 h-4" />
             Projects
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
             Work that <span className="text-gradient">Ships</span>
           </h2>
-          <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
+          <p className="text-neutral-400 text-base sm:text-lg max-w-xl mx-auto">
             Real products used by real people — from digital platforms to brand ecosystems.
           </p>
         </div>
@@ -131,7 +131,7 @@ export default function Projects() {
             return (
               <div
                 key={project.title}
-                className={`group relative p-5 sm:p-6 rounded-2xl border ${a.border} bg-slate-900/70 card-hover cursor-pointer flex flex-col`}
+                className={`group relative p-5 sm:p-6 rounded-2xl border ${a.border} bg-neutral-900/70 card-hover cursor-pointer flex flex-col`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center`}>
@@ -144,7 +144,7 @@ export default function Projects() {
 
                 <h3 className="text-base sm:text-lg font-bold text-white mb-1">{project.title}</h3>
                 <p className={`text-xs sm:text-sm font-medium ${a.text} mb-3`}>{project.subtitle}</p>
-                <p className="text-slate-400 text-xs sm:text-sm leading-relaxed flex-1 mb-4">
+                <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed flex-1 mb-4">
                   {project.description}
                 </p>
 
