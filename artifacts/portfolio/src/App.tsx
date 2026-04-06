@@ -1,3 +1,6 @@
+import { Route, Switch } from "wouter";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLocation } from "wouter";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -10,10 +13,23 @@ import Vision from "@/components/Vision";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ScanLine from "@/components/ScanLine";
+import ProjectPage from "@/pages/ProjectPage";
 
-function App() {
+const pageVariants = {
+  initial: { opacity: 0, scale: 0.97 },
+  animate: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const } },
+  exit: { opacity: 0, scale: 1.02, transition: { duration: 0.3, ease: [0.7, 0, 0.84, 0] as const } },
+} as const;
+
+function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative">
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative"
+    >
       <Nav />
       <Hero />
       <ScanLine />
@@ -33,7 +49,33 @@ function App() {
       <ScanLine />
       <Contact />
       <Footer />
-    </div>
+    </motion.div>
+  );
+}
+
+function AnimatedProjectPage() {
+  return (
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
+      <ProjectPage />
+    </motion.div>
+  );
+}
+
+function App() {
+  const [location] = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Switch key={location}>
+        <Route path="/" component={HomePage} />
+        <Route path="/project/:slug" component={AnimatedProjectPage} />
+      </Switch>
+    </AnimatePresence>
   );
 }
 

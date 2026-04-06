@@ -1,11 +1,13 @@
 import { useRef, useCallback } from "react";
-import { ExternalLink, Users, Droplets, FileText, ShoppingBag, Briefcase, GraduationCap } from "lucide-react";
+import { ExternalLink, Users, Droplets, FileText, ShoppingBag, Briefcase, GraduationCap, ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 import NebulaBg from "./NebulaBg";
 
 const projects = [
   {
     icon: Users,
     title: "The Subspot",
+    slug: "the-subspot",
     subtitle: "Digital Subscription Management System",
     description:
       "A fully operational subscription management platform scaling to 2000+ active users. Handles digital product delivery, user management, and automated subscription renewals.",
@@ -16,6 +18,7 @@ const projects = [
   {
     icon: Droplets,
     title: "Jibon",
+    slug: "jibon",
     subtitle: "Blood Donation Platform",
     description:
       "A life-saving platform connecting blood donors with patients in need. Features donor matching, real-time availability tracking, and hospital integration.",
@@ -26,6 +29,7 @@ const projects = [
   {
     icon: FileText,
     title: "Hospital Report Maker",
+    slug: "hospital-report-maker",
     subtitle: "Multi-user Medical System",
     description:
       "A comprehensive medical report generation system supporting multiple users simultaneously. Streamlines documentation for healthcare professionals with automated formatting.",
@@ -36,6 +40,7 @@ const projects = [
   {
     icon: ShoppingBag,
     title: "Roshbadam",
+    slug: "roshbadam",
     subtitle: "E-commerce Branding & Logistics",
     description:
       "End-to-end e-commerce brand setup including visual identity, product photography direction, logistics pipeline, and digital marketing strategy.",
@@ -46,6 +51,7 @@ const projects = [
   {
     icon: GraduationCap,
     title: "College ERP System",
+    slug: "college-erp",
     subtitle: "Comprehensive Educational Management Platform",
     description:
       "A role-based ERP for educational institutions with dedicated portals for Admins, Department Heads, Teachers, and Students. Features automated attendance tracking, fine management (20tk per missed class), and dynamic mark entry.",
@@ -56,6 +62,7 @@ const projects = [
   {
     icon: Briefcase,
     title: "The Cat Club",
+    slug: "the-cat-club",
     subtitle: "E-commerce Brand & Community",
     description:
       "A niche e-commerce brand built from scratch with community-first approach. Includes brand identity, product catalog, social media presence, and fulfilment workflow.",
@@ -206,7 +213,7 @@ export default function Projects() {
                   {project.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mt-auto">
+                <div className="flex flex-wrap gap-2 mt-auto mb-4">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
@@ -216,6 +223,14 @@ export default function Projects() {
                     </span>
                   ))}
                 </div>
+
+                <Link
+                  href={`/project/${project.slug}`}
+                  className={`inline-flex items-center gap-2 text-xs sm:text-sm font-semibold ${a.text} hover:gap-3 transition-all duration-300`}
+                >
+                  View Project
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </TiltCard>
             );
           })}

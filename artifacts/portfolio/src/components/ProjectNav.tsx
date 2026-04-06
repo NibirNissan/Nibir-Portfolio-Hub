@@ -1,20 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import { User, Briefcase, Code2, Layers, Mail, Menu, X } from "lucide-react";
-import { useLocation } from "wouter";
+import { Eye, Cpu, LayoutGrid, BarChart3, Menu, X } from "lucide-react";
 
 const navLinks = [
-  { label: "About", href: "#about", icon: User },
-  { label: "Skills", href: "#skills", icon: Code2 },
-  { label: "Projects", href: "#projects", icon: Briefcase },
-  { label: "Services", href: "#services", icon: Layers },
-  { label: "Contact", href: "#contact", icon: Mail },
+  { label: "Overview", href: "#overview", icon: Eye },
+  { label: "Solution", href: "#solution", icon: Cpu },
+  { label: "Features", href: "#features", icon: LayoutGrid },
+  { label: "Results", href: "#results", icon: BarChart3 },
 ];
 
-export default function Nav() {
+export default function ProjectNav() {
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const linkRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [, setLocation] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,15 +51,6 @@ export default function Nav() {
 
   return (
     <>
-      {/* Monogram logo — fixed top-left */}
-      <button
-        onClick={() => { setLocation("/"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-        className="fixed top-5 left-5 sm:top-6 sm:left-6 z-50 w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all group"
-      >
-        <span className="text-sm sm:text-base font-black text-emerald-400 tracking-tighter font-[var(--app-font-display)]">NN</span>
-      </button>
-
-      {/* Desktop: floating capsule nav — bottom center */}
       <nav className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-50 nav-capsule rounded-full px-2 py-2 items-center gap-1">
         {navLinks.map((link, idx) => {
           const isActive = activeSection === link.href.slice(1);
@@ -85,15 +73,8 @@ export default function Nav() {
             </button>
           );
         })}
-        <button
-          onClick={() => handleNavClick("#contact")}
-          className="ml-1 px-5 py-2.5 rounded-full text-sm font-semibold bg-emerald-500 text-black hover:bg-emerald-400 transition-all glow-emerald"
-        >
-          Hire Me
-        </button>
       </nav>
 
-      {/* Mobile: floating bottom pill */}
       <div className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
         {!mobileOpen && (
           <button
@@ -101,14 +82,14 @@ export default function Nav() {
             className="nav-capsule rounded-full px-5 py-3 flex items-center gap-2.5"
           >
             <Menu className="w-5 h-5 text-emerald-400" />
-            <span className="text-sm font-medium text-neutral-300">Menu</span>
+            <span className="text-sm font-medium text-neutral-300">Navigate</span>
           </button>
         )}
 
         {mobileOpen && (
           <div className="nav-capsule rounded-3xl p-3 w-64">
             <div className="flex items-center justify-between px-3 py-2 mb-1">
-              <span className="text-sm font-semibold text-emerald-400 font-[var(--app-font-display)]">NN</span>
+              <span className="text-sm font-semibold text-emerald-400 font-[var(--app-font-display)]">Sections</span>
               <button onClick={() => setMobileOpen(false)} className="text-neutral-400 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
@@ -130,12 +111,6 @@ export default function Nav() {
                 </button>
               );
             })}
-            <button
-              onClick={() => handleNavClick("#contact")}
-              className="w-full mt-1 px-4 py-3 rounded-xl text-sm font-semibold bg-emerald-500 text-black hover:bg-emerald-400 transition-all text-center"
-            >
-              Hire Me
-            </button>
           </div>
         )}
       </div>

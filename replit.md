@@ -38,6 +38,20 @@ Professional portfolio for Nibir Nissan — CST student, full-stack developer, A
 ### Sections
 Hero, About, Skills, Projects, Services (6 standard + 2 premium glassmorphism), Subscription, Ecosystem (interactive flowchart), Vision, Contact
 
+### Case Study Sub-Pages (`/project/:slug`)
+Dynamic project pages accessible via "View Project" links on project cards. Each page includes:
+- **Hero**: Title, subtitle, year, role, status badge, 3D tilt mockup
+- **Problem**: Challenge description with emerald left-border accent
+- **Solution + Tech Stack**: Glowing pill tags for each technology
+- **Features Grid**: Numbered feature cards (3-column layout)
+- **Results/Impact**: Bold stats in colored cards with hover glow
+- **CTA**: "Get in Touch" linking back to main contact section
+
+**Routing**: wouter with framer-motion `AnimatePresence` page transitions (fade-and-scale)
+**Navigation**: ProjectNav (bottom capsule with Overview/Solution/Features/Results anchors), BackButton (fixed top-right glowing arrow)
+**Scroll Reveals**: IntersectionObserver-based `ScrollReveal` component with directional animations (up/left/right/scale)
+**Data**: `src/data/projects.ts` — 6 projects with slug-based lookup
+
 ### Visual Depth Enhancements
 - **NebulaBg**: Animated mesh gradient backgrounds (deep greens/blacks) in Projects and Services sections — slow-drifting radial blobs
 - **TiltCard**: 3D perspective tilt on hover for project cards — RAF-throttled mouse tracking with cached bounds
