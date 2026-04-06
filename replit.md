@@ -52,6 +52,15 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 **Scroll Reveals**: IntersectionObserver-based `ScrollReveal` component with directional animations (up/left/right/scale)
 **Data**: `src/data/projects.ts` — 6 projects with slug-based lookup
 
+### Service Sub-Pages (`/service/:slug`)
+- **Data**: `src/data/services.ts` — 8 services with full content (process, deliverables, FAQ, pricing, case study links)
+- **ServicePage** (`src/pages/ServicePage.tsx`): Hero, Process Timeline, Deliverables Grid, Case Study Teaser, Pricing Tiers, FAQ Accordion
+- **ServiceNav** (`src/components/ServiceNav.tsx`): Bottom capsule nav (Overview/Process/Deliverables/Pricing/FAQ + pulsing Hire Me button)
+- **Routing**: `/service/:slug` with animated page transitions via framer-motion
+- **Interactive**: FAQ accordion with animated expand/collapse, floating "Get Started" sticky button, pulsing "Hire Me" CTA
+- **Links**: "Learn More" links on all homepage service cards point to their sub-pages
+- **Slugs**: ai-automation, web-development, video-editing, digital-marketing, subscription-business, saas-development, wordpress-development, webapp-saas-product
+
 ### Custom Cursor & Scroll Effects
 - **CustomCursor**: Replaces system cursor with emerald dot (8px) + semi-transparent ring (25px) with lerp lag. Ring expands to 40px on hover over links/buttons/cards, dot vanishes. Touch devices auto-detected and excluded.
 - **ScrollSkew**: 3D fold effect on scroll — sections tilt on X-axis (±3°) and scale down as they move away from viewport center. Uses RAF-throttled scroll listener.

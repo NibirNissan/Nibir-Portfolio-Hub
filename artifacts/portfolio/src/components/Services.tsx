@@ -1,4 +1,5 @@
-import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard, Rocket } from "lucide-react";
+import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard, Rocket, ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 import NebulaBg from "./NebulaBg";
 
 interface GeoShape {
@@ -126,6 +127,7 @@ const services = [
   {
     icon: Bot,
     title: "Custom AI Agent & Workflow Building",
+    slug: "ai-automation",
     description:
       "End-to-end automation using n8n — from lead generation pipelines to complex multi-step AI workflows that run 24/7 without human intervention.",
     features: ["n8n Workflow Design", "AI Agent Integration", "API Connections", "Zapier Migration"],
@@ -138,6 +140,7 @@ const services = [
   {
     icon: Code2,
     title: "Web Development & UI/UX Design",
+    slug: "web-development",
     description:
       "From Figma prototypes to production-ready React applications. Full stack — design systems, component libraries, and responsive frontends.",
     features: ["Figma Prototyping", "React Development", "Tailwind CSS", "Responsive Design"],
@@ -150,6 +153,7 @@ const services = [
   {
     icon: Video,
     title: "Professional Video Editing",
+    slug: "video-editing",
     description:
       "High-impact video content for social media, ads, and brand campaigns. Short-form content that converts, from raw footage to polished deliverables.",
     features: ["Social Media Reels", "Ad Creatives", "Premiere Pro", "CapCut"],
@@ -162,6 +166,7 @@ const services = [
   {
     icon: TrendingUp,
     title: "Results-Driven Digital Marketing",
+    slug: "digital-marketing",
     description:
       "Data-backed marketing campaigns that generate real leads and scale brands. From Meta Ads automation to full-funnel strategy — performance you can measure.",
     features: ["Meta Ads & Automation", "Google Ads Campaigns", "Lead Generation Funnels", "Brand Scaling Strategy"],
@@ -174,6 +179,7 @@ const services = [
   {
     icon: ShoppingBag,
     title: "Digital Subscription Business Setup",
+    slug: "subscription-business",
     description:
       "Complete setup of digital subscription systems and e-commerce stores — from payment integration to automated delivery and customer management.",
     features: ["Subscription Systems", "E-commerce Setup", "Payment Integration", "Logistics"],
@@ -186,6 +192,7 @@ const services = [
   {
     icon: Rocket,
     title: "Web App & SaaS Development",
+    slug: "saas-development",
     description:
       "Building custom SaaS platforms and web applications with complex logic, user dashboards, and subscription-based ecosystems.",
     features: ["Custom Dashboard Design", "Multi-user Role Management", "API & Payment Integration", "Scalable Architecture"],
@@ -201,6 +208,7 @@ const glassServices = [
   {
     icon: Globe,
     title: "High-Conversion WordPress Development",
+    slug: "wordpress-development",
     tagline: "Scalable & SEO-Optimized Websites",
     description:
       "Professional WordPress sites engineered to turn visitors into customers. Expert in custom theme customization, page builders, and WooCommerce — with a relentless focus on speed and SEO.",
@@ -219,6 +227,7 @@ const glassServices = [
   {
     icon: LayoutDashboard,
     title: "Web App & SaaS Product Development",
+    slug: "webapp-saas-product",
     tagline: "Building the Future of Digital Tools",
     description:
       "Leveraging ERP system architecture and proven subscription models to build robust, scalable SaaS platforms. From admin dashboards to full multi-tenant logic — built to grow.",
@@ -292,6 +301,14 @@ export default function Services() {
                   </li>
                 ))}
               </ul>
+
+              <Link
+                href={`/service/${service.slug}`}
+                className={`relative z-10 mt-5 inline-flex items-center gap-2 text-xs sm:text-sm font-semibold ${service.color} hover:underline transition-colors`}
+              >
+                Learn More
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
 
               {service.title === "Digital Subscription Business Setup" && (
                 <div className="relative z-10 mt-6 p-4 rounded-xl border border-violet-500/15 bg-violet-500/5">
@@ -402,6 +419,14 @@ export default function Services() {
                     </li>
                   ))}
                 </ul>
+
+                <Link
+                  href={`/service/${service.slug}`}
+                  className={`mt-6 inline-flex items-center gap-2 text-sm font-semibold ${service.color} hover:underline transition-colors`}
+                >
+                  Learn More
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           ))}

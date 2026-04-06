@@ -16,6 +16,7 @@ import ScanLine from "@/components/ScanLine";
 import ScrollSkew from "@/components/ScrollSkew";
 import CustomCursor from "@/components/CustomCursor";
 import ProjectPage from "@/pages/ProjectPage";
+import ServicePage from "@/pages/ServicePage";
 
 const pageVariants = {
   initial: { opacity: 0, scale: 0.97 },
@@ -68,6 +69,19 @@ function AnimatedProjectPage() {
   );
 }
 
+function AnimatedServicePage() {
+  return (
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
+      <ServicePage />
+    </motion.div>
+  );
+}
+
 function App() {
   const [location] = useLocation();
 
@@ -78,6 +92,7 @@ function App() {
         <Switch key={location}>
           <Route path="/" component={HomePage} />
           <Route path="/project/:slug" component={AnimatedProjectPage} />
+          <Route path="/service/:slug" component={AnimatedServicePage} />
         </Switch>
       </AnimatePresence>
     </>
