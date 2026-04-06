@@ -22,6 +22,13 @@ export default function CustomCursor() {
     const inputSelector = "input, textarea, select, [contenteditable]";
     let hoverCount = 0;
 
+    const toElement = (t: EventTarget | null): Element | null => {
+      if (!t) return null;
+      if (t instanceof Element) return t;
+      if (t instanceof Node && t.parentElement) return t.parentElement;
+      return null;
+    };
+
     const onMouseMove = (e: MouseEvent) => {
       mouse.current.x = e.clientX;
       mouse.current.y = e.clientY;
@@ -30,8 +37,8 @@ export default function CustomCursor() {
         dotRef.current.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
       }
 
-      const target = e.target as HTMLElement;
-      if (target.closest(inputSelector)) {
+      const el = toElement(e.target);
+      if (el?.closest(inputSelector)) {
         document.documentElement.classList.remove("custom-cursor-active");
       } else if (!document.documentElement.classList.contains("custom-cursor-active")) {
         document.documentElement.classList.add("custom-cursor-active");
@@ -39,8 +46,8 @@ export default function CustomCursor() {
     };
 
     const onPointerEnter = (e: PointerEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest(magneticSelector)) {
+      const el = toElement(e.target);
+      if (el?.closest(magneticSelector)) {
         hoverCount++;
         if (!hovering.current) {
           hovering.current = true;
@@ -52,8 +59,8 @@ export default function CustomCursor() {
     };
 
     const onPointerLeave = (e: PointerEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.closest(magneticSelector)) {
+      const el = toElement(e.target);
+      if (el?.closest(magneticSelector)) {
         hoverCount = Math.max(0, hoverCount - 1);
         if (hoverCount === 0) {
           hovering.current = false;
