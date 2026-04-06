@@ -1,5 +1,126 @@
 import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard, Rocket } from "lucide-react";
 
+interface GeoShape {
+  type: "sphere" | "line" | "ring";
+  size: number;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  anim: string;
+  dur: string;
+  delay?: string;
+  opacity: number;
+  angle?: number;
+}
+
+const geoConfigs: GeoShape[][] = [
+  [
+    { type: "sphere", size: 48, top: "-12px", right: "20px", anim: "geo-float-1", dur: "7s", opacity: 0.18 },
+    { type: "line", size: 80, bottom: "16px", left: "-8px", anim: "geo-line-drift", dur: "9s", opacity: 0.12, angle: 30 },
+    { type: "ring", size: 32, bottom: "-8px", right: "40%", anim: "geo-float-3", dur: "8s", delay: "1s", opacity: 0.14 },
+  ],
+  [
+    { type: "sphere", size: 36, bottom: "10px", left: "10px", anim: "geo-float-2", dur: "8s", opacity: 0.16 },
+    { type: "line", size: 60, top: "20px", right: "-4px", anim: "geo-line-drift", dur: "10s", delay: "0.5s", opacity: 0.1, angle: -20 },
+  ],
+  [
+    { type: "ring", size: 44, top: "-6px", left: "30%", anim: "geo-float-1", dur: "9s", delay: "0.3s", opacity: 0.15 },
+    { type: "sphere", size: 28, bottom: "-4px", right: "15px", anim: "geo-float-3", dur: "7.5s", opacity: 0.18 },
+    { type: "line", size: 70, top: "50%", left: "-12px", anim: "geo-line-drift", dur: "11s", opacity: 0.1, angle: 45 },
+  ],
+  [
+    { type: "sphere", size: 40, top: "8px", left: "-6px", anim: "geo-float-3", dur: "8.5s", opacity: 0.17 },
+    { type: "line", size: 90, bottom: "20px", right: "5px", anim: "geo-line-drift", dur: "10s", delay: "1s", opacity: 0.11, angle: -35 },
+  ],
+  [
+    { type: "ring", size: 38, top: "-10px", right: "25%", anim: "geo-float-2", dur: "9s", opacity: 0.15 },
+    { type: "sphere", size: 30, bottom: "5px", left: "20px", anim: "geo-float-1", dur: "7s", delay: "0.8s", opacity: 0.16 },
+  ],
+  [
+    { type: "sphere", size: 52, top: "-8px", left: "15px", anim: "geo-float-1", dur: "8s", delay: "0.5s", opacity: 0.2 },
+    { type: "ring", size: 26, bottom: "10px", right: "10px", anim: "geo-float-2", dur: "9.5s", opacity: 0.14 },
+    { type: "line", size: 65, top: "40%", right: "-10px", anim: "geo-line-drift", dur: "10s", delay: "0.3s", opacity: 0.1, angle: 20 },
+  ],
+];
+
+function GeoDecor({ shapes, rgb }: { shapes: GeoShape[]; rgb: string }) {
+  return (
+    <>
+      {shapes.map((s, i) => {
+        const pos: React.CSSProperties = {
+          position: "absolute",
+          top: s.top,
+          bottom: s.bottom,
+          left: s.left,
+          right: s.right,
+          pointerEvents: "none",
+          animation: `${s.anim} ${s.dur} ease-in-out ${s.delay || "0s"} infinite`,
+          zIndex: 0,
+        };
+
+        if (s.type === "sphere") {
+          return (
+            <div
+              key={i}
+              style={{
+                ...pos,
+                width: s.size,
+                height: s.size,
+                borderRadius: "50%",
+                background: `radial-gradient(circle at 35% 35%, rgba(${rgb}, ${s.opacity + 0.08}), rgba(${rgb}, ${s.opacity * 0.3}) 60%, transparent 80%)`,
+                boxShadow: `0 0 ${s.size * 0.6}px rgba(${rgb}, ${s.opacity * 0.5})`,
+                filter: "blur(1px)",
+              }}
+            />
+          );
+        }
+
+        if (s.type === "ring") {
+          return (
+            <div
+              key={i}
+              style={{
+                ...pos,
+                width: s.size,
+                height: s.size,
+                borderRadius: "50%",
+                border: `1.5px solid rgba(${rgb}, ${s.opacity})`,
+                boxShadow: `0 0 ${s.size * 0.4}px rgba(${rgb}, ${s.opacity * 0.4}), inset 0 0 ${s.size * 0.3}px rgba(${rgb}, ${s.opacity * 0.15})`,
+              }}
+            />
+          );
+        }
+
+        return (
+          <div
+            key={i}
+            style={{
+              ...pos,
+              width: s.size,
+              height: 1.5,
+              background: `linear-gradient(90deg, transparent, rgba(${rgb}, ${s.opacity}), transparent)`,
+              boxShadow: `0 0 8px rgba(${rgb}, ${s.opacity * 0.6})`,
+              ["--line-angle" as string]: `${s.angle || 0}deg`,
+              ["--line-opacity" as string]: s.opacity,
+              transform: `rotate(${s.angle || 0}deg)`,
+            }}
+          />
+        );
+      })}
+    </>
+  );
+}
+
+const colorToRgb: Record<string, string> = {
+  "text-emerald-400": "16, 185, 129",
+  "text-indigo-400": "99, 102, 241",
+  "text-sky-400": "56, 189, 248",
+  "text-rose-400": "251, 113, 133",
+  "text-violet-400": "139, 92, 246",
+  "text-amber-400": "245, 158, 11",
+};
+
 const services = [
   {
     icon: Bot,
@@ -145,12 +266,13 @@ export default function Services() {
 
         {/* Standard service cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
-          {services.map((service) => (
+          {services.map((service, idx) => (
             <div
               key={service.title}
-              className={`p-6 sm:p-8 rounded-2xl border ${service.border} bg-neutral-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
+              className={`relative overflow-hidden p-6 sm:p-8 rounded-2xl border ${service.border} bg-neutral-900/70 card-hover hover:shadow-xl ${service.glow} transition-all duration-300`}
             >
-              <div className="flex items-start justify-between mb-5">
+              <GeoDecor shapes={geoConfigs[idx]} rgb={colorToRgb[service.color]} />
+              <div className="relative z-10 flex items-start justify-between mb-5">
                 <div className={`w-11 h-11 rounded-xl ${service.bg} border ${service.border} flex items-center justify-center`}>
                   <service.icon className={`w-5 h-5 ${service.color}`} />
                 </div>
@@ -158,9 +280,9 @@ export default function Services() {
                   {service.tag}
                 </span>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-white mb-3 leading-snug">{service.title}</h3>
-              <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed mb-5">{service.description}</p>
-              <ul className="space-y-2">
+              <h3 className="relative z-10 text-base sm:text-lg font-bold text-white mb-3 leading-snug">{service.title}</h3>
+              <p className="relative z-10 text-neutral-400 text-xs sm:text-sm leading-relaxed mb-5">{service.description}</p>
+              <ul className="relative z-10 space-y-2">
                 {service.features.map((f) => (
                   <li key={f} className="flex items-center gap-2.5 text-xs sm:text-sm text-neutral-300">
                     <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${service.color.replace("text-", "bg-")}`} />
