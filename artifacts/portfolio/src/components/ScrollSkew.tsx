@@ -1,32 +1,8 @@
 import { useRef, useEffect, type ReactNode } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const managedElements = new Set<{ el: HTMLElement }>();
-let scrollRafId = 0;
-let listenerCount = 0;
-
-function updateAll() {
-  const vh = window.innerHeight;
-  const viewCenter = vh / 2;
-
-  managedElements.forEach(({ el }) => {
-    const rect = el.getBoundingClientRect();
-    const center = rect.top + rect.height / 2;
-    const distance = (center - viewCenter) / vh;
-    const clamped = Math.max(-1, Math.min(1, distance));
-
-    const rotateX = clamped * 3;
-    const scale = 1 - Math.abs(clamped) * 0.03;
-    const opacity = Math.max(0.6, 1 - Math.abs(clamped) * 0.15);
-
-    el.style.transform = `perspective(1200px) rotateX(${rotateX}deg) scale(${scale})`;
-    el.style.opacity = String(opacity);
-  });
-}
-
-function onScroll() {
-  cancelAnimationFrame(scrollRafId);
-  scrollRafId = requestAnimationFrame(updateAll);
-}
+gsap.registerPlugin(ScrollTrigger);
 
 interface ScrollSkewProps {
   children: ReactNode;
@@ -40,33 +16,61 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
     const el = ref.current;
     if (!el) return;
 
-    const entry = { el };
-    managedElements.add(entry);
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced) return;
 
-    if (listenerCount === 0) {
-      window.addEventListener("scroll", onScroll, { passive: true });
-    }
-    listenerCount++;
+    const isMobile = window.innerWidth < 768;
 
-    updateAll();
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: el,
+          start: "top 90%",
+          end: "bottom 10%",
+          scrub: isMobile ? 0.5 : 1,
+          toggleClass: { targets: el, className: "scroll-skew-active" },
+        },
+      });
 
-    return () => {
-      managedElements.delete(entry);
-      listenerCount--;
-      if (listenerCount === 0) {
-        window.removeEventListener("scroll", onScroll);
-        cancelAnimationFrame(scrollRafId);
-      }
-    };
+      tl.fromTo(
+        el,
+        {
+          rotateX: isMobile ? -10 : -15,
+          opacity: 0,
+          scale: isMobile ? 0.97 : 0.95,
+          y: isMobile ? 30 : 0,
+        },
+        {
+          rotateX: 0,
+          opacity: 1,
+          scale: 1,
+          y: 0,
+          ease: "none",
+          duration: 0.4,
+        }
+      );
+
+      tl.to(el, {
+        rotateX: isMobile ? 8 : 12,
+        opacity: 0.7,
+        scale: isMobile ? 0.98 : 0.96,
+        ease: "none",
+        duration: 0.4,
+      });
+    }, el);
+
+    return () => ctx.revert();
   }, []);
 
   return (
     <div
       ref={ref}
-      className={className}
+      className={`scroll-skew-section ${className}`}
       style={{
-        willChange: "transform, opacity",
+        perspective: 1000,
+        transformStyle: "preserve-3d" as const,
         transformOrigin: "center center",
+        willChange: "transform, opacity",
       }}
     >
       {children}
