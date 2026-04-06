@@ -106,6 +106,7 @@ function getSavedTheme(): ThemeKey {
 export default function ThemeSwitcher() {
   const [open, setOpen] = useState(false);
   const [current, setCurrent] = useState<ThemeKey>(getSavedTheme);
+  const [hovered, setHovered] = useState<ThemeKey | null>(null);
   const [wipe, setWipe] = useState<{ active: boolean; x: number; y: number; bg: string } | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -127,6 +128,7 @@ export default function ThemeSwitcher() {
   const switchTheme = useCallback((key: ThemeKey, e: React.MouseEvent) => {
     if (key === current) {
       setOpen(false);
+      setHovered(null);
       return;
     }
 
@@ -137,6 +139,7 @@ export default function ThemeSwitcher() {
 
     setWipe({ active: true, x, y, bg: t.bg });
     setOpen(false);
+    setHovered(null);
 
     requestAnimationFrame(() => {
       setTimeout(() => {
@@ -166,53 +169,76 @@ export default function ThemeSwitcher() {
           <Sparkles className="w-5 h-5" style={{ color: "var(--theme-accent-light)" }} />
         </button>
 
-        {open && (
-          <div
-            className="absolute top-14 right-0 w-56 rounded-2xl p-3 space-y-1"
-            style={{
-              background: "rgba(10, 10, 10, 0.85)",
-              backdropFilter: "blur(24px) saturate(180%)",
-              WebkitBackdropFilter: "blur(24px) saturate(180%)",
-              border: `1px solid rgba(var(--theme-accent-rgb), 0.15)`,
-              boxShadow: `0 8px 32px rgba(0,0,0,0.5), 0 0 30px rgba(var(--theme-accent-rgb), 0.08)`,
-              animation: "theme-menu-in 0.25s ease-out",
-            }}
-          >
-            <div className="px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-500">
-              Theme
-            </div>
-            {THEME_KEYS.map((key) => {
-              const t = themes[key];
-              const isActive = key === current;
-              return (
-                <button
-                  key={key}
-                  onClick={(e) => switchTheme(key, e)}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 text-left"
-                  style={{
-                    background: isActive ? `rgba(var(--theme-accent-rgb), 0.1)` : "transparent",
-                    color: isActive ? "var(--theme-accent-light)" : "#a3a3a3",
-                  }}
-                >
-                  <span
-                    className="w-4 h-4 rounded-full flex-shrink-0"
+        {open && (() => {
+          const previewTheme = hovered ? themes[hovered] : null;
+          const borderAccentRgb = previewTheme ? previewTheme.accentRgb : `var(--theme-accent-rgb)`;
+          return (
+            <div
+              className="absolute top-14 right-0 w-56 rounded-2xl p-3 space-y-1 overflow-hidden"
+              style={{
+                background: previewTheme
+                  ? previewTheme.bg
+                  : "rgba(10, 10, 10, 0.85)",
+                backdropFilter: "blur(24px) saturate(180%)",
+                WebkitBackdropFilter: "blur(24px) saturate(180%)",
+                border: `1px solid rgba(${borderAccentRgb}, 0.25)`,
+                boxShadow: previewTheme
+                  ? `0 8px 32px rgba(0,0,0,0.6), 0 0 40px rgba(${previewTheme.accentRgb}, 0.15)`
+                  : `0 8px 32px rgba(0,0,0,0.5), 0 0 30px rgba(var(--theme-accent-rgb), 0.08)`,
+                animation: "theme-menu-in 0.25s ease-out",
+                transition: "background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
+              }}
+              onMouseLeave={() => setHovered(null)}
+            >
+              <div
+                className="px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors duration-200"
+                style={{ color: previewTheme ? previewTheme.accentLight : "#737373" }}
+              >
+                Theme
+              </div>
+              {THEME_KEYS.map((key) => {
+                const t = themes[key];
+                const isActive = key === current;
+                const isHovered = key === hovered;
+                return (
+                  <button
+                    key={key}
+                    onClick={(e) => switchTheme(key, e)}
+                    onMouseEnter={() => setHovered(key)}
+                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 text-left"
                     style={{
-                      background: t.preview,
-                      boxShadow: isActive
-                        ? `0 0 0 2px rgba(10,10,10,0.9), 0 0 0 4px ${t.preview}, 0 0 8px ${t.preview}`
-                        : "none",
-                      border: `1px solid rgba(255,255,255,0.15)`,
+                      background: isHovered
+                        ? `rgba(${t.accentRgb}, 0.15)`
+                        : isActive
+                          ? `rgba(${t.accentRgb}, 0.1)`
+                          : "transparent",
+                      color: isHovered
+                        ? t.accentLight
+                        : isActive
+                          ? t.accentLight
+                          : "rgba(255,255,255,0.55)",
                     }}
-                  />
-                  <span>{t.label}</span>
-                  {isActive && (
-                    <span className="ml-auto text-[10px] font-bold uppercase tracking-wider opacity-50">Active</span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
+                  >
+                    <span
+                      className="w-4 h-4 rounded-full flex-shrink-0 transition-shadow duration-200"
+                      style={{
+                        background: t.preview,
+                        boxShadow: isActive || isHovered
+                          ? `0 0 0 2px ${previewTheme?.bg || "rgba(10,10,10,0.9)"}, 0 0 0 4px ${t.preview}, 0 0 10px ${t.preview}`
+                          : "none",
+                        border: `1px solid rgba(255,255,255,0.15)`,
+                      }}
+                    />
+                    <span>{t.label}</span>
+                    {isActive && (
+                      <span className="ml-auto text-[10px] font-bold uppercase tracking-wider opacity-50">Active</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })()}
       </div>
 
       {wipe && (
