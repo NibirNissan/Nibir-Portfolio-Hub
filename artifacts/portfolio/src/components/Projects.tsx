@@ -110,8 +110,19 @@ const accentMap: Record<string, { border: string; bg: string; text: string; badg
 
 export default function Projects() {
   return (
-    <section id="projects" className="py-20 md:py-28">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="projects" className="py-20 md:py-28 relative overflow-hidden">
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+        aria-hidden="true"
+      >
+        <span
+          className="text-[12rem] sm:text-[16rem] md:text-[20rem] lg:text-[26rem] font-black tracking-tight text-white whitespace-nowrap"
+          style={{ opacity: 0.025, transform: "rotate(-6deg)" }}
+        >
+          BUILD
+        </span>
+      </div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
             <ExternalLink className="w-4 h-4" />

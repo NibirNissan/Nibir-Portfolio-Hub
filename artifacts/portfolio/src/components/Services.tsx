@@ -116,8 +116,19 @@ const glassServices = [
 
 export default function Services() {
   return (
-    <section id="services" className="py-20 md:py-28 relative">
+    <section id="services" className="py-20 md:py-28 relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+      <div
+        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+        aria-hidden="true"
+      >
+        <span
+          className="text-[10rem] sm:text-[13rem] md:text-[16rem] lg:text-[20rem] font-black tracking-tight text-white whitespace-nowrap"
+          style={{ opacity: 0.025, transform: "rotate(-6deg)" }}
+        >
+          SOLUTIONS
+        </span>
+      </div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
