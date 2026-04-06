@@ -290,6 +290,55 @@ export default function Services() {
                   </li>
                 ))}
               </ul>
+
+              {service.title === "Digital Subscription Business Setup" && (
+                <div className="relative z-10 mt-6 p-4 rounded-xl border border-violet-500/15 bg-violet-500/5">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 relative">
+                      <div
+                        className="absolute inset-0 rounded-xl opacity-30"
+                        style={{ background: "radial-gradient(circle, rgba(139, 92, 246, 0.4), transparent 70%)" }}
+                      />
+                      <svg viewBox="0 0 80 80" fill="none" className="w-full h-full relative">
+                        <defs>
+                          <linearGradient id="chart-grad" x1="0" y1="60" x2="70" y2="10">
+                            <stop offset="0%" stopColor="rgba(139, 92, 246, 0.15)" />
+                            <stop offset="100%" stopColor="rgba(139, 92, 246, 0.5)" />
+                          </linearGradient>
+                          <linearGradient id="line-grad" x1="0" y1="50" x2="70" y2="10">
+                            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.4" />
+                            <stop offset="100%" stopColor="#a78bfa" stopOpacity="1" />
+                          </linearGradient>
+                          <filter id="glow">
+                            <feGaussianBlur stdDeviation="2" result="blur" />
+                            <feMerge>
+                              <feMergeNode in="blur" />
+                              <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                          </filter>
+                        </defs>
+                        <path d="M12 65 L12 60 Q20 58 28 50 Q36 40 44 36 Q52 30 58 20 Q62 14 68 10" fill="none" stroke="url(#line-grad)" strokeWidth="2.5" strokeLinecap="round" filter="url(#glow)" />
+                        <path d="M12 65 L12 60 Q20 58 28 50 Q36 40 44 36 Q52 30 58 20 Q62 14 68 10 L68 65 Z" fill="url(#chart-grad)" />
+                        <circle cx="68" cy="10" r="4" fill="#a78bfa" opacity="0.9" filter="url(#glow)">
+                          <animate attributeName="r" values="3.5;5;3.5" dur="2s" repeatCount="indefinite" />
+                          <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite" />
+                        </circle>
+                        <line x1="10" y1="65" x2="72" y2="65" stroke="rgba(139,92,246,0.15)" strokeWidth="1" />
+                        {[20, 35, 50, 65].map((y) => (
+                          <line key={y} x1="10" y1={y} x2="72" y2={y} stroke="rgba(139,92,246,0.06)" strokeWidth="0.5" />
+                        ))}
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-2xl sm:text-3xl font-black text-violet-300">2k+</span>
+                        <TrendingUp className="w-4 h-4 text-violet-400" />
+                      </div>
+                      <p className="text-neutral-500 text-xs mt-0.5">Active subscribers &amp; growing</p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
