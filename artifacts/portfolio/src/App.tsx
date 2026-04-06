@@ -13,6 +13,8 @@ import Vision from "@/components/Vision";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ScanLine from "@/components/ScanLine";
+import ScrollSkew from "@/components/ScrollSkew";
+import CustomCursor from "@/components/CustomCursor";
 import ProjectPage from "@/pages/ProjectPage";
 
 const pageVariants = {
@@ -33,21 +35,21 @@ function HomePage() {
       <Nav />
       <Hero />
       <ScanLine />
-      <About />
+      <ScrollSkew><About /></ScrollSkew>
       <ScanLine />
-      <Skills />
+      <ScrollSkew><Skills /></ScrollSkew>
       <ScanLine />
-      <Projects />
+      <ScrollSkew><Projects /></ScrollSkew>
       <ScanLine />
-      <Services />
+      <ScrollSkew><Services /></ScrollSkew>
       <ScanLine />
-      <Subscription />
+      <ScrollSkew><Subscription /></ScrollSkew>
       <ScanLine />
-      <Ecosystem />
+      <ScrollSkew><Ecosystem /></ScrollSkew>
       <ScanLine />
-      <Vision />
+      <ScrollSkew><Vision /></ScrollSkew>
       <ScanLine />
-      <Contact />
+      <ScrollSkew><Contact /></ScrollSkew>
       <Footer />
     </motion.div>
   );
@@ -70,12 +72,15 @@ function App() {
   const [location] = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Switch key={location}>
-        <Route path="/" component={HomePage} />
-        <Route path="/project/:slug" component={AnimatedProjectPage} />
-      </Switch>
-    </AnimatePresence>
+    <>
+      <CustomCursor />
+      <AnimatePresence mode="wait">
+        <Switch key={location}>
+          <Route path="/" component={HomePage} />
+          <Route path="/project/:slug" component={AnimatedProjectPage} />
+        </Switch>
+      </AnimatePresence>
+    </>
   );
 }
 

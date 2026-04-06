@@ -63,6 +63,17 @@
     background-color: #0a0a0a;
     color: #e5e7eb;
   }
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: none !important;
+  }
+  .cursor-dot.cursor-hovering {
+    opacity: 0;
+  }
+  .cursor-ring.cursor-hovering {
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.3), 0 0 35px rgba(16, 185, 129, 0.1);
+  }
   h1, h2, h3, h4 {
     font-family: 'Space Grotesk', sans-serif;
   }

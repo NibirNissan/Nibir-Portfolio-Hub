@@ -52,6 +52,11 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 **Scroll Reveals**: IntersectionObserver-based `ScrollReveal` component with directional animations (up/left/right/scale)
 **Data**: `src/data/projects.ts` — 6 projects with slug-based lookup
 
+### Custom Cursor & Scroll Effects
+- **CustomCursor**: Replaces system cursor with emerald dot (8px) + semi-transparent ring (25px) with lerp lag. Ring expands to 40px on hover over links/buttons/cards, dot vanishes. Touch devices auto-detected and excluded.
+- **ScrollSkew**: 3D fold effect on scroll — sections tilt on X-axis (±3°) and scale down as they move away from viewport center. Uses RAF-throttled scroll listener.
+- CSS: `cursor: none` applied via `.custom-cursor-active` class on `<html>`, hover states via `.cursor-hovering`
+
 ### Visual Depth Enhancements
 - **NebulaBg**: Animated mesh gradient backgrounds (deep greens/blacks) in Projects and Services sections — slow-drifting radial blobs
 - **TiltCard**: 3D perspective tilt on hover for project cards — RAF-throttled mouse tracking with cached bounds
