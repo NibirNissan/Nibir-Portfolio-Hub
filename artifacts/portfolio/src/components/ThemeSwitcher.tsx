@@ -20,6 +20,7 @@ interface ThemeConfig {
   heading: string;
   body: string;
   muted: string;
+  isLight: boolean;
 }
 
 const themes: Record<ThemeKey, ThemeConfig> = {
@@ -40,6 +41,7 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     heading: "#ffffff",
     body: "#d1d5db",
     muted: "#737373",
+    isLight: false,
   },
   "cyber-amber": {
     label: "Cyber Amber",
@@ -58,6 +60,7 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     heading: "#ffffff",
     body: "#d1d5db",
     muted: "#737373",
+    isLight: false,
   },
   "midnight-royal": {
     label: "Midnight Royal",
@@ -76,6 +79,7 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     heading: "#ffffff",
     body: "#d1d5db",
     muted: "#737373",
+    isLight: false,
   },
   "mono-chrome": {
     label: "Mono Chrome",
@@ -94,24 +98,26 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     heading: "#ffffff",
     body: "#d1d5db",
     muted: "#737373",
+    isLight: false,
   },
   "liquid-glass": {
     label: "iPhone Liquid Glass",
-    bg: "#f9f9f9",
-    accent: "#313131",
-    accentLight: "#4b5563",
-    accentLighter: "#6b7280",
-    accentRgb: "49, 49, 49",
-    secondary: "#a1c4fd",
-    secondaryLight: "#c3dafe",
-    secondaryRgb: "161, 196, 253",
-    text: "#1c1c1c",
-    grain: "0.015",
-    preview: "linear-gradient(135deg, #e0e7ff, #f9f9f9, #dbeafe)",
+    bg: "#e5e5e7",
+    accent: "#1d1d1f",
+    accentLight: "#424245",
+    accentLighter: "#6e6e73",
+    accentRgb: "29, 29, 31",
+    secondary: "#0066cc",
+    secondaryLight: "#2997ff",
+    secondaryRgb: "0, 102, 204",
+    text: "#1d1d1f",
+    grain: "0.012",
+    preview: "linear-gradient(135deg, #d2d2d7, #e5e5e7, #f5f5f7)",
     surfaceRgb: "255, 255, 255",
-    heading: "#1c1c1c",
-    body: "#4b5563",
-    muted: "#9ca3af",
+    heading: "#1d1d1f",
+    body: "#424245",
+    muted: "#86868b",
+    isLight: true,
   },
 };
 
@@ -135,13 +141,13 @@ function applyTheme(key: ThemeKey) {
   s.setProperty("--theme-heading", t.heading);
   s.setProperty("--theme-body", t.body);
   s.setProperty("--theme-muted", t.muted);
-  s.setProperty("--theme-accent-fg", key === "liquid-glass" ? "#ffffff" : "#000000");
+  s.setProperty("--theme-accent-fg", t.isLight ? "#ffffff" : "#000000");
   const cursorColors: Record<ThemeKey, string> = {
     "emerald-stealth": "#10b981",
     "cyber-amber": "#f59e0b",
     "midnight-royal": "#8b5cf6",
     "mono-chrome": "#ffffff",
-    "liquid-glass": "#313131",
+    "liquid-glass": "#1d1d1f",
   };
   s.setProperty("--cursor-dot-color", cursorColors[key]);
   document.documentElement.setAttribute("data-theme", key);
@@ -234,7 +240,7 @@ export default function ThemeSwitcher() {
                 WebkitBackdropFilter: "blur(24px) saturate(180%)",
                 border: `1px solid rgba(${borderAccentRgb}, 0.25)`,
                 boxShadow: previewTheme
-                  ? previewTheme.bg === "#f9f9f9"
+                  ? previewTheme.isLight
                     ? `0 8px 32px rgba(0,0,0,0.08), 0 0 40px rgba(${previewTheme.secondaryRgb}, 0.1)`
                     : `0 8px 32px rgba(0,0,0,0.6), 0 0 40px rgba(${previewTheme.accentRgb}, 0.15)`
                   : `0 8px 32px rgba(0,0,0,0.5), 0 0 30px rgba(var(--theme-accent-rgb), 0.08)`,
@@ -245,7 +251,7 @@ export default function ThemeSwitcher() {
             >
               <div
                 className="px-3 py-2 text-[10px] font-bold uppercase tracking-[0.2em] transition-colors duration-200"
-                style={{ color: previewTheme ? previewTheme.accentLight : "#737373" }}
+                style={{ color: previewTheme ? previewTheme.accentLight : "var(--theme-muted)" }}
               >
                 Theme
               </div>
@@ -270,7 +276,7 @@ export default function ThemeSwitcher() {
                         : isActive
                           ? t.accentLight
                           : previewTheme
-                            ? (previewTheme.bg === "#f9f9f9" ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.55)")
+                            ? (previewTheme.isLight ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.55)")
                             : `var(--theme-muted)`,
                     }}
                   >
@@ -279,7 +285,7 @@ export default function ThemeSwitcher() {
                       style={{
                         background: t.preview,
                         boxShadow: isActive || isHovered
-                          ? `0 0 0 2px ${previewTheme?.bg || themes[current].bg}, 0 0 0 4px ${t.preview.startsWith("linear") ? "#c3dafe" : t.preview}, 0 0 10px ${t.preview.startsWith("linear") ? "#a1c4fd" : t.preview}`
+                          ? `0 0 0 2px ${previewTheme?.bg || themes[current].bg}, 0 0 0 4px ${t.preview.startsWith("linear") ? t.secondary : t.preview}, 0 0 10px ${t.preview.startsWith("linear") ? t.secondary : t.preview}`
                           : "none",
                         border: t.preview.startsWith("linear")
                           ? `1px solid rgba(0,0,0,0.1)`

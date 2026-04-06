@@ -77,9 +77,9 @@ export default function Hero() {
               <button
                 onClick={() => scrollToSection("contact")}
                 className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-white transition-all duration-200 text-sm sm:text-base"
-                style={{ border: "1px solid rgba(255,255,255,0.15)" }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = `rgba(var(--theme-accent-rgb), 0.5)`; e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.05)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; e.currentTarget.style.backgroundColor = "transparent"; }}
+                style={{ border: "1px solid rgba(var(--theme-accent-rgb), 0.2)", color: "var(--theme-heading)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = `rgba(var(--theme-accent-rgb), 0.5)`; e.currentTarget.style.backgroundColor = "rgba(var(--theme-accent-rgb), 0.05)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(var(--theme-accent-rgb), 0.2)"; e.currentTarget.style.backgroundColor = "transparent"; }}
               >
                 Let's Talk
               </button>
