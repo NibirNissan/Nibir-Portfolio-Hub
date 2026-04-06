@@ -55,7 +55,7 @@ export default function Skills() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
-            <Layers className="w-4 h-4" />
+            <span className="icon-duotone"><Layers className="w-4 h-4" /></span>
             Skills
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">

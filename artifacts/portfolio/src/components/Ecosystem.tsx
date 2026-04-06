@@ -141,7 +141,7 @@ export default function Ecosystem() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
-            <LayoutDashboard className="w-4 h-4" />
+            <span className="icon-duotone"><LayoutDashboard className="w-4 h-4" /></span>
             Ecosystem
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">

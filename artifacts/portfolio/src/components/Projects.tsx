@@ -1,4 +1,6 @@
+import { useRef, useCallback } from "react";
 import { ExternalLink, Users, Droplets, FileText, ShoppingBag, Briefcase, GraduationCap } from "lucide-react";
+import NebulaBg from "./NebulaBg";
 
 const projects = [
   {
@@ -108,9 +110,54 @@ const accentMap: Record<string, { border: string; bg: string; text: string; badg
   },
 };
 
+function TiltCard({ children, className }: { children: React.ReactNode; className: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const rafRef = useRef<number>(0);
+
+  const handleMouseEnter = useCallback(() => {
+    const el = ref.current;
+    if (el) rectRef.current = el.getBoundingClientRect();
+  }, []);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      const el = ref.current;
+      const rect = rectRef.current;
+      if (!el || !rect) return;
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      el.style.transform = `perspective(600px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale3d(1.02, 1.02, 1.02)`;
+    });
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    cancelAnimationFrame(rafRef.current);
+    const el = ref.current;
+    if (!el) return;
+    el.style.transform = "perspective(600px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)";
+    rectRef.current = null;
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transition: "transform 0.15s ease-out", transformStyle: "preserve-3d", willChange: "transform" }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function Projects() {
   return (
     <section id="projects" className="py-20 md:py-28 relative overflow-hidden">
+      <NebulaBg variant="green" />
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
         aria-hidden="true"
@@ -125,7 +172,7 @@ export default function Projects() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
-            <ExternalLink className="w-4 h-4" />
+            <span className="icon-duotone"><ExternalLink className="w-4 h-4" /></span>
             Projects
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
@@ -140,9 +187,9 @@ export default function Projects() {
           {projects.map((project) => {
             const a = accentMap[project.accent];
             return (
-              <div
+              <TiltCard
                 key={project.title}
-                className={`group relative p-5 sm:p-6 rounded-2xl border ${a.border} bg-neutral-900/70 card-hover cursor-pointer flex flex-col`}
+                className={`group relative p-5 sm:p-6 rounded-2xl border ${a.border} bg-neutral-900/70 cursor-pointer flex flex-col`}
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center`}>
@@ -169,7 +216,7 @@ export default function Projects() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </TiltCard>
             );
           })}
         </div>

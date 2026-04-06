@@ -9,27 +9,28 @@ import Ecosystem from "@/components/Ecosystem";
 import Vision from "@/components/Vision";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import ScanLine from "@/components/ScanLine";
 
 function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#e5e7eb] overflow-x-hidden grain-bg relative">
       <Nav />
       <Hero />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <About />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <Skills />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <Projects />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <Services />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <Subscription />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <Ecosystem />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <Vision />
-      <div className="section-line h-px w-full opacity-30 relative z-10" />
+      <ScanLine />
       <Contact />
       <Footer />
     </div>

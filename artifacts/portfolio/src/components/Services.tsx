@@ -1,4 +1,5 @@
 import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard, Rocket } from "lucide-react";
+import NebulaBg from "./NebulaBg";
 
 interface GeoShape {
   type: "sphere" | "line" | "ring";
@@ -238,6 +239,7 @@ const glassServices = [
 export default function Services() {
   return (
     <section id="services" className="py-20 md:py-28 relative overflow-hidden">
+      <NebulaBg variant="emerald-amber" />
       <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
@@ -253,7 +255,7 @@ export default function Services() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
-            <Zap className="w-4 h-4" />
+            <span className="icon-duotone"><Zap className="w-4 h-4" /></span>
             Services
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">

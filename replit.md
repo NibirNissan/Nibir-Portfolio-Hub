@@ -38,8 +38,15 @@ Professional portfolio for Nibir Nissan — CST student, full-stack developer, A
 ### Sections
 Hero, About, Skills, Projects, Services (6 standard + 2 premium glassmorphism), Subscription, Ecosystem (interactive flowchart), Vision, Contact
 
+### Visual Depth Enhancements
+- **NebulaBg**: Animated mesh gradient backgrounds (deep greens/blacks) in Projects and Services sections — slow-drifting radial blobs
+- **TiltCard**: 3D perspective tilt on hover for project cards — RAF-throttled mouse tracking with cached bounds
+- **ScanLine**: Glowing neon line dividers between sections (transform-based animation, replaces static `.section-line`)
+- **icon-duotone**: CSS utility for glowing duo-tone emerald icons on all section header icons — `drop-shadow` + `brightness(1.2)`
+- Reduced-motion media query fallback for icon filters
+
 ### Key CSS Utilities
-`glow-emerald`, `glow-amber`, `text-gradient` (emerald), `text-gradient-amber`, `nav-capsule`, `.hub-pulse-border`
+`glow-emerald`, `glow-amber`, `text-gradient` (emerald), `text-gradient-amber`, `nav-capsule`, `.hub-pulse-border`, `.icon-duotone`
 
 ### Assets
 5 photos in `attached_assets/` via `@assets/` alias. Hero: `162cf2f1...webp`. About: `WhatsApp_Image_2026-02-28...jpeg`.

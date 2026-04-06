@@ -85,7 +85,7 @@ export default function About() {
 
           <div className="flex-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4">
-              <Star className="w-4 h-4" />
+              <span className="icon-duotone"><Star className="w-4 h-4" /></span>
               About Me
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
