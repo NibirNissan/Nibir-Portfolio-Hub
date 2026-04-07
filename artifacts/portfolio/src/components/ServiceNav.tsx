@@ -84,11 +84,11 @@ export default function ServiceNav() {
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }, 500);
           }}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold text-black transition-all duration-200 hire-pulse"
-          style={{ backgroundColor: "var(--theme-accent)" }}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-200 hire-pulse"
+          style={{ backgroundColor: "var(--theme-accent)", color: "var(--theme-accent-fg, #000)" }}
         >
           <Sparkles className="w-4 h-4" />
-          <span>Hire Me</span>
+          <span>Let's Build</span>
         </button>
       </nav>
 
@@ -137,11 +137,11 @@ export default function ServiceNav() {
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }, 500);
               }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-black mt-1 hire-pulse"
-              style={{ backgroundColor: "var(--theme-accent)" }}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold mt-1 hire-pulse"
+              style={{ backgroundColor: "var(--theme-accent)", color: "var(--theme-accent-fg, #000)" }}
             >
               <Sparkles className="w-4 h-4" />
-              Hire Me
+              Let's Build
             </button>
           </div>
         )}

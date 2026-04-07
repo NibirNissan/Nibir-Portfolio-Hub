@@ -83,8 +83,8 @@ export default function ServicePage() {
         href={service.ctaLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed right-5 bottom-20 md:bottom-24 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-sm font-bold text-black shadow-lg transition-all duration-300 hover:scale-105 hire-pulse"
-        style={{ backgroundColor: "var(--theme-accent)", boxShadow: `0 0 30px rgba(var(--theme-accent-rgb), 0.3)` }}
+        className="fixed right-5 bottom-20 md:bottom-24 z-50 flex items-center gap-2 px-5 py-3 rounded-full text-sm font-bold shadow-lg transition-all duration-300 hover:scale-105 hire-pulse"
+        style={{ backgroundColor: "var(--theme-accent)", color: "var(--theme-accent-fg, #000)", boxShadow: `0 0 30px rgba(var(--theme-accent-rgb), 0.3)` }}
       >
         <MessageCircle className="w-4 h-4" />
         Get Started

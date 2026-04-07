@@ -356,6 +356,11 @@
 
 .hire-pulse {
   animation: hire-pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hire-pulse:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(var(--theme-accent-rgb), 0.4), 0 0 40px rgba(var(--theme-accent-rgb), 0.15);
 }
 
 @keyframes theme-wipe {

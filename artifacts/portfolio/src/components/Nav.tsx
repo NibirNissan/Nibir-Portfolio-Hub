@@ -89,10 +89,10 @@ export default function Nav() {
         })}
         <button
           onClick={() => handleNavClick("#contact")}
-          className="ml-1 px-5 py-2.5 rounded-full text-sm font-semibold transition-all glow-emerald"
+          className="ml-1 px-5 py-2.5 rounded-full text-sm font-semibold transition-all hire-pulse hover:scale-105"
           style={{ backgroundColor: "var(--theme-accent)", color: "var(--theme-accent-fg, #000)" }}
         >
-          Hire Me
+          Let's Build
         </button>
       </nav>
 
@@ -134,10 +134,10 @@ export default function Nav() {
             })}
             <button
               onClick={() => handleNavClick("#contact")}
-              className="w-full mt-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-center"
+              className="w-full mt-1 px-4 py-3 rounded-xl text-sm font-semibold transition-all text-center hire-pulse hover:scale-105"
               style={{ backgroundColor: "var(--theme-accent)", color: "var(--theme-accent-fg, #000)" }}
             >
-              Hire Me
+              Let's Build
             </button>
           </div>
         )}
