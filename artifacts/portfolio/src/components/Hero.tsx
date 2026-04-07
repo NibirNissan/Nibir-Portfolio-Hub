@@ -84,7 +84,7 @@ export default function Hero() {
 
             <div style={stagger(0.7)} className="flex items-center justify-center lg:justify-start gap-3">
               <a
-                href="https://github.com"
+                href="https://github.com/NibirNissan"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-neutral-400 hover:text-white hover:border-neutral-500/50 hover:bg-neutral-500/10 transition-all duration-200"
@@ -100,7 +100,7 @@ export default function Hero() {
                 <MessageCircle className="w-5 h-5" />
               </a>
               <a
-                href="https://wa.me/1234567890"
+                href="https://wa.me/8801976816697"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-xl border border-white/10 bg-white/5 flex items-center justify-center text-neutral-400 hover:text-white hover:border-green-500/50 hover:bg-green-500/10 transition-all duration-200"

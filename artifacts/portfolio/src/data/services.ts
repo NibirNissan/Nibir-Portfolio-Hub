@@ -79,7 +79,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "For businesses ready to scale operations", features: ["Up to 5 automation workflows", "Unlimited tool integrations", "AI agent integration", "Custom dashboard", "30 days of support", "Priority response time"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Full-scale automation transformation", features: ["Unlimited workflows", "Multi-department automation", "Advanced AI agents", "Custom reporting", "Dedicated support channel", "Quarterly optimization reviews"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
   {
     slug: "web-development",
@@ -117,7 +117,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "Full business website or web app", features: ["Up to 10 pages", "Custom design system", "Advanced animations", "CMS integration", "SEO optimization", "3 rounds of revisions"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Complex web applications", features: ["Unlimited pages", "Full-stack development", "User authentication", "Database integration", "API development", "Ongoing support & maintenance"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
   {
     slug: "video-editing",
@@ -155,7 +155,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "Full content production", features: ["Up to 15 edits/month", "Advanced color grading", "Motion graphics & intros", "Sound design & mixing", "Brand consistency guide", "2 revisions per video"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Complete video strategy", features: ["Unlimited edits", "Ad creative production", "Long-form content", "Custom templates", "Priority turnaround", "Dedicated revision rounds"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
   {
     slug: "digital-marketing",
@@ -193,7 +193,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "Multi-channel growth strategy", features: ["Meta + Google Ads", "Unlimited campaigns", "Weekly reporting", "Advanced audience building", "A/B testing", "Funnel optimization"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Full-scale marketing department", features: ["All ad platforms", "Full funnel management", "Daily optimization", "Custom analytics dashboard", "Creative production", "Dedicated strategy calls"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
   {
     slug: "subscription-business",
@@ -231,7 +231,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "Multi-tier subscription business", features: ["Up to 5 subscription tiers", "Advanced automation", "Analytics dashboard", "Email sequences", "30 days support", "Renewal optimization"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Full subscription ecosystem", features: ["Unlimited tiers", "Multi-product catalog", "Advanced analytics", "Custom integrations", "White-label option", "Ongoing optimization"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
   {
     slug: "saas-development",
@@ -269,7 +269,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "Full SaaS platform", features: ["Advanced feature set", "Multi-role auth & permissions", "Admin + user dashboards", "Subscription billing", "API documentation", "60 days support"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Enterprise-grade SaaS", features: ["Unlimited features", "Multi-tenant architecture", "Advanced analytics", "Custom integrations", "Performance optimization", "Ongoing development & support"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
   {
     slug: "wordpress-development",
@@ -304,7 +304,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "Full business or e-commerce site", features: ["Up to 15 pages", "WooCommerce setup", "Advanced SEO", "Speed optimization", "Security hardening", "3 revision rounds"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Complex WordPress ecosystem", features: ["Unlimited pages", "Custom plugin development", "Multi-language support", "Advanced integrations", "Priority support", "Monthly maintenance"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
   {
     slug: "webapp-saas-product",
@@ -342,7 +342,7 @@ export const servicesData: ServiceData[] = [
       { name: "Professional", price: "Contact", description: "Full product build", features: ["Everything in Starter", "Full-stack development", "Multi-role authentication", "Billing integration", "Admin dashboard", "90 days post-launch support"], highlight: true },
       { name: "Enterprise", price: "Contact", description: "Scale & grow", features: ["Everything in Professional", "Multi-tenant architecture", "Advanced analytics", "Custom integrations", "Performance optimization", "Ongoing development retainer"] },
     ],
-    ctaLink: "https://wa.me/message",
+    ctaLink: "https://wa.me/8801976816697",
   },
 ];
 
