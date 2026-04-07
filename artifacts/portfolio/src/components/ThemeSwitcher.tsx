@@ -124,6 +124,30 @@ const themes: Record<ThemeKey, ThemeConfig> = {
 const THEME_KEYS = Object.keys(themes) as ThemeKey[];
 const STORAGE_KEY = "portfolio-theme";
 
+function generateFaviconSvg(color: string, bg: string, dimmed = false): string {
+  const opacity = dimmed ? 0.4 : 1;
+  const glowOpacity = dimmed ? 0 : 0.6;
+  const dotMarkup = dimmed
+    ? `<circle cx="54" cy="10" r="6" fill="${color}" opacity="0.9"/><circle cx="54" cy="10" r="3" fill="#ffffff" opacity="0.8"/>`
+    : "";
+  return `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><filter id="g"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="64" height="64" rx="14" fill="${bg}"/><text x="32" y="46" text-anchor="middle" font-family="'Space Grotesk','Inter',system-ui,sans-serif" font-weight="700" font-size="40" fill="${color}" opacity="${opacity}" filter="url(#g)">N</text><text x="32" y="46" text-anchor="middle" font-family="'Space Grotesk','Inter',system-ui,sans-serif" font-weight="700" font-size="40" fill="${color}" opacity="${glowOpacity}" filter="url(#g)">N</text>${dotMarkup}</svg>`
+  )}`;
+}
+
+let _currentFaviconColor = "";
+let _currentFaviconBg = "";
+
+function updateFavicon(color: string, bg: string, dimmed = false) {
+  const link = document.getElementById("dynamic-favicon") as HTMLLinkElement | null;
+  if (!link) return;
+  link.href = generateFaviconSvg(color, bg, dimmed);
+  if (!dimmed) {
+    _currentFaviconColor = color;
+    _currentFaviconBg = bg;
+  }
+}
+
 function applyTheme(key: ThemeKey) {
   const t = themes[key];
   const s = document.documentElement.style;
@@ -152,6 +176,7 @@ function applyTheme(key: ThemeKey) {
   s.setProperty("--cursor-dot-color", cursorColors[key]);
   document.documentElement.setAttribute("data-theme", key);
   localStorage.setItem(STORAGE_KEY, key);
+  updateFavicon(t.accent, t.isLight ? "#e5e5e7" : "#0a0a0a");
 }
 
 function getSavedTheme(): ThemeKey {
@@ -169,6 +194,16 @@ export default function ThemeSwitcher() {
 
   useEffect(() => {
     applyTheme(current);
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        updateFavicon(_currentFaviconColor, _currentFaviconBg, true);
+      } else {
+        updateFavicon(_currentFaviconColor, _currentFaviconBg, false);
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => document.removeEventListener("visibilitychange", handleVisibility);
   }, []);
 
   useEffect(() => {

@@ -71,6 +71,12 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 - CSS: `cursor: none` applied via `.custom-cursor-active` class on `<html>`, hover states via `.cursor-hovering`
 - **GSAP dependency**: `gsap` package with `ScrollTrigger` plugin registered globally
 
+### Dynamic Favicon
+- **SVG Favicon**: Dynamically generated `data:image/svg+xml` with bold "N" letter in Space Grotesk, neon glow filter (Gaussian blur + merge), themed accent color on dark/light background. Generated via `generateFaviconSvg()` in ThemeSwitcher.
+- **Theme Integration**: `updateFavicon()` called from `applyTheme()` — favicon color matches active theme accent (emerald, amber, violet, white, midnight).
+- **Tab Focus**: `visibilitychange` listener dims the "N" to 40% opacity and adds a notification dot (accent circle + white inner) when tab is hidden; restores full brightness when tab returns.
+- **HTML**: `<link rel="icon" id="dynamic-favicon">` in `index.html`, updated via JS `href` swap.
+
 ### Visual Depth Enhancements
 - **NebulaBg**: Animated mesh gradient backgrounds (deep greens/blacks) in Projects and Services sections — slow-drifting radial blobs
 - **TiltCard**: 3D perspective tilt on hover for project cards — RAF-throttled mouse tracking with cached bounds
