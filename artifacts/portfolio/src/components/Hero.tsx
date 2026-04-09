@@ -29,17 +29,14 @@ export default function Hero() {
 
           <div className="flex-1 text-center lg:text-left w-full">
             <div
-              style={stagger(0.1)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6"
-              {...{
-                style: {
-                  ...stagger(0.1),
-                  borderColor: `rgba(var(--theme-accent-rgb), 0.3)`,
-                  backgroundColor: `rgba(var(--theme-accent-rgb), 0.08)`,
-                  color: "var(--theme-accent-light)",
-                  border: `1px solid rgba(var(--theme-accent-rgb), 0.3)`,
-                },
+              style={{
+                ...stagger(0.1),
+                borderColor: `rgba(var(--theme-accent-rgb), 0.3)`,
+                backgroundColor: `rgba(var(--theme-accent-rgb), 0.08)`,
+                color: "var(--theme-accent-light)",
+                border: `1px solid rgba(var(--theme-accent-rgb), 0.3)`,
               }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6"
             >
               <span
                 className="w-2 h-2 rounded-full animate-pulse-slow"
