@@ -88,15 +88,22 @@ html {
   .custom-cursor-active * {
     cursor: none !important;
   }
-  .cursor-dot {
-    opacity: 1 !important;
-  }
+  /* Dot fades out when hovering a clickable element (ring expands instead) */
   .cursor-dot.cursor-hovering {
     opacity: 0 !important;
   }
+  /* Ring expands + glows on hover */
   .cursor-ring.cursor-hovering {
     border-color: rgba(var(--theme-accent-rgb), 0.3);
     box-shadow: 0 0 18px rgba(var(--theme-accent-rgb), 0.3), 0 0 35px rgba(var(--theme-accent-rgb), 0.1);
+  }
+  /* Hard-hide cursor elements on touch/stylus screens — JS guard is a second
+     line of defence but CSS covers the frame before JS executes */
+  @media (pointer: coarse) {
+    .cursor-dot,
+    .cursor-ring {
+      display: none !important;
+    }
   }
   h1, h2, h3, h4 {
     font-family: 'Space Grotesk', sans-serif;
