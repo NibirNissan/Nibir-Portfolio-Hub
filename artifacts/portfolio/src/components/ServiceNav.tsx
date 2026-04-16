@@ -80,7 +80,7 @@ export default function ServiceNav() {
           onClick={() => {
             setLocation("/");
             setTimeout(() => {
-              const el = document.getElementById("contact");
+              const el = document.getElementById("services");
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }, 500);
           }}
@@ -133,7 +133,7 @@ export default function ServiceNav() {
                 setMobileOpen(false);
                 setLocation("/");
                 setTimeout(() => {
-                  const el = document.getElementById("contact");
+                  const el = document.getElementById("services");
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }, 500);
               }}
