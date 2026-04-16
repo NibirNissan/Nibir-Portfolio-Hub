@@ -39,7 +39,7 @@ Professional portfolio for Nibir Nissan — CST student, full-stack developer, A
 - Magnetic hover effect via JS mouse tracking
 
 ### Sections
-Hero, About, Skills, Projects, Services (6 standard + 2 premium glassmorphism), Subscription, Ecosystem (interactive flowchart), Vision, Contact
+Hero, About, Skills, Projects, Services (6 standard + 2 premium glassmorphism), Subscription, Ecosystem (interactive flowchart), Vision, **ProjectFeatures** (horizontal slider carousel), Contact
 
 ### Case Study Sub-Pages (`/project/:slug`)
 Dynamic project pages accessible via "View Project" links on project cards. Each page includes:
