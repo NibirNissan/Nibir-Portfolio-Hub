@@ -57,3 +57,24 @@ export interface FirestoreSkill {
   category: string;
   order?: number;
 }
+
+export interface FirestoreTestimonial {
+  id?: string;
+  clientName: string;
+  designation: string;
+  imageUrl: string;
+  review: string;
+  rating?: number;
+  order?: number;
+  createdAt?: number;
+}
+
+export interface FirestoreInquiry {
+  id?: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  read?: boolean;
+  createdAt?: number;
+}
