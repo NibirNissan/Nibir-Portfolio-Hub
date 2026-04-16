@@ -23,6 +23,8 @@ import { SocialsTab } from "@/pages/admin/SocialsTab";
 import { SkillsTab } from "@/pages/admin/SkillsTab";
 import { TestimonialsTab } from "@/pages/admin/TestimonialsTab";
 import { InboxTab } from "@/pages/admin/InboxTab";
+import { ServicesTab } from "@/pages/admin/ServicesTab";
+import { getVisitCount } from "@/lib/analytics";
 import {
   LogOut,
   Plus,
@@ -44,6 +46,7 @@ import {
   Zap,
   Quote,
   Inbox,
+  Briefcase,
 } from "lucide-react";
 
 function NotConfigured() {
@@ -740,8 +743,13 @@ function BlogsTab({ showToast }: { showToast: (msg: string, type: "success" | "e
 }
 
 function AdminDashboard({ user }: { user: User }) {
-  const [tab, setTab] = useState<"settings" | "socials" | "skills" | "testimonials" | "projects" | "blogs" | "inbox">("inbox");
+  const [tab, setTab] = useState<"settings" | "socials" | "skills" | "testimonials" | "services" | "projects" | "blogs" | "inbox">("inbox");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
+  const [visitCount, setVisitCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    getVisitCount().then(setVisitCount);
+  }, []);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
     setToast({ message, type });
@@ -778,6 +786,52 @@ function AdminDashboard({ user }: { user: User }) {
       </header>
 
       <div className="max-w-5xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 p-4 flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center shrink-0">
+              <Eye className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-[11px] font-medium text-emerald-300/80 uppercase tracking-wider">Total Profile Views</div>
+              <div className="text-2xl font-black text-white leading-tight tabular-nums">
+                {visitCount === null ? (
+                  <span className="inline-block w-10 h-6 bg-neutral-800 rounded animate-pulse" />
+                ) : (
+                  visitCount.toLocaleString()
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="rounded-xl bg-neutral-900 border border-neutral-800 p-4 flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+              <Inbox className="w-5 h-5 text-indigo-400" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Inbox</div>
+              <button
+                onClick={() => setTab("inbox")}
+                className="text-sm text-neutral-300 hover:text-white font-medium"
+              >
+                Open messages →
+              </button>
+            </div>
+          </div>
+          <div className="rounded-xl bg-neutral-900 border border-neutral-800 p-4 flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+              <Briefcase className="w-5 h-5 text-amber-400" />
+            </div>
+            <div className="min-w-0">
+              <div className="text-[11px] font-medium text-neutral-500 uppercase tracking-wider">Services</div>
+              <button
+                onClick={() => setTab("services")}
+                className="text-sm text-neutral-300 hover:text-white font-medium"
+              >
+                Manage offerings →
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-wrap gap-1 mb-8 bg-neutral-900 border border-neutral-800 p-1 rounded-xl w-fit">
           {(
             [
@@ -786,6 +840,7 @@ function AdminDashboard({ user }: { user: User }) {
               { key: "socials", icon: Link2, label: "Social Links" },
               { key: "skills", icon: Zap, label: "Skills" },
               { key: "testimonials", icon: Quote, label: "Testimonials" },
+              { key: "services", icon: Briefcase, label: "Services" },
               { key: "projects", icon: Layers, label: "Projects" },
               { key: "blogs", icon: BookOpen, label: "Blogs" },
             ] as const
@@ -810,6 +865,7 @@ function AdminDashboard({ user }: { user: User }) {
         {tab === "socials" && <SocialsTab showToast={showToast} />}
         {tab === "skills" && <SkillsTab showToast={showToast} />}
         {tab === "testimonials" && <TestimonialsTab showToast={showToast} />}
+        {tab === "services" && <ServicesTab showToast={showToast} />}
         {tab === "projects" && <ProjectsTab showToast={showToast} />}
         {tab === "blogs" && <BlogsTab showToast={showToast} />}
       </div>

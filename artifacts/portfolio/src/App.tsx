@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Route, Switch } from "wouter";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation } from "wouter";
+import { trackHomepageVisit } from "@/lib/analytics";
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -32,6 +34,10 @@ const pageVariants = {
 } as const;
 
 function HomePage() {
+  useEffect(() => {
+    void trackHomepageVisit();
+  }, []);
+
   return (
     <motion.div
       variants={pageVariants}

@@ -69,6 +69,16 @@ export interface FirestoreTestimonial {
   createdAt?: number;
 }
 
+export interface FirestoreService {
+  id?: string;
+  title: string;
+  description: string;
+  iconUrl: string;
+  price?: string;
+  order?: number;
+  createdAt?: number;
+}
+
 export interface FirestoreInquiry {
   id?: string;
   name: string;

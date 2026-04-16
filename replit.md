@@ -102,7 +102,8 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 
 ### Firebase CMS (`src/lib/firebase.ts`)
 - **Auth**: Email/password via Firebase Auth. `isFirebaseConfigured` guards all Firestore calls.
-- **Admin Panel** (`/admin`): 7-tab dashboard — Inbox, General, Social Links, Skills, Testimonials, Projects, Blogs. Defaults to Inbox tab on login.
+- **Admin Panel** (`/admin`): 8-tab dashboard — Inbox, General, Social Links, Skills, Testimonials, Services, Projects, Blogs. Defaults to Inbox tab on login. Header shows 3 stat cards: **Total Profile Views** (from `analytics/visits` doc), Inbox shortcut, Services shortcut.
+  - **Services** (`src/pages/admin/ServicesTab.tsx`): CRUD on `services` collection — title, description, iconUrl (image URL), optional price/starting-at string, order. Homepage Services section auto-switches to dynamic Firestore-driven cards when any services exist, otherwise shows the static default layout.
   - **Inbox** (`src/pages/admin/InboxTab.tsx`): Two-pane layout — list + detail view. All/Unread/Read filter. Auto-marks as read when a message is opened. Per-message toggle read/unread, delete, and "Reply via Email" mailto link. Timestamps shown as relative ("2h ago").
   - **General Settings** (`src/pages/admin/SettingsTab.tsx`): Edits `settings/profile` doc.
   - **Social Links** (`src/pages/admin/SocialsTab.tsx`): CRUD on `socials` collection.
@@ -110,6 +111,10 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
   - **Testimonials** (`src/pages/admin/TestimonialsTab.tsx`): CRUD on `testimonials` collection — clientName, designation, imageUrl, review, rating (1-5), order.
   - **Projects** tab: CRUD on `projects` collection.
   - **Blogs** tab: CRUD on `blogs` collection with Quill.js rich text editor.
+
+### Analytics (`src/lib/analytics.ts`)
+- `trackHomepageVisit()` — fired once per session from `HomePage` in `App.tsx`. Uses Firestore `increment(1)` on `analytics/visits` doc (upsert via `setDoc` + `{merge:true}`). Session-gated with `sessionStorage` so HMR/remounts don't double-count.
+- `getVisitCount()` — reads the counter for the admin dashboard stat card.
 
 ### Dynamic Home Page
 - **Hero**: Fetches `settings/profile` on mount; falls back to hardcoded defaults. Shows dynamic name, subtitle, bio, availability badge, profileImageUrl. Social icons rendered from `socials` collection using `socialIconMap` (icon string → lucide component). Falls back to GitHub/Telegram/WhatsApp defaults if collection empty.

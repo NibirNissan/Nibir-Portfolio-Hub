@@ -1,6 +1,19 @@
-import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard, Rocket, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Bot, Code2, Video, ShoppingBag, Zap, TrendingUp, Globe, LayoutDashboard, Rocket, ArrowRight, ImageIcon } from "lucide-react";
 import { Link } from "wouter";
 import NebulaBg from "./NebulaBg";
+import { db, isFirebaseConfigured } from "@/lib/firebase";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import type { FirestoreService } from "@/lib/firestoreTypes";
+
+const dynamicAccents = [
+  { bg: "bg-emerald-500/10", border: "border-emerald-500/20", hoverBorder: "hover:border-emerald-500/40", text: "text-emerald-400", dot: "bg-emerald-400" },
+  { bg: "bg-indigo-500/10", border: "border-indigo-500/20", hoverBorder: "hover:border-indigo-500/40", text: "text-indigo-400", dot: "bg-indigo-400" },
+  { bg: "bg-sky-500/10", border: "border-sky-500/20", hoverBorder: "hover:border-sky-500/40", text: "text-sky-400", dot: "bg-sky-400" },
+  { bg: "bg-rose-500/10", border: "border-rose-500/20", hoverBorder: "hover:border-rose-500/40", text: "text-rose-400", dot: "bg-rose-400" },
+  { bg: "bg-violet-500/10", border: "border-violet-500/20", hoverBorder: "hover:border-violet-500/40", text: "text-violet-400", dot: "bg-violet-400" },
+  { bg: "bg-amber-500/10", border: "border-amber-500/20", hoverBorder: "hover:border-amber-500/40", text: "text-amber-400", dot: "bg-amber-400" },
+];
 
 interface GeoShape {
   type: "sphere" | "line" | "ring";
@@ -246,6 +259,28 @@ const glassServices = [
 ];
 
 export default function Services() {
+  const [dynamicServices, setDynamicServices] = useState<FirestoreService[]>([]);
+  const [loadedDynamic, setLoadedDynamic] = useState(false);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !db) { setLoadedDynamic(true); return; }
+    (async () => {
+      try {
+        const q = query(collection(db!, "services"), orderBy("order", "asc"));
+        const snap = await getDocs(q);
+        setDynamicServices(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService)));
+      } catch {
+        try {
+          const snap = await getDocs(collection(db!, "services"));
+          setDynamicServices(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService)));
+        } catch { /* empty */ }
+      }
+      setLoadedDynamic(true);
+    })();
+  }, []);
+
+  const useDynamic = loadedDynamic && dynamicServices.length > 0;
+
   return (
     <section id="services" className="py-20 md:py-28 relative overflow-hidden">
       <NebulaBg variant="emerald-amber" />
@@ -275,6 +310,45 @@ export default function Services() {
           </p>
         </div>
 
+        {useDynamic ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {dynamicServices.map((service, idx) => {
+              const a = dynamicAccents[idx % dynamicAccents.length];
+              return (
+                <div
+                  key={service.id}
+                  className={`reveal-card relative overflow-hidden p-6 sm:p-8 rounded-2xl border ${a.border} bg-neutral-900/70 card-hover hover:shadow-xl ${a.hoverBorder} transition-all duration-300`}
+                >
+                  <div className="relative z-10 flex items-start justify-between mb-5 gap-3">
+                    <div className={`w-12 h-12 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center shrink-0 overflow-hidden p-2`}>
+                      {service.iconUrl ? (
+                        <img src={service.iconUrl} alt="" className="max-w-full max-h-full object-contain" />
+                      ) : (
+                        <ImageIcon className={`w-5 h-5 ${a.text}`} />
+                      )}
+                    </div>
+                    {service.price && (
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${a.bg} ${a.text} border ${a.border} whitespace-nowrap`}>
+                        {service.price}
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="relative z-10 text-base sm:text-lg font-bold text-white mb-3 leading-snug">
+                    {service.title}
+                  </h3>
+                  <p className="relative z-10 text-neutral-400 text-xs sm:text-sm leading-relaxed whitespace-pre-wrap">
+                    {service.description}
+                  </p>
+                  <div className={`relative z-10 mt-5 pt-4 border-t border-white/5 flex items-center gap-2 text-xs font-semibold ${a.text}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${a.dot}`} />
+                    Available now
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <>
         {/* Standard service cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6">
           {services.map((service, idx) => (
@@ -431,6 +505,8 @@ export default function Services() {
             </div>
           ))}
         </div>
+          </>
+        )}
       </div>
     </section>
   );
