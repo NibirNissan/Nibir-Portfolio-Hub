@@ -20,6 +20,9 @@ import CustomCursor from "@/components/CustomCursor";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 import ProjectPage from "@/pages/ProjectPage";
 import ServicePage from "@/pages/ServicePage";
+import AdminPage from "@/pages/AdminPage";
+import BlogList from "@/pages/BlogList";
+import BlogPost from "@/pages/BlogPost";
 
 const pageVariants = {
   initial: { opacity: 0, scale: 0.97 },
@@ -65,12 +68,7 @@ function HomePage() {
 
 function AnimatedProjectPage() {
   return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
+    <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
       <ProjectPage />
     </motion.div>
   );
@@ -78,29 +76,44 @@ function AnimatedProjectPage() {
 
 function AnimatedServicePage() {
   return (
-    <motion.div
-      variants={pageVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
+    <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
       <ServicePage />
+    </motion.div>
+  );
+}
+
+function AnimatedBlogList() {
+  return (
+    <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+      <BlogList />
+    </motion.div>
+  );
+}
+
+function AnimatedBlogPost() {
+  return (
+    <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+      <BlogPost />
     </motion.div>
   );
 }
 
 function App() {
   const [location] = useLocation();
+  const isAdmin = location.startsWith("/admin");
 
   return (
     <>
-      <CustomCursor />
-      <ThemeSwitcher />
+      {!isAdmin && <CustomCursor />}
+      {!isAdmin && <ThemeSwitcher />}
       <AnimatePresence mode="wait">
         <Switch key={location}>
           <Route path="/" component={HomePage} />
           <Route path="/project/:slug" component={AnimatedProjectPage} />
           <Route path="/service/:slug" component={AnimatedServicePage} />
+          <Route path="/blog" component={AnimatedBlogList} />
+          <Route path="/blog/:slug" component={AnimatedBlogPost} />
+          <Route path="/admin" component={AdminPage} />
         </Switch>
       </AnimatePresence>
     </>

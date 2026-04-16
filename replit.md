@@ -39,7 +39,17 @@ Professional portfolio for Nibir Nissan — CST student, full-stack developer, A
 - Magnetic hover effect via JS mouse tracking
 
 ### Sections
-Hero, About, Skills, Projects, Services (6 standard + 2 premium glassmorphism), Subscription, Ecosystem (interactive flowchart), Vision, **ProjectFeatures** (horizontal slider carousel), Contact
+Hero, About, Skills, Projects (Firestore-backed, static fallback), Services (6 standard + 2 premium glassmorphism), Subscription, Ecosystem (interactive flowchart), Vision, **ProjectFeatures** (horizontal slider carousel), Contact
+
+### Dynamic CMS — Firebase (Firestore + Auth)
+- **`/admin`** — Protected Admin Panel (email/password login). Tabs: "Manage Projects" + "Manage Blogs".
+  - Projects CRUD: title, slug, thumbnail, tech stack, live/repo links, features, stats, detail sections (text/image paragraphs)
+  - Blogs CRUD: title, slug, date, cover image, excerpt, rich text content (Quill.js editor), published toggle
+- **`/blog`** — Public blog listing page (only published posts)
+- **`/blog/:slug`** — Individual blog post with rich typography
+- Firebase config: 6 `VITE_FIREBASE_*` env vars (see Firebase setup guide)
+- Projects section auto-fetches from Firestore if configured; falls back to static data if not
+- Key files: `src/lib/firebase.ts`, `src/lib/firestoreTypes.ts`, `src/pages/AdminPage.tsx`, `src/pages/BlogList.tsx`, `src/pages/BlogPost.tsx`, `src/components/QuillEditor.tsx`
 
 ### Case Study Sub-Pages (`/project/:slug`)
 Dynamic project pages accessible via "View Project" links on project cards. Each page includes:
