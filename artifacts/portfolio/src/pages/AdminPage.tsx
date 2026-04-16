@@ -18,6 +18,9 @@ import {
 import { auth, db, isFirebaseConfigured } from "@/lib/firebase";
 import QuillEditor from "@/components/QuillEditor";
 import type { FirestoreProject, FirestoreBlog } from "@/lib/firestoreTypes";
+import { SettingsTab } from "@/pages/admin/SettingsTab";
+import { SocialsTab } from "@/pages/admin/SocialsTab";
+import { SkillsTab } from "@/pages/admin/SkillsTab";
 import {
   LogOut,
   Plus,
@@ -34,6 +37,9 @@ import {
   AlertCircle,
   CheckCircle2,
   Loader2,
+  Settings,
+  Link2,
+  Zap,
 } from "lucide-react";
 
 function NotConfigured() {
@@ -730,7 +736,7 @@ function BlogsTab({ showToast }: { showToast: (msg: string, type: "success" | "e
 }
 
 function AdminDashboard({ user }: { user: User }) {
-  const [tab, setTab] = useState<"projects" | "blogs">("projects");
+  const [tab, setTab] = useState<"settings" | "socials" | "skills" | "projects" | "blogs">("settings");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
@@ -768,23 +774,34 @@ function AdminDashboard({ user }: { user: User }) {
       </header>
 
       <div className="max-w-5xl mx-auto px-6 py-8">
-        <div className="flex gap-1 mb-8 bg-neutral-900 border border-neutral-800 p-1 rounded-xl w-fit">
-          {(["projects", "blogs"] as const).map((t) => (
+        <div className="flex flex-wrap gap-1 mb-8 bg-neutral-900 border border-neutral-800 p-1 rounded-xl w-fit">
+          {(
+            [
+              { key: "settings", icon: Settings, label: "General Settings" },
+              { key: "socials", icon: Link2, label: "Social Links" },
+              { key: "skills", icon: Zap, label: "Skills" },
+              { key: "projects", icon: Layers, label: "Projects" },
+              { key: "blogs", icon: BookOpen, label: "Blogs" },
+            ] as const
+          ).map(({ key, icon: Icon, label }) => (
             <button
-              key={t}
-              onClick={() => setTab(t)}
+              key={key}
+              onClick={() => setTab(key)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                tab === t
+                tab === key
                   ? "bg-neutral-800 text-white"
                   : "text-neutral-500 hover:text-neutral-300"
               }`}
             >
-              {t === "projects" ? <Layers className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
-              {t === "projects" ? "Manage Projects" : "Manage Blogs"}
+              <Icon className="w-4 h-4" />
+              {label}
             </button>
           ))}
         </div>
 
+        {tab === "settings" && <SettingsTab showToast={showToast} />}
+        {tab === "socials" && <SocialsTab showToast={showToast} />}
+        {tab === "skills" && <SkillsTab showToast={showToast} />}
         {tab === "projects" && <ProjectsTab showToast={showToast} />}
         {tab === "blogs" && <BlogsTab showToast={showToast} />}
       </div>

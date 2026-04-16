@@ -33,3 +33,27 @@ export interface FirestoreBlog {
   published: boolean;
   createdAt?: number;
 }
+
+export interface FirestoreProfile {
+  heroTitle?: string;
+  heroSubtitle?: string;
+  bio?: string;
+  profileImageUrl?: string;
+  resumeLink?: string;
+  availability?: string;
+}
+
+export interface FirestoreSocial {
+  id?: string;
+  name: string;
+  icon: string;
+  url: string;
+  order?: number;
+}
+
+export interface FirestoreSkill {
+  id?: string;
+  name: string;
+  category: string;
+  order?: number;
+}

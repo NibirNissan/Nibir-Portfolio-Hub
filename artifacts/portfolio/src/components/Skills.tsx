@@ -1,6 +1,79 @@
-import { Code2, Figma, Bot, Video, Layers, TrendingUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Code2, Figma, Bot, Video, Layers, TrendingUp, Server, Smartphone, Cog } from "lucide-react";
+import { db, isFirebaseConfigured } from "@/lib/firebase";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import type { FirestoreSkill } from "@/lib/firestoreTypes";
 
-const skillGroups = [
+type CategoryConfig = {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  color: string;
+  bg: string;
+  border: string;
+  glow: string;
+  skills: string[];
+};
+
+const categoryConfigs: Record<string, Omit<CategoryConfig, "skills" | "label">> = {
+  Tech: {
+    icon: Code2,
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/20",
+    glow: "hover:shadow-emerald-500/20",
+  },
+  Design: {
+    icon: Figma,
+    color: "text-violet-400",
+    bg: "bg-violet-500/10",
+    border: "border-violet-500/20",
+    glow: "hover:shadow-violet-500/20",
+  },
+  Automation: {
+    icon: Bot,
+    color: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/20",
+    glow: "hover:shadow-amber-500/20",
+  },
+  Video: {
+    icon: Video,
+    color: "text-sky-400",
+    bg: "bg-sky-500/10",
+    border: "border-sky-500/20",
+    glow: "hover:shadow-sky-500/20",
+  },
+  "Digital Marketing": {
+    icon: TrendingUp,
+    color: "text-rose-400",
+    bg: "bg-rose-500/10",
+    border: "border-rose-500/20",
+    glow: "hover:shadow-rose-500/20",
+  },
+  Backend: {
+    icon: Server,
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/20",
+    glow: "hover:shadow-blue-500/20",
+  },
+  DevOps: {
+    icon: Cog,
+    color: "text-orange-400",
+    bg: "bg-orange-500/10",
+    border: "border-orange-500/20",
+    glow: "hover:shadow-orange-500/20",
+  },
+  Mobile: {
+    icon: Smartphone,
+    color: "text-pink-400",
+    bg: "bg-pink-500/10",
+    border: "border-pink-500/20",
+    glow: "hover:shadow-pink-500/20",
+  },
+};
+
+const fallbackConfigs: CategoryConfig[] = [
   {
     icon: Code2,
     label: "Tech",
@@ -48,7 +121,62 @@ const skillGroups = [
   },
 ];
 
+const defaultCategoryConfig: Omit<CategoryConfig, "skills" | "label"> = {
+  icon: Code2,
+  color: "text-neutral-400",
+  bg: "bg-neutral-500/10",
+  border: "border-neutral-500/20",
+  glow: "hover:shadow-neutral-500/20",
+};
+
 export default function Skills() {
+  const [skillGroups, setSkillGroups] = useState<CategoryConfig[]>(fallbackConfigs);
+
+  useEffect(() => {
+    if (!isFirebaseConfigured || !db) return;
+
+    (async () => {
+      try {
+        const q = query(collection(db!, "skills"), orderBy("order", "asc"));
+        const snap = await getDocs(q);
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill));
+        if (items.length === 0) return;
+
+        const grouped: Record<string, string[]> = {};
+        for (const skill of items) {
+          (grouped[skill.category] = grouped[skill.category] || []).push(skill.name);
+        }
+
+        const groups: CategoryConfig[] = Object.entries(grouped).map(([label, skills]) => ({
+          label,
+          skills,
+          ...(categoryConfigs[label] ?? defaultCategoryConfig),
+        }));
+
+        setSkillGroups(groups);
+      } catch {
+        try {
+          const snap = await getDocs(collection(db!, "skills"));
+          const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill));
+          if (items.length === 0) return;
+
+          const grouped: Record<string, string[]> = {};
+          for (const skill of items) {
+            (grouped[skill.category] = grouped[skill.category] || []).push(skill.name);
+          }
+
+          const groups: CategoryConfig[] = Object.entries(grouped).map(([label, skills]) => ({
+            label,
+            skills,
+            ...(categoryConfigs[label] ?? defaultCategoryConfig),
+          }));
+
+          setSkillGroups(groups);
+        } catch { /* use fallback */ }
+      }
+    })();
+  }, []);
+
   return (
     <section id="skills" className="py-20 md:py-28 relative">
       <div className="absolute inset-0 grid-bg opacity-50 pointer-events-none" />

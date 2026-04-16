@@ -100,10 +100,30 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 ### Assets
 5 photos in `attached_assets/` via `@assets/` alias. Hero: `162cf2f1...webp`. About: `WhatsApp_Image_2026-02-28...jpeg`.
 
+### Firebase CMS (`src/lib/firebase.ts`)
+- **Auth**: Email/password via Firebase Auth. `isFirebaseConfigured` guards all Firestore calls.
+- **Admin Panel** (`/admin`): 5-tab dashboard — General Settings, Social Links, Skills, Projects, Blogs.
+  - **General Settings** (`src/pages/admin/SettingsTab.tsx`): Edits `settings/profile` doc — heroTitle, heroSubtitle, bio, profileImageUrl, resumeLink, availability badge.
+  - **Social Links** (`src/pages/admin/SocialsTab.tsx`): CRUD on `socials` collection — name, icon (lucide name string), url, order.
+  - **Skills** (`src/pages/admin/SkillsTab.tsx`): CRUD on `skills` collection — name, category, order. Category filter UI.
+  - **Projects** tab: CRUD on `projects` collection.
+  - **Blogs** tab: CRUD on `blogs` collection with Quill.js rich text editor.
+
+### Dynamic Home Page
+- **Hero**: Fetches `settings/profile` on mount; falls back to hardcoded defaults. Shows dynamic name, subtitle, bio, availability badge, profileImageUrl. Social icons rendered from `socials` collection using `socialIconMap` (icon string → lucide component). Falls back to GitHub/Telegram/WhatsApp defaults if collection empty.
+- **Skills** (`src/components/Skills.tsx`): Fetches `skills` collection; groups by category; maps category to color/icon via `categoryConfigs`. Falls back to 5 static skillGroups if collection empty.
+- **Projects** (`src/components/Projects.tsx`): Fetches `projects` collection with static fallback.
+
+### Firestore Collections
+- `settings/profile` — single document, FirestoreProfile shape
+- `socials` — ordered by `order` asc, FirestoreSocial shape
+- `skills` — ordered by `order` asc, FirestoreSkill shape
+- `projects` — ordered by `order` asc, FirestoreProject shape
+- `blogs` — ordered by `createdAt` desc, FirestoreBlog shape; `published: true` filter for public view
+
 ### Notes
 - Contact form is frontend-only (fake submit with setTimeout)
-- Social links use placeholder URLs
-- No backend/API needed — purely static frontend
+- No backend/API needed — purely static frontend + Firebase Firestore
 
 ## Key Commands
 
