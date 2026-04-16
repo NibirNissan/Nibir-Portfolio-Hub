@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { User, Briefcase, Code2, Layers, Mail, Menu, X } from "lucide-react";
+import { User, Briefcase, Code2, Layers, Mail, Menu, X, Newspaper } from "lucide-react";
 import { useLocation } from "wouter";
 
 const navLinks = [
   { label: "About", href: "#about", icon: User },
   { label: "Skills", href: "#skills", icon: Code2 },
   { label: "Projects", href: "#projects", icon: Briefcase },
+  { label: "Blog", href: "/blog", icon: Newspaper },
   { label: "Services", href: "#services", icon: Layers },
   { label: "Contact", href: "#contact", icon: Mail },
 ];
@@ -14,11 +15,11 @@ export default function Nav() {
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const linkRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navLinks.map((l) => l.href.slice(1));
+      const sections = navLinks.filter((l) => l.href.startsWith("#")).map((l) => l.href.slice(1));
       for (const s of [...sections].reverse()) {
         const el = document.getElementById(s);
         if (el && window.scrollY >= el.offsetTop - 200) {
@@ -34,6 +35,10 @@ export default function Nav() {
 
   const handleNavClick = (href: string) => {
     setMobileOpen(false);
+    if (href.startsWith("/")) {
+      setLocation(href);
+      return;
+    }
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
@@ -67,7 +72,7 @@ export default function Nav() {
 
       <nav className="hidden md:flex fixed bottom-6 left-1/2 -translate-x-1/2 z-50 nav-capsule rounded-full px-2 py-2 items-center gap-1">
         {navLinks.map((link, idx) => {
-          const isActive = activeSection === link.href.slice(1);
+          const isActive = link.href.startsWith("/") ? location === link.href : activeSection === link.href.slice(1);
           return (
             <button
               key={link.label}
@@ -116,7 +121,7 @@ export default function Nav() {
               </button>
             </div>
             {navLinks.map((link) => {
-              const isActive = activeSection === link.href.slice(1);
+              const isActive = link.href.startsWith("/") ? location === link.href : activeSection === link.href.slice(1);
               return (
                 <button
                   key={link.label}
