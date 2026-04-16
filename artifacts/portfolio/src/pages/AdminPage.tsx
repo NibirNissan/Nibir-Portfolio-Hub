@@ -21,6 +21,8 @@ import type { FirestoreProject, FirestoreBlog } from "@/lib/firestoreTypes";
 import { SettingsTab } from "@/pages/admin/SettingsTab";
 import { SocialsTab } from "@/pages/admin/SocialsTab";
 import { SkillsTab } from "@/pages/admin/SkillsTab";
+import { TestimonialsTab } from "@/pages/admin/TestimonialsTab";
+import { InboxTab } from "@/pages/admin/InboxTab";
 import {
   LogOut,
   Plus,
@@ -40,6 +42,8 @@ import {
   Settings,
   Link2,
   Zap,
+  Quote,
+  Inbox,
 } from "lucide-react";
 
 function NotConfigured() {
@@ -736,7 +740,7 @@ function BlogsTab({ showToast }: { showToast: (msg: string, type: "success" | "e
 }
 
 function AdminDashboard({ user }: { user: User }) {
-  const [tab, setTab] = useState<"settings" | "socials" | "skills" | "projects" | "blogs">("settings");
+  const [tab, setTab] = useState<"settings" | "socials" | "skills" | "testimonials" | "projects" | "blogs" | "inbox">("inbox");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
@@ -777,9 +781,11 @@ function AdminDashboard({ user }: { user: User }) {
         <div className="flex flex-wrap gap-1 mb-8 bg-neutral-900 border border-neutral-800 p-1 rounded-xl w-fit">
           {(
             [
-              { key: "settings", icon: Settings, label: "General Settings" },
+              { key: "inbox", icon: Inbox, label: "Inbox" },
+              { key: "settings", icon: Settings, label: "General" },
               { key: "socials", icon: Link2, label: "Social Links" },
               { key: "skills", icon: Zap, label: "Skills" },
+              { key: "testimonials", icon: Quote, label: "Testimonials" },
               { key: "projects", icon: Layers, label: "Projects" },
               { key: "blogs", icon: BookOpen, label: "Blogs" },
             ] as const
@@ -799,9 +805,11 @@ function AdminDashboard({ user }: { user: User }) {
           ))}
         </div>
 
+        {tab === "inbox" && <InboxTab showToast={showToast} />}
         {tab === "settings" && <SettingsTab showToast={showToast} />}
         {tab === "socials" && <SocialsTab showToast={showToast} />}
         {tab === "skills" && <SkillsTab showToast={showToast} />}
+        {tab === "testimonials" && <TestimonialsTab showToast={showToast} />}
         {tab === "projects" && <ProjectsTab showToast={showToast} />}
         {tab === "blogs" && <BlogsTab showToast={showToast} />}
       </div>

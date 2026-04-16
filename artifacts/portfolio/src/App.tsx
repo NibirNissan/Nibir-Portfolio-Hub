@@ -11,6 +11,7 @@ import Subscription from "@/components/Subscription";
 import Ecosystem from "@/components/Ecosystem";
 import Vision from "@/components/Vision";
 import ProjectFeatures from "@/components/ProjectFeatures";
+import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ScanLine from "@/components/ScanLine";
@@ -59,6 +60,8 @@ function HomePage() {
       <ScrollSkew><Vision /></ScrollSkew>
       <ScanLine />
       <ScrollSkew><ProjectFeatures /></ScrollSkew>
+      <ScanLine />
+      <ScrollSkew><Testimonials /></ScrollSkew>
       <ScanLine />
       <ScrollSkew><Contact /></ScrollSkew>
       <Footer />

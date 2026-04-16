@@ -1,18 +1,43 @@
 import { useState } from "react";
-import { Send, Github, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
+import { Send, Github, MessageCircle, Phone, Mail, MapPin, AlertCircle } from "lucide-react";
+import { db, isFirebaseConfigured } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+    setError(null);
+
+    if (!isFirebaseConfigured || !db) {
+      // Graceful fallback when Firebase is not configured
+      setTimeout(() => {
+        setLoading(false);
+        setSubmitted(true);
+      }, 900);
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "inquiries"), {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        subject: form.subject.trim(),
+        message: form.message.trim(),
+        read: false,
+        createdAt: Date.now(),
+      });
       setLoading(false);
       setSubmitted(true);
-    }, 1200);
+    } catch (err) {
+      setLoading(false);
+      setError(err instanceof Error ? err.message : "Failed to send message. Please try again or contact me directly.");
+    }
   };
 
   const socials = [
@@ -127,6 +152,12 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="flex items-start gap-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs sm:text-sm">
+                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                    <span>{error}</span>
+                  </div>
+                )}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs sm:text-sm font-medium text-neutral-400 mb-2">Name</label>

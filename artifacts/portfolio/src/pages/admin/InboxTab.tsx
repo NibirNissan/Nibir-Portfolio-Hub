@@ -73,10 +73,12 @@ export function InboxTab({
   const markReadOnOpen = async (i: FirestoreInquiry) => {
     setSelected(i);
     if (!i.read && db && i.id) {
+      const targetId = i.id;
       try {
-        await updateDoc(doc(db, "inquiries", i.id), { read: true });
-        setItems(list => list.map(x => x.id === i.id ? { ...x, read: true } : x));
-        setSelected({ ...i, read: true });
+        await updateDoc(doc(db, "inquiries", targetId), { read: true });
+        setItems(list => list.map(x => x.id === targetId ? { ...x, read: true } : x));
+        // Only update selected if user hasn't clicked a different message in the meantime
+        setSelected(curr => (curr?.id === targetId ? { ...curr, read: true } : curr));
       } catch { /* silent */ }
     }
   };

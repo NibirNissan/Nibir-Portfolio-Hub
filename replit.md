@@ -102,10 +102,12 @@ Dynamic project pages accessible via "View Project" links on project cards. Each
 
 ### Firebase CMS (`src/lib/firebase.ts`)
 - **Auth**: Email/password via Firebase Auth. `isFirebaseConfigured` guards all Firestore calls.
-- **Admin Panel** (`/admin`): 5-tab dashboard — General Settings, Social Links, Skills, Projects, Blogs.
-  - **General Settings** (`src/pages/admin/SettingsTab.tsx`): Edits `settings/profile` doc — heroTitle, heroSubtitle, bio, profileImageUrl, resumeLink, availability badge.
-  - **Social Links** (`src/pages/admin/SocialsTab.tsx`): CRUD on `socials` collection — name, icon (lucide name string), url, order.
-  - **Skills** (`src/pages/admin/SkillsTab.tsx`): CRUD on `skills` collection — name, category, order. Category filter UI.
+- **Admin Panel** (`/admin`): 7-tab dashboard — Inbox, General, Social Links, Skills, Testimonials, Projects, Blogs. Defaults to Inbox tab on login.
+  - **Inbox** (`src/pages/admin/InboxTab.tsx`): Two-pane layout — list + detail view. All/Unread/Read filter. Auto-marks as read when a message is opened. Per-message toggle read/unread, delete, and "Reply via Email" mailto link. Timestamps shown as relative ("2h ago").
+  - **General Settings** (`src/pages/admin/SettingsTab.tsx`): Edits `settings/profile` doc.
+  - **Social Links** (`src/pages/admin/SocialsTab.tsx`): CRUD on `socials` collection.
+  - **Skills** (`src/pages/admin/SkillsTab.tsx`): CRUD on `skills` collection with category filter.
+  - **Testimonials** (`src/pages/admin/TestimonialsTab.tsx`): CRUD on `testimonials` collection — clientName, designation, imageUrl, review, rating (1-5), order.
   - **Projects** tab: CRUD on `projects` collection.
   - **Blogs** tab: CRUD on `blogs` collection with Quill.js rich text editor.
 
