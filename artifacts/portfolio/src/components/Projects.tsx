@@ -2,8 +2,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import {
   ExternalLink, Users, Droplets, FileText, ShoppingBag,
   Briefcase, GraduationCap, ArrowRight, Globe, Github,
-  X, ExternalLink as Launch, ChevronRight, Zap,
-  AlertTriangle, Cpu, BarChart3, Layers,
+  X, ExternalLink as Launch, ChevronRight, Layers,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import NebulaBg from "./NebulaBg";
@@ -263,10 +262,6 @@ function ProjectOverlay({
   }, [project.slug]);
 
   const tech = fullData?.techStack ?? project.tags;
-  const stats = fullData?.stats ?? [];
-  const features = fullData?.features ?? [];
-  const problem = fullData?.problem ?? "";
-  const solution = fullData?.solution ?? "";
   const year = fullData?.year ?? "";
   const role = fullData?.role ?? "";
 
@@ -297,8 +292,7 @@ function ProjectOverlay({
         className="relative z-10 w-full sm:w-[95%] sm:mx-auto flex flex-col overflow-hidden sm:rounded-3xl rounded-t-3xl"
         style={{
           ...panelStyle,
-          maxWidth: "900px",
-          maxHeight: "90dvh",
+          maxWidth: "540px",
           background: "#0d0e10",
           border: "1px solid rgba(255,255,255,0.08)",
           boxShadow: `0 40px 120px -20px rgba(${a.glowRgb},0.22), 0 0 0 1px rgba(${a.glowRgb},0.12), 0 8px 40px rgba(0,0,0,0.8)`,
@@ -313,19 +307,13 @@ function ProjectOverlay({
           <X className="w-4 h-4" />
         </button>
 
-        {/* ── Single scroll container — clicking anywhere navigates to full project page ── */}
-        <style>{`.overlay-scroll::-webkit-scrollbar { display: none; }`}</style>
+        {/* ── Clickable content area — click anywhere to navigate to full case study ── */}
         <div
           ref={contentRef}
-          className="overlay-scroll flex-1 overflow-y-auto overscroll-contain"
-          style={{
-            scrollbarWidth: "none",
-            WebkitOverflowScrolling: "touch",
-            cursor: "pointer",
-          } as React.CSSProperties}
+          style={{ cursor: "pointer" }}
           onClick={onNavigate}
         >
-          {/* ── Hero Image — inside scroll so it moves with content ── */}
+          {/* Hero Image */}
           <div className="relative w-full aspect-video overflow-hidden bg-neutral-900">
             {project.thumbnail ? (
               <img
@@ -363,9 +351,7 @@ function ProjectOverlay({
 
             {/* Top badges — leave right-12 gap so close button is never covered */}
             <div className="absolute top-3 left-3 right-12 flex items-start justify-between pointer-events-none" style={anim("overlay-fade-in", "0.4s", "ease", "0.15s")}>
-              <span
-                className={`px-2.5 py-1 rounded-full text-[11px] font-bold border tracking-wide ${a.statusBg} ${a.statusText}`}
-              >
+              <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold border tracking-wide ${a.statusBg} ${a.statusText}`}>
                 {project.status}
               </span>
               {year && (
@@ -376,89 +362,53 @@ function ProjectOverlay({
             </div>
           </div>
 
-          <div className="px-4 sm:px-7 pt-4 pb-16 sm:pb-[80px] space-y-6">
+          <div className="px-4 sm:px-6 pt-4 pb-5 space-y-4">
 
             {/* Title block */}
             <div style={stagger(0)}>
               <div className="flex items-start gap-3">
                 <div
-                  className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center mt-1"
+                  className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center mt-0.5"
                   style={{ background: `rgba(${a.glowRgb},0.12)`, border: `1px solid rgba(${a.glowRgb},0.25)`, boxShadow: `0 0 16px rgba(${a.glowRgb},0.15)` }}
                 >
                   <Icon className={`w-4.5 h-4.5 ${a.text}`} style={{ width: "18px", height: "18px" }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
                     {project.title}
                   </h2>
-                  <p className={`text-sm font-semibold uppercase tracking-widest mt-0.5 ${a.text}`}>
+                  <p className={`text-xs font-semibold uppercase tracking-widest mt-0.5 ${a.text}`}>
                     {project.subtitle}
                   </p>
                 </div>
               </div>
               {role && (
-                <p className="text-xs text-neutral-600 mt-2 ml-12">{role}</p>
+                <p className="text-xs text-neutral-600 mt-1.5 ml-12">{role}</p>
               )}
             </div>
 
-            {/* Description */}
+            {/* Description — truncated to 3 lines */}
             <div style={stagger(1)}>
-              <p className="text-neutral-300 text-sm sm:text-base leading-relaxed">
+              <p className="text-neutral-400 text-sm leading-relaxed line-clamp-3">
                 {project.description}
               </p>
             </div>
 
-            {/* Problem & Solution (if available) */}
-            {(problem || solution) && (
-              <div className="space-y-4" style={stagger(2)}>
-                {problem && (
-                  <div
-                    className="rounded-2xl p-4 sm:p-5 border relative overflow-hidden"
-                    style={{ background: `rgba(${a.glowRgb},0.04)`, borderColor: `rgba(${a.glowRgb},0.15)` }}
-                  >
-                    <div
-                      className="absolute left-0 inset-y-0 w-0.5 rounded-full"
-                      style={{ background: `linear-gradient(to bottom, rgba(${a.glowRgb},0.7), transparent)` }}
-                    />
-                    <div className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-2 ${a.text}`}>
-                      <AlertTriangle className="w-3 h-3" /> The Problem
-                    </div>
-                    <p className="text-neutral-400 text-sm leading-relaxed pl-1">{problem}</p>
-                  </div>
-                )}
-                {solution && (
-                  <div
-                    className="rounded-2xl p-4 sm:p-5 border relative overflow-hidden"
-                    style={{ background: `rgba(${a.glowRgb},0.04)`, borderColor: `rgba(${a.glowRgb},0.15)` }}
-                  >
-                    <div
-                      className="absolute left-0 inset-y-0 w-0.5 rounded-full"
-                      style={{ background: `linear-gradient(to bottom, rgba(${a.glowRgb},0.7), transparent)` }}
-                    />
-                    <div className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-2 ${a.text}`}>
-                      <Cpu className="w-3 h-3" /> The Solution
-                    </div>
-                    <p className="text-neutral-400 text-sm leading-relaxed pl-1">{solution}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Tech Stack */}
-            <div style={stagger(problem || solution ? 3 : 2)}>
-              <div className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-3 ${a.text}`}>
+            <div style={stagger(2)}>
+              <div className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-2.5 ${a.text}`}>
                 <Layers className="w-3 h-3" /> Tech Stack
               </div>
               <div className="flex flex-wrap gap-2">
                 {tech.map((t) => (
                   <span
                     key={t}
-                    className="px-3 py-1.5 rounded-full text-xs font-semibold border transition-transform hover:scale-105"
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold border"
                     style={{
                       background: a.pillBg,
                       borderColor: a.pillBorder,
                       color: a.pillText,
-                      boxShadow: `0 0 12px rgba(${a.glowRgb},0.12)`,
+                      boxShadow: `0 0 10px rgba(${a.glowRgb},0.1)`,
                     }}
                   >
                     {t}
@@ -467,94 +417,26 @@ function ProjectOverlay({
               </div>
             </div>
 
-            {/* Stats */}
-            {stats.length > 0 && (
-              <div style={stagger(4)}>
-                <div className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-3 ${a.text}`}>
-                  <BarChart3 className="w-3 h-3" /> Impact
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {stats.map((s) => (
-                    <div
-                      key={s.label}
-                      className="rounded-2xl p-4 text-center border"
-                      style={{ background: `rgba(${a.glowRgb},0.06)`, borderColor: `rgba(${a.glowRgb},0.15)` }}
-                    >
-                      <div className="text-xl sm:text-2xl font-black mb-0.5" style={{ color: `rgba(${a.glowRgb},1)` }}>
-                        {s.value}
-                      </div>
-                      <div className="text-[11px] text-neutral-500 font-medium">{s.label}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Features */}
-            {features.length > 0 && (
-              <div style={stagger(5)}>
-                <div className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-3 ${a.text}`}>
-                  <Zap className="w-3 h-3" /> Key Features
-                </div>
-                <div className="space-y-3">
-                  {features.slice(0, 4).map((f, i) => (
-                    <div
-                      key={f.title}
-                      className="rounded-xl border overflow-hidden"
-                      style={{ background: `rgba(${a.glowRgb},0.04)`, borderColor: `rgba(${a.glowRgb},0.12)` }}
-                    >
-                      {/* Feature image (if provided) */}
-                      {f.imageUrl && (
-                        <div className="w-full h-36 sm:h-44 overflow-hidden bg-neutral-900">
-                          <img
-                            src={f.imageUrl}
-                            alt={f.title}
-                            className="w-full h-full object-cover"
-                            onError={(e) => { (e.currentTarget as HTMLImageElement).parentElement!.style.display = "none"; }}
-                          />
-                        </div>
-                      )}
-                      {/* Text row */}
-                      <div className="flex gap-3 items-start p-3.5">
-                        <div
-                          className="w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center shrink-0 mt-px"
-                          style={{ background: `rgba(${a.glowRgb},0.15)`, color: `rgba(${a.glowRgb},1)` }}
-                        >
-                          {String(i + 1).padStart(2, "0")}
-                        </div>
-                        <div>
-                          <div className="text-sm font-semibold text-white leading-tight">{f.title}</div>
-                          {f.description && (
-                            <div className="text-xs text-neutral-500 mt-0.5 leading-relaxed">{f.description}</div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Divider */}
-            <div className="border-t border-neutral-800/70" style={stagger(6)} />
+            <div className="border-t border-neutral-800/60" style={stagger(3)} />
 
             {/* CTA Buttons */}
-            <div className="space-y-3" style={stagger(6)}>
-              <div className="flex gap-3">
+            <div className="space-y-2.5" style={stagger(3)}>
+              <div className="flex gap-2.5">
                 {project.liveLink && (
                   <a
                     href={project.liveLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all hover:brightness-110 active:scale-[0.98]"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all hover:brightness-110 active:scale-[0.98]"
                     style={{
                       background: `linear-gradient(135deg, rgba(${a.glowRgb},0.9), rgba(${a.glowRgb},0.7))`,
                       color: "#fff",
-                      boxShadow: `0 8px 28px rgba(${a.glowRgb},0.35)`,
+                      boxShadow: `0 6px 20px rgba(${a.glowRgb},0.3)`,
                     }}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <Launch className="w-4 h-4" /> Visit Live Project
+                    <Launch className="w-4 h-4" /> Visit Live
                   </a>
                 )}
                 {project.repoLink && (
@@ -562,7 +444,7 @@ function ProjectOverlay({
                     href={project.repoLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold border border-neutral-700 text-neutral-300 hover:border-neutral-500 hover:text-white transition-all active:scale-[0.98]"
+                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold border border-neutral-700 text-neutral-300 hover:border-neutral-500 hover:text-white transition-all active:scale-[0.98]"
                     style={{ background: "rgba(255,255,255,0.04)" }}
                     onClick={(e) => e.stopPropagation()}
                   >
