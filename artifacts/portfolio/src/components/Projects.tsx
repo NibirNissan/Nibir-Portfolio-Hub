@@ -1,6 +1,6 @@
 import { useRef, useCallback, useEffect, useState } from "react";
 import { ExternalLink, Users, Droplets, FileText, ShoppingBag, Briefcase, GraduationCap, ArrowRight, Globe, Github } from "lucide-react";
-import { Link } from "wouter";
+import { useLocation } from "wouter";
 import NebulaBg from "./NebulaBg";
 import { db, isFirebaseConfigured } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
@@ -93,22 +93,31 @@ const staticProjects = [
   },
 ];
 
-const accentMap: Record<string, { border: string; bg: string; text: string; badge: string; status: string }> = {
-  indigo: { border: "border-indigo-500/30", bg: "bg-indigo-500/10", text: "text-indigo-400", badge: "bg-indigo-500/15 text-indigo-300 border-indigo-500/20", status: "bg-indigo-500/20 text-indigo-300" },
-  red: { border: "border-red-500/30", bg: "bg-red-500/10", text: "text-red-400", badge: "bg-red-500/15 text-red-300 border-red-500/20", status: "bg-red-500/20 text-red-300" },
-  sky: { border: "border-sky-500/30", bg: "bg-sky-500/10", text: "text-sky-400", badge: "bg-sky-500/15 text-sky-300 border-sky-500/20", status: "bg-sky-500/20 text-sky-300" },
-  orange: { border: "border-orange-500/30", bg: "bg-orange-500/10", text: "text-orange-400", badge: "bg-orange-500/15 text-orange-300 border-orange-500/20", status: "bg-orange-500/20 text-orange-300" },
-  violet: { border: "border-violet-500/30", bg: "bg-violet-500/10", text: "text-violet-400", badge: "bg-violet-500/15 text-violet-300 border-violet-500/20", status: "bg-violet-500/20 text-violet-300" },
-  teal: { border: "border-teal-500/30", bg: "bg-teal-500/10", text: "text-teal-400", badge: "bg-teal-500/15 text-teal-300 border-teal-500/20", status: "bg-teal-500/20 text-teal-300" },
-  green: { border: "border-green-500/30", bg: "bg-green-500/10", text: "text-green-400", badge: "bg-green-500/15 text-green-300 border-green-500/20", status: "bg-green-500/20 text-green-300" },
-  amber: { border: "border-amber-500/30", bg: "bg-amber-500/10", text: "text-amber-400", badge: "bg-amber-500/15 text-amber-300 border-amber-500/20", status: "bg-amber-500/20 text-amber-300" },
+const accentMap: Record<string, { border: string; bg: string; text: string; badge: string; status: string; hoverShadow: string }> = {
+  indigo: { border: "border-indigo-500/30", bg: "bg-indigo-500/10", text: "text-indigo-400", badge: "bg-indigo-500/15 text-indigo-300 border-indigo-500/20", status: "bg-indigo-500/20 text-indigo-300", hoverShadow: "hover:shadow-indigo-500/10" },
+  red: { border: "border-red-500/30", bg: "bg-red-500/10", text: "text-red-400", badge: "bg-red-500/15 text-red-300 border-red-500/20", status: "bg-red-500/20 text-red-300", hoverShadow: "hover:shadow-red-500/10" },
+  sky: { border: "border-sky-500/30", bg: "bg-sky-500/10", text: "text-sky-400", badge: "bg-sky-500/15 text-sky-300 border-sky-500/20", status: "bg-sky-500/20 text-sky-300", hoverShadow: "hover:shadow-sky-500/10" },
+  orange: { border: "border-orange-500/30", bg: "bg-orange-500/10", text: "text-orange-400", badge: "bg-orange-500/15 text-orange-300 border-orange-500/20", status: "bg-orange-500/20 text-orange-300", hoverShadow: "hover:shadow-orange-500/10" },
+  violet: { border: "border-violet-500/30", bg: "bg-violet-500/10", text: "text-violet-400", badge: "bg-violet-500/15 text-violet-300 border-violet-500/20", status: "bg-violet-500/20 text-violet-300", hoverShadow: "hover:shadow-violet-500/10" },
+  teal: { border: "border-teal-500/30", bg: "bg-teal-500/10", text: "text-teal-400", badge: "bg-teal-500/15 text-teal-300 border-teal-500/20", status: "bg-teal-500/20 text-teal-300", hoverShadow: "hover:shadow-teal-500/10" },
+  green: { border: "border-green-500/30", bg: "bg-green-500/10", text: "text-green-400", badge: "bg-green-500/15 text-green-300 border-green-500/20", status: "bg-green-500/20 text-green-300", hoverShadow: "hover:shadow-green-500/10" },
+  amber: { border: "border-amber-500/30", bg: "bg-amber-500/10", text: "text-amber-400", badge: "bg-amber-500/15 text-amber-300 border-amber-500/20", status: "bg-amber-500/20 text-amber-300", hoverShadow: "hover:shadow-amber-500/10" },
 };
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Users, Droplets, FileText, ShoppingBag, GraduationCap, Briefcase,
 };
 
-function TiltCard({ children, className }: { children: React.ReactNode; className: string }) {
+interface TiltCardProps {
+  children: React.ReactNode;
+  className: string;
+  onClick?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
+  role?: string;
+  tabIndex?: number;
+}
+
+function TiltCard({ children, className, onClick, onKeyDown, role, tabIndex }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
   const rafRef = useRef<number>(0);
@@ -142,10 +151,14 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
     <div
       ref={ref}
       className={className}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      role={role}
+      tabIndex={tabIndex}
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ transition: "transform 0.15s ease-out", transformStyle: "preserve-3d", willChange: "transform" }}
+      style={{ transition: "transform 0.15s ease-out, box-shadow 0.3s ease", transformStyle: "preserve-3d", willChange: "transform" }}
     >
       {children}
     </div>
@@ -170,6 +183,7 @@ type DisplayProject = {
 export default function Projects() {
   const [projects, setProjects] = useState<DisplayProject[]>(staticProjects);
   const [loaded, setLoaded] = useState(false);
+  const [, setLocation] = useLocation();
 
   useEffect(() => {
     if (!isFirebaseConfigured || !db) return;
@@ -259,14 +273,23 @@ export default function Projects() {
             return (
               <TiltCard
                 key={project.title}
-                className={`reveal-card group relative rounded-2xl border ${a.border} bg-neutral-900/70 cursor-pointer flex flex-col overflow-hidden`}
+                className={`group reveal-card relative rounded-2xl border ${a.border} bg-neutral-900/70 cursor-pointer flex flex-col overflow-hidden hover:shadow-2xl ${a.hoverShadow} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30`}
+                onClick={() => setLocation(`/project/${project.slug}`)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setLocation(`/project/${project.slug}`);
+                  }
+                }}
+                role="link"
+                tabIndex={0}
               >
                 {project.thumbnail && (
                   <div className="w-full h-40 overflow-hidden bg-neutral-800">
                     <img src={project.thumbnail} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   </div>
                 )}
-                <div className={`flex flex-col flex-1 p-5 sm:p-6 ${project.thumbnail ? "" : ""}`}>
+                <div className="flex flex-col flex-1 p-5 sm:p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center`}>
                       <Icon className={`w-5 h-5 ${a.text}`} />
@@ -282,16 +305,30 @@ export default function Projects() {
                     ))}
                   </div>
                   <div className="flex items-center gap-3">
-                    <Link href={`/project/${project.slug}`} className={`inline-flex items-center gap-2 text-xs sm:text-sm font-semibold ${a.text} hover:gap-3 transition-all duration-300`}>
+                    <span className={`inline-flex items-center gap-2 group-hover:gap-3 text-xs sm:text-sm font-semibold ${a.text} transition-all duration-300`}>
                       View Project <ArrowRight className="w-3.5 h-3.5" />
-                    </Link>
+                    </span>
                     {project.liveLink && (
-                      <a href={project.liveLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-neutral-500 hover:text-white transition-colors" title="Live site">
+                      <a
+                        href={project.liveLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-neutral-500 hover:text-white transition-colors"
+                        title="Live site"
+                      >
                         <Globe className="w-3.5 h-3.5" />
                       </a>
                     )}
                     {project.repoLink && (
-                      <a href={project.repoLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-neutral-500 hover:text-white transition-colors" title="Source code">
+                      <a
+                        href={project.repoLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-neutral-500 hover:text-white transition-colors"
+                        title="Source code"
+                      >
                         <Github className="w-3.5 h-3.5" />
                       </a>
                     )}
