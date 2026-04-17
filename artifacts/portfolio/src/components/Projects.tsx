@@ -306,14 +306,14 @@ function ProjectOverlay({
       >
         {/* Close button — anchored to panel, always visible while scrolling */}
         <button
-          onClick={onClose}
+          onClick={(e) => { e.stopPropagation(); onClose(); }}
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/15 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-black/80 transition-all z-20"
           style={anim("overlay-fade-in", "0.3s", "ease", "0.1s")}
         >
           <X className="w-4 h-4" />
         </button>
 
-        {/* ── Single scroll container — image + text flow together ── */}
+        {/* ── Single scroll container — clicking anywhere navigates to full project page ── */}
         <style>{`.overlay-scroll::-webkit-scrollbar { display: none; }`}</style>
         <div
           ref={contentRef}
@@ -321,7 +321,9 @@ function ProjectOverlay({
           style={{
             scrollbarWidth: "none",
             WebkitOverflowScrolling: "touch",
+            cursor: "pointer",
           } as React.CSSProperties}
+          onClick={onNavigate}
         >
           {/* ── Hero Image — inside scroll so it moves with content ── */}
           <div className="relative w-full aspect-video overflow-hidden bg-neutral-900">
@@ -571,7 +573,7 @@ function ProjectOverlay({
 
               {/* View full case study */}
               <button
-                onClick={onNavigate}
+                onClick={(e) => { e.stopPropagation(); onNavigate(); }}
                 className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold text-neutral-500 hover:text-neutral-300 border border-transparent hover:border-neutral-800 transition-all group"
               >
                 View full case study
