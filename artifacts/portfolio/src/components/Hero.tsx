@@ -1,9 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import { ArrowDown, Github, Globe, Linkedin, Twitter, Instagram, Youtube, Facebook, MessageCircle, Phone, Mail, Rss, ExternalLink } from "lucide-react";
 import heroImg from "@assets/162cf2f13523cdbb8190637d39e5c469_1775426775549.webp";
 import { db, isFirebaseConfigured } from "@/lib/firebase";
 import { getDoc, getDocs, doc, collection, orderBy, query } from "firebase/firestore";
 import type { FirestoreProfile, FirestoreSocial } from "@/lib/firestoreTypes";
+
+const LONG_PRESS_MS = 2500;
 
 const socialIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Github, Globe, Linkedin, Twitter, Instagram, Youtube, Facebook,
@@ -33,6 +36,25 @@ const stagger = (delay: number): React.CSSProperties => ({
 export default function Hero() {
   const [profile, setProfile] = useState<FirestoreProfile>(defaultProfile);
   const [socials, setSocials] = useState<FirestoreSocial[]>(defaultSocials);
+  const [, setLocation] = useLocation();
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelLongPress = () => {
+    if (longPressTimer.current !== null) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const startLongPress = () => {
+    cancelLongPress();
+    longPressTimer.current = setTimeout(() => {
+      longPressTimer.current = null;
+      setLocation("/admin");
+    }, LONG_PRESS_MS);
+  };
+
+  useEffect(() => cancelLongPress, []);
 
   useEffect(() => {
     if (!isFirebaseConfigured || !db) return;
@@ -206,6 +228,22 @@ export default function Hero() {
                   src={imgSrc}
                   alt={profile.heroTitle || "Nibir Nissan"}
                   className="w-full h-full object-cover object-top"
+                  draggable={false}
+                  onMouseDown={startLongPress}
+                  onMouseUp={cancelLongPress}
+                  onMouseLeave={cancelLongPress}
+                  onTouchStart={startLongPress}
+                  onTouchEnd={cancelLongPress}
+                  onTouchCancel={cancelLongPress}
+                  onTouchMove={cancelLongPress}
+                  onContextMenu={cancelLongPress}
+                  onDragStart={(e) => e.preventDefault()}
+                  style={{
+                    userSelect: "none",
+                    WebkitUserSelect: "none",
+                    WebkitTouchCallout: "none",
+                    WebkitUserDrag: "none",
+                  } as React.CSSProperties}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               </div>
