@@ -1,10 +1,15 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import { ArrowDown, Github, Globe, Linkedin, Twitter, Instagram, Youtube, Facebook, MessageCircle, Phone, Mail, Rss, ExternalLink } from "lucide-react";
+import { ArrowDown, Github, Globe, Linkedin, Twitter, Instagram, Youtube, Facebook, MessageCircle, Phone, Mail, Rss, ExternalLink, Fingerprint } from "lucide-react";
 import heroImg from "@assets/162cf2f13523cdbb8190637d39e5c469_1775426775549.webp";
 import { db, isFirebaseConfigured } from "@/lib/firebase";
 import { getDoc, getDocs, doc, collection, orderBy, query } from "firebase/firestore";
 import type { FirestoreProfile, FirestoreSocial } from "@/lib/firestoreTypes";
+import {
+  isWebAuthnSupported,
+  hasBiometricRegistered,
+  verifyBiometric,
+} from "@/lib/webauthn";
 
 const LONG_PRESS_MS = 2500;
 
@@ -38,8 +43,8 @@ export default function Hero() {
   const [socials, setSocials] = useState<FirestoreSocial[]>(defaultSocials);
   const [, setLocation] = useLocation();
   const [pressing, setPressing] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Keep a stable ref to the blocker so we can remove the exact same fn
   const contextBlocker = useRef<((e: Event) => void) | null>(null);
 
   const removeContextBlocker = () => {
@@ -53,38 +58,53 @@ export default function Hero() {
     if (longPressTimer.current !== null) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
-      console.log("[hero-press] Timer cleared");
     }
     removeContextBlocker();
     setPressing(false);
   };
 
   const startLongPress = () => {
-    // Guard: if a timer is already running (e.g. both touchstart + pointerdown
-    // fired for the same gesture), don't restart — just keep the first timer.
     if (longPressTimer.current !== null) return;
 
-    // Haptic pulse so the user feels the press register
     if (navigator.vibrate) navigator.vibrate(50);
 
-    // Mount a document-level context-menu blocker for the duration of the
-    // press — this catches the OS-level popup on Android before React sees it
     removeContextBlocker();
     const blocker = (e: Event) => e.preventDefault();
     contextBlocker.current = blocker;
     document.addEventListener("contextmenu", blocker, { capture: true });
 
-    console.log("[hero-press] Timer started");
     setPressing(true);
 
-    longPressTimer.current = setTimeout(() => {
+    longPressTimer.current = setTimeout(async () => {
       longPressTimer.current = null;
       removeContextBlocker();
       setPressing(false);
-      // Double-buzz pattern confirms the secret trigger
-      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-      console.log("[hero-press] Long-press complete → /admin");
-      setLocation("/admin");
+
+      const useWebAuthn =
+        isWebAuthnSupported() && hasBiometricRegistered();
+
+      if (useWebAuthn) {
+        // Show the fingerprint overlay while the OS dialog is open
+        setVerifying(true);
+        const ok = await verifyBiometric();
+        setVerifying(false);
+
+        if (!ok) {
+          // Auth cancelled or failed — stay on the page, no access
+          console.log("[hero-press] Biometric verification denied");
+          return;
+        }
+        // Confirmed device owner — double-buzz and enter
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        console.log("[hero-press] Biometric OK → /admin");
+        setLocation("/admin");
+      } else {
+        // WebAuthn unavailable or not yet enrolled — fall back to
+        // the standard Firebase email/password login screen
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        console.log("[hero-press] WebAuthn unavailable → /admin (fallback)");
+        setLocation("/admin");
+      }
     }, LONG_PRESS_MS);
   };
 
@@ -290,7 +310,7 @@ export default function Hero() {
                   draggable={false}
                   onDragStart={(e) => e.preventDefault()}
                   style={{
-                    pointerEvents: "none",       // let the wrapper own all events
+                    pointerEvents: "none",
                     userSelect: "none",
                     WebkitUserSelect: "none",
                     WebkitTouchCallout: "none",
@@ -302,6 +322,38 @@ export default function Hero() {
                   className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
                   style={{ pointerEvents: "none" }}
                 />
+                {/* Biometric verifying overlay — appears while OS dialog is open */}
+                {verifying && (
+                  <div
+                    className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+                    style={{
+                      pointerEvents: "none",
+                      background: "rgba(0,0,0,0.65)",
+                      backdropFilter: "blur(4px)",
+                    }}
+                  >
+                    <div
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                      style={{
+                        background: "rgba(var(--theme-accent-rgb), 0.15)",
+                        border: "1.5px solid rgba(var(--theme-accent-rgb), 0.5)",
+                        boxShadow: "0 0 24px rgba(var(--theme-accent-rgb), 0.4)",
+                        animation: "hero-press-pulse 800ms ease-in-out infinite",
+                      }}
+                    >
+                      <Fingerprint
+                        className="w-9 h-9"
+                        style={{ color: "var(--theme-accent-light)" }}
+                      />
+                    </div>
+                    <span
+                      className="text-xs font-medium tracking-widest uppercase"
+                      style={{ color: "var(--theme-accent-light)", opacity: 0.85 }}
+                    >
+                      Verifying…
+                    </span>
+                  </div>
+                )}
               </div>
 
               <div

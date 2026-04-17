@@ -47,7 +47,15 @@ import {
   Quote,
   Inbox,
   Briefcase,
+  Fingerprint,
+  ShieldCheck,
 } from "lucide-react";
+import {
+  isWebAuthnSupported,
+  isPlatformAuthenticatorAvailable,
+  hasBiometricRegistered,
+  registerBiometric,
+} from "@/lib/webauthn";
 
 function NotConfigured() {
   return (
@@ -746,15 +754,41 @@ function AdminDashboard({ user }: { user: User }) {
   const [tab, setTab] = useState<"settings" | "socials" | "skills" | "testimonials" | "services" | "projects" | "blogs" | "inbox">("inbox");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [visitCount, setVisitCount] = useState<number | null>(null);
+  const [biometricBanner, setBiometricBanner] = useState<"idle" | "enrolling" | "success" | "hidden">("idle");
 
   useEffect(() => {
     getVisitCount().then(setVisitCount);
+  }, []);
+
+  // Show biometric enrollment banner only if WebAuthn is supported on this
+  // device AND a credential hasn't been registered yet.
+  useEffect(() => {
+    if (!isWebAuthnSupported() || hasBiometricRegistered()) {
+      setBiometricBanner("hidden");
+      return;
+    }
+    isPlatformAuthenticatorAvailable().then((available) => {
+      setBiometricBanner(available ? "idle" : "hidden");
+    });
   }, []);
 
   const showToast = useCallback((message: string, type: "success" | "error") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3500);
   }, []);
+
+  const handleEnrollBiometric = async () => {
+    setBiometricBanner("enrolling");
+    const ok = await registerBiometric(user.uid, user.email ?? "admin");
+    if (ok) {
+      setBiometricBanner("success");
+      showToast("Biometric login enabled! Long-press your photo to unlock.", "success");
+      setTimeout(() => setBiometricBanner("hidden"), 3500);
+    } else {
+      setBiometricBanner("idle");
+      showToast("Biometric registration cancelled or unavailable.", "error");
+    }
+  };
 
   const handleLogout = async () => {
     if (!auth) return;
@@ -831,6 +865,55 @@ function AdminDashboard({ user }: { user: User }) {
             </div>
           </div>
         </div>
+
+        {/* Biometric enrollment banner — only shown once on devices that
+            support WebAuthn and haven't registered a credential yet */}
+        {biometricBanner !== "hidden" && (
+          <div className="mb-6 flex items-center gap-4 bg-neutral-900 border border-emerald-500/20 rounded-xl p-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+              {biometricBanner === "success"
+                ? <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                : <Fingerprint className="w-5 h-5 text-emerald-400" />
+              }
+            </div>
+            <div className="flex-1 min-w-0">
+              {biometricBanner === "success" ? (
+                <>
+                  <p className="text-sm font-semibold text-white">Biometric login activated</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    Long-press your hero photo for 2.5s to unlock the admin panel with your fingerprint or PIN.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm font-semibold text-white">Enable biometric unlock</p>
+                  <p className="text-xs text-neutral-400 mt-0.5">
+                    Register your fingerprint or device PIN to access the admin panel via the secret long-press.
+                  </p>
+                </>
+              )}
+            </div>
+            {biometricBanner !== "success" && (
+              <button
+                onClick={handleEnrollBiometric}
+                disabled={biometricBanner === "enrolling"}
+                className="shrink-0 flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-black text-xs font-semibold px-3 py-2 rounded-lg transition-colors"
+              >
+                {biometricBanner === "enrolling"
+                  ? <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Enrolling…</>
+                  : <><Fingerprint className="w-3.5 h-3.5" /> Enable</>
+                }
+              </button>
+            )}
+            <button
+              onClick={() => setBiometricBanner("hidden")}
+              className="shrink-0 text-neutral-600 hover:text-neutral-300 transition-colors"
+              title="Dismiss"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
 
         <div className="flex flex-wrap gap-1 mb-8 bg-neutral-900 border border-neutral-800 p-1 rounded-xl w-fit">
           {(
