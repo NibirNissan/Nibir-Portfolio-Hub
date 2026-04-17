@@ -88,6 +88,13 @@ html {
   .custom-cursor-active * {
     cursor: none !important;
   }
+  /* Cursor elements must NEVER intercept any input — enforced with !important
+     so no specificity battle from modal overlays or other stacking contexts
+     can accidentally enable pointer events on them. */
+  .cursor-dot,
+  .cursor-ring {
+    pointer-events: none !important;
+  }
   /* Dot fades out when hovering a clickable element (ring expands instead) */
   .cursor-dot.cursor-hovering {
     opacity: 0 !important;

@@ -146,7 +146,7 @@ export default function CustomCursor() {
           borderRadius: "50%",
           background: "var(--cursor-dot-color, #10b981)",
           pointerEvents: "none",
-          zIndex: 9999,
+          zIndex: 999999,
           opacity: 0,                      // hidden until first mousemove
           willChange: "transform, opacity",
           transition: "opacity 0.15s ease, background 0.3s ease",
@@ -166,7 +166,7 @@ export default function CustomCursor() {
           border: "1.5px solid rgba(var(--theme-accent-rgb), 0.5)",
           boxShadow: "0 0 10px rgba(var(--theme-accent-rgb), 0.2), 0 0 20px rgba(var(--theme-accent-rgb), 0.08)",
           pointerEvents: "none",
-          zIndex: 9999,
+          zIndex: 999999,
           opacity: 0,                      // hidden until first mousemove
           willChange: "transform, opacity",
           transformOrigin: "center center",
