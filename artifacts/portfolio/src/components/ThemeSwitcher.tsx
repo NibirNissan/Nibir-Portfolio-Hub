@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Sparkles } from "lucide-react";
 
-type ThemeKey = "emerald-stealth" | "cyber-amber" | "midnight-royal" | "mono-chrome" | "liquid-glass";
+type ThemeKey = "emerald-stealth" | "cyber-amber" | "midnight-royal" | "mono-chrome" | "neon-abyss";
 
 interface ThemeConfig {
   label: string;
@@ -100,24 +100,24 @@ const themes: Record<ThemeKey, ThemeConfig> = {
     muted: "#737373",
     isLight: false,
   },
-  "liquid-glass": {
-    label: "iPhone Liquid Glass",
-    bg: "#e5e5e7",
-    accent: "#1d1d1f",
-    accentLight: "#424245",
-    accentLighter: "#6e6e73",
-    accentRgb: "29, 29, 31",
-    secondary: "#0066cc",
-    secondaryLight: "#2997ff",
-    secondaryRgb: "0, 102, 204",
-    text: "#1d1d1f",
-    grain: "0.012",
-    preview: "linear-gradient(135deg, #d2d2d7, #e5e5e7, #f5f5f7)",
-    surfaceRgb: "255, 255, 255",
-    heading: "#1d1d1f",
-    body: "#424245",
-    muted: "#86868b",
-    isLight: true,
+  "neon-abyss": {
+    label: "Neon Abyss",
+    bg: "#000510",
+    accent: "#00f0ff",
+    accentLight: "#33f5ff",
+    accentLighter: "#80f9ff",
+    accentRgb: "0, 240, 255",
+    secondary: "#7c3aed",
+    secondaryLight: "#a78bfa",
+    secondaryRgb: "124, 58, 237",
+    text: "#e2f8ff",
+    grain: "0.028",
+    preview: "#00f0ff",
+    surfaceRgb: "0, 8, 20",
+    heading: "#f0fdff",
+    body: "#a8d8e0",
+    muted: "#3d7585",
+    isLight: false,
   },
 };
 
@@ -171,7 +171,7 @@ function applyTheme(key: ThemeKey) {
     "cyber-amber": "#f59e0b",
     "midnight-royal": "#8b5cf6",
     "mono-chrome": "#ffffff",
-    "liquid-glass": "#1d1d1f",
+    "neon-abyss": "#00f0ff",
   };
   s.setProperty("--cursor-dot-color", cursorColors[key]);
   document.documentElement.setAttribute("data-theme", key);
@@ -182,7 +182,7 @@ function applyTheme(key: ThemeKey) {
 function getSavedTheme(): ThemeKey {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved && saved in themes) return saved as ThemeKey;
-  return "emerald-stealth";
+  return "midnight-royal";
 }
 
 export default function ThemeSwitcher() {
