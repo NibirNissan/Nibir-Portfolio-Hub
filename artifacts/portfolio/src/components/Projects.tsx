@@ -278,7 +278,7 @@ function ProjectOverlay({
 
   return (
     <div
-      className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className="fixed inset-0 flex items-center justify-center p-4"
       style={{ ...backdropStyle, zIndex: 99999 }}
     >
       {/* Backdrop */}
@@ -289,10 +289,11 @@ function ProjectOverlay({
 
       {/* Panel */}
       <div
-        className="relative z-10 w-full sm:w-[95%] sm:mx-auto flex flex-col overflow-hidden sm:rounded-3xl rounded-t-3xl"
+        className="relative z-10 w-full sm:w-[95%] sm:mx-auto flex flex-col overflow-hidden sm:rounded-3xl rounded-3xl"
         style={{
           ...panelStyle,
           maxWidth: "540px",
+          maxHeight: "90dvh",
           background: "#0d0e10",
           border: "1px solid rgba(255,255,255,0.08)",
           boxShadow: `0 40px 120px -20px rgba(${a.glowRgb},0.22), 0 0 0 1px rgba(${a.glowRgb},0.12), 0 8px 40px rgba(0,0,0,0.8)`,
@@ -310,7 +311,8 @@ function ProjectOverlay({
         {/* ── Clickable content area — click anywhere to navigate to full case study ── */}
         <div
           ref={contentRef}
-          style={{ cursor: "pointer" }}
+          className="no-scrollbar"
+          style={{ cursor: "pointer", overflowY: "auto" }}
           onClick={onNavigate}
         >
           {/* Hero Image */}

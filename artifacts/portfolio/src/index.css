@@ -447,6 +447,15 @@ html {
   }
 }
 
+/* ── Scrollbar hide utility ──────────────────────────────── */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* ── Blog Content Typography ─────────────────────────────── */
 .blog-content {
   color: #d4d4d4;
