@@ -769,3 +769,29 @@ html {
 .quill-admin-wrapper .ql-snow .ql-picker-item:hover {
   color: #34d399;
 }
+
+/* ── Project Overlay Animations ── */
+@keyframes overlay-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes overlay-backdrop-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes overlay-panel-in {
+  from { opacity: 0; transform: translateY(64px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+@keyframes overlay-panel-out {
+  from { opacity: 1; transform: translateY(0)    scale(1);    }
+  to   { opacity: 0; transform: translateY(40px) scale(0.97); }
+}
+@keyframes overlay-item-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes overlay-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
