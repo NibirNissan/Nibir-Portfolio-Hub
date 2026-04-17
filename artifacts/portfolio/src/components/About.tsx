@@ -3,30 +3,11 @@ import { motion, useInView } from "framer-motion";
 import {
   Code2, Figma, Video, Bot, Star,
   GraduationCap, Sparkles, Rocket,
-  Briefcase, Globe, Zap, Award, Trophy,
-  Flame, Heart, Terminal, Users, Lightbulb,
-  Camera, Laptop2, Package,
 } from "lucide-react";
 import { db, isFirebaseConfigured } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import type { FirestoreTimeline } from "@/lib/firestoreTypes";
-
-/* ─────────────────────────────────────────────────────────── */
-/*  Icon map — string key from Firestore → React component     */
-/* ─────────────────────────────────────────────────────────── */
-
-export const TIMELINE_ICON_MAP: Record<
-  string,
-  React.ComponentType<{ className?: string; style?: React.CSSProperties }>
-> = {
-  Code2, Figma, Video, Bot, Star,
-  GraduationCap, Sparkles, Rocket,
-  Briefcase, Globe, Zap, Award, Trophy,
-  Flame, Heart, Terminal, Users, Lightbulb,
-  Camera, Laptop2, Package,
-};
-
-export const TIMELINE_ICON_NAMES = Object.keys(TIMELINE_ICON_MAP);
+import { TIMELINE_ICON_MAP } from "@/lib/timelineIcons";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Timeline entry type (runtime, with resolved icon)          */
@@ -241,20 +222,6 @@ function TimelineCard({
       {/* Description */}
       <p className="text-sm text-neutral-400 leading-relaxed">{entry.description}</p>
 
-      {/* Milestone image — rendered only when imageUrl is provided */}
-      {entry.imageUrl && (
-        <div className="mt-4 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6">
-          <img
-            src={entry.imageUrl}
-            alt={entry.title}
-            className="w-full h-40 object-cover"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = "none";
-            }}
-          />
-        </div>
-      )}
-
       {/* Hover accent bottom bar */}
       <motion.div
         className="absolute bottom-0 left-0 right-0 h-[2px] rounded-b-2xl"
@@ -262,6 +229,87 @@ function TimelineCard({
         initial={{ opacity: 0, scaleX: 0 }}
         animate={{ opacity: hovered ? 1 : 0, scaleX: hovered ? 1 : 0 }}
         transition={{ duration: 0.3 }}
+      />
+    </motion.div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Milestone image frame                                      */
+/* ─────────────────────────────────────────────────────────── */
+
+function TimelineImage({
+  entry,
+  inView,
+  direction,
+}: {
+  entry: TimelineEntry;
+  inView: boolean;
+  direction: "left" | "right";
+}) {
+  const [imgError, setImgError] = useState(false);
+  if (imgError || !entry.imageUrl) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: direction === "left" ? -28 : 28 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.28 }}
+      className="relative rounded-2xl overflow-hidden w-full max-w-sm"
+      style={{
+        aspectRatio: "4 / 3",
+        border: `1px solid rgba(${entry.rgb},0.18)`,
+        boxShadow: `0 8px 32px rgba(${entry.rgb},0.1), 0 2px 8px rgba(0,0,0,0.4)`,
+      }}
+    >
+      <img
+        src={entry.imageUrl}
+        alt={entry.title}
+        className="absolute inset-0 w-full h-full object-cover"
+        onError={() => setImgError(true)}
+      />
+
+      {/* Scan-line texture overlay — matches site grain aesthetic */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          opacity: 0.035,
+          backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,1) 2px, rgba(255,255,255,1) 3px)",
+        }}
+      />
+
+      {/* Bottom dark-to-transparent gradient for legibility */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
+        style={{
+          background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.18) 55%, transparent 100%)",
+        }}
+      />
+
+      {/* Accent radial glow at the base */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: `radial-gradient(ellipse at 50% 115%, rgba(${entry.rgb},0.2), transparent 60%)` }}
+      />
+
+      {/* Floating tag pill */}
+      <div
+        className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest leading-none"
+        style={{
+          background: `rgba(0,0,0,0.45)`,
+          border: `1px solid rgba(${entry.rgb},0.45)`,
+          color: `rgba(${entry.rgb},1)`,
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+        }}
+      >
+        {entry.tag}
+      </div>
+
+      {/* Inset accent border shimmer */}
+      <div
+        className="absolute inset-0 rounded-2xl pointer-events-none"
+        style={{ boxShadow: `inset 0 0 0 1px rgba(${entry.rgb},0.12)` }}
       />
     </motion.div>
   );
@@ -284,22 +332,40 @@ function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) 
           <TimelineDot entry={entry} inView={inView} />
           <YearBadge entry={entry} inView={inView} delay={0.25} />
         </div>
-        <div className="flex-1 pt-1 pb-2">
+        <div className="flex-1 pt-1 pb-2 space-y-3">
           <TimelineCard entry={entry} inView={inView} direction="right" align="start" />
+          {entry.imageUrl && (
+            <TimelineImage entry={entry} inView={inView} direction="right" />
+          )}
         </div>
       </div>
 
       {/* ── Desktop layout (lg+): alternating 3-col grid ── */}
       <div className="hidden lg:grid items-center gap-6" style={{ gridTemplateColumns: "1fr 80px 1fr" }}>
+        {/* Left column: card when isLeft, or image when !isLeft and image exists */}
         <div className="flex justify-end">
-          {isLeft && <TimelineCard entry={entry} inView={inView} direction="left" align="end" />}
+          {isLeft
+            ? <TimelineCard entry={entry} inView={inView} direction="left" align="end" />
+            : entry.imageUrl
+              ? <TimelineImage entry={entry} inView={inView} direction="left" />
+              : null
+          }
         </div>
+
+        {/* Center: dot + year */}
         <div className="flex flex-col items-center gap-2.5 py-4">
           <TimelineDot entry={entry} inView={inView} />
           <YearBadge entry={entry} inView={inView} delay={0.22} />
         </div>
+
+        {/* Right column: card when !isLeft, or image when isLeft and image exists */}
         <div className="flex justify-start">
-          {!isLeft && <TimelineCard entry={entry} inView={inView} direction="right" align="start" />}
+          {!isLeft
+            ? <TimelineCard entry={entry} inView={inView} direction="right" align="start" />
+            : entry.imageUrl
+              ? <TimelineImage entry={entry} inView={inView} direction="right" />
+              : null
+          }
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@ import {
   Plus, Pencil, Trash2, X, Loader2, Clock3, Image as ImageIcon,
 } from "lucide-react";
 import type { FirestoreTimeline } from "@/lib/firestoreTypes";
-import { TIMELINE_ICON_MAP, TIMELINE_ICON_NAMES } from "@/components/About";
+import { TIMELINE_ICON_MAP, TIMELINE_ICON_NAMES } from "@/lib/timelineIcons";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Constants                                                  */
