@@ -10,6 +10,7 @@ import NebulaBg from "./NebulaBg";
 import { db, isFirebaseConfigured } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy, where } from "firebase/firestore";
 import type { FirestoreProject } from "@/lib/firestoreTypes";
+import { trackEvent } from "@/lib/analytics";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Static fallback data                                        */
@@ -770,6 +771,7 @@ export default function Projects() {
     setActiveProject(project);
     setFullData(null);
     setOverlayClosing(false);
+    trackEvent({ eventType: "project_view", eventTarget: project.title });
 
     if (!isFirebaseConfigured || !db) return;
     (async () => {

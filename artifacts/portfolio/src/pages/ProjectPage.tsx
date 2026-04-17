@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { getProjectBySlug } from "@/data/projects";
+import { trackEvent } from "@/lib/analytics";
 import NebulaBg from "@/components/NebulaBg";
 import ScanLine from "@/components/ScanLine";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -375,6 +376,18 @@ export default function ProjectPage() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [params.slug]);
+
+  /* Time-on-page tracking — fires page_leave with seconds spent on unmount */
+  useEffect(() => {
+    if (!project) return;
+    const title = project.title;
+    const startedAt = Date.now();
+    trackEvent({ eventType: "page_enter", eventTarget: title });
+    return () => {
+      const timeSpent = Math.round((Date.now() - startedAt) / 1000);
+      trackEvent({ eventType: "page_leave", eventTarget: title, timeSpent });
+    };
+  }, [project?.slug]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!project) {
     return (

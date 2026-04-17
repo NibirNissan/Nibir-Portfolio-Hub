@@ -24,6 +24,7 @@ import { SkillsTab } from "@/pages/admin/SkillsTab";
 import { TestimonialsTab } from "@/pages/admin/TestimonialsTab";
 import { InboxTab } from "@/pages/admin/InboxTab";
 import { ServicesTab } from "@/pages/admin/ServicesTab";
+import { AnalyticsTab } from "@/pages/admin/AnalyticsTab";
 import { getVisitCount } from "@/lib/analytics";
 import {
   LogOut,
@@ -49,6 +50,7 @@ import {
   Briefcase,
   Fingerprint,
   ShieldCheck,
+  BarChart3,
 } from "lucide-react";
 import {
   isWebAuthnSupported,
@@ -856,7 +858,7 @@ function BlogsTab({ showToast }: { showToast: (msg: string, type: "success" | "e
 }
 
 function AdminDashboard({ user }: { user: User }) {
-  const [tab, setTab] = useState<"settings" | "socials" | "skills" | "testimonials" | "services" | "projects" | "blogs" | "inbox">("inbox");
+  const [tab, setTab] = useState<"settings" | "socials" | "skills" | "testimonials" | "services" | "projects" | "blogs" | "inbox" | "analytics">("inbox");
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [visitCount, setVisitCount] = useState<number | null>(null);
   const [biometricBanner, setBiometricBanner] = useState<"idle" | "enrolling" | "success" | "hidden">("idle");
@@ -1031,6 +1033,7 @@ function AdminDashboard({ user }: { user: User }) {
               { key: "services", icon: Briefcase, label: "Services" },
               { key: "projects", icon: Layers, label: "Projects" },
               { key: "blogs", icon: BookOpen, label: "Blogs" },
+              { key: "analytics", icon: BarChart3, label: "Analytics" },
             ] as const
           ).map(({ key, icon: Icon, label }) => (
             <button
@@ -1056,6 +1059,7 @@ function AdminDashboard({ user }: { user: User }) {
         {tab === "services" && <ServicesTab showToast={showToast} />}
         {tab === "projects" && <ProjectsTab showToast={showToast} />}
         {tab === "blogs" && <BlogsTab showToast={showToast} />}
+        {tab === "analytics" && <AnalyticsTab showToast={showToast} />}
       </div>
 
       {toast && <Toast message={toast.message} type={toast.type} />}

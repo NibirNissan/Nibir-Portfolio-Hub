@@ -10,6 +10,7 @@ import {
   hasBiometricRegistered,
   verifyBiometric,
 } from "@/lib/webauthn";
+import { trackEvent } from "@/lib/analytics";
 
 const LONG_PRESS_MS = 2500;
 
@@ -220,7 +221,7 @@ export default function Hero() {
 
             <div style={stagger(0.55)} className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-8">
               <button
-                onClick={() => scrollToSection("projects")}
+                onClick={() => { scrollToSection("projects"); trackEvent({ eventType: "button_click", eventTarget: "View My Work" }); }}
                 className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold transition-all duration-200 glow-emerald hover:scale-105 text-sm sm:text-base"
                 style={{ backgroundColor: "var(--theme-accent)", color: "var(--theme-accent-fg, #000)" }}
               >
@@ -233,6 +234,7 @@ export default function Hero() {
                   rel="noopener noreferrer"
                   className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-white transition-all duration-200 text-sm sm:text-base"
                   style={{ border: "1px solid rgba(var(--theme-accent-rgb), 0.2)", color: "var(--theme-heading)" }}
+                  onClick={() => trackEvent({ eventType: "button_click", eventTarget: "Resume" })}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = `rgba(var(--theme-accent-rgb), 0.5)`; e.currentTarget.style.backgroundColor = "rgba(var(--theme-accent-rgb), 0.05)"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(var(--theme-accent-rgb), 0.2)"; e.currentTarget.style.backgroundColor = "transparent"; }}
                 >
@@ -240,7 +242,7 @@ export default function Hero() {
                 </a>
               ) : (
                 <button
-                  onClick={() => scrollToSection("contact")}
+                  onClick={() => { scrollToSection("contact"); trackEvent({ eventType: "button_click", eventTarget: "Let's Talk" }); }}
                   className="px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl font-semibold text-white transition-all duration-200 text-sm sm:text-base"
                   style={{ border: "1px solid rgba(var(--theme-accent-rgb), 0.2)", color: "var(--theme-heading)" }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = `rgba(var(--theme-accent-rgb), 0.5)`; e.currentTarget.style.backgroundColor = "rgba(var(--theme-accent-rgb), 0.05)"; }}
