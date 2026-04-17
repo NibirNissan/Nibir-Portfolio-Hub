@@ -190,7 +190,7 @@ export default function ServicePage() {
   const c = colorMap[colorKey] || colorMap.emerald;
 
   return (
-    <div className="min-h-screen overflow-x-hidden grain-bg relative" style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}>
+    <div className="min-h-screen overflow-x-clip grain-bg relative" style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}>
       <BackButton />
       <ServiceNav />
 
