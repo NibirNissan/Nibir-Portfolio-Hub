@@ -294,10 +294,11 @@ function ProjectOverlay({
 
       {/* Panel */}
       <div
-        className="relative z-10 w-full sm:max-w-2xl sm:mx-auto flex flex-col overflow-hidden sm:rounded-3xl rounded-t-3xl"
+        className="relative z-10 w-full sm:w-[95%] sm:mx-auto flex flex-col overflow-hidden sm:rounded-3xl rounded-t-3xl"
         style={{
           ...panelStyle,
-          maxHeight: "90vh",
+          maxWidth: "900px",
+          maxHeight: "90dvh",
           background: "#0d0e10",
           border: "1px solid rgba(255,255,255,0.08)",
           boxShadow: `0 40px 120px -20px rgba(${a.glowRgb},0.22), 0 0 0 1px rgba(${a.glowRgb},0.12), 0 8px 40px rgba(0,0,0,0.8)`,
@@ -373,7 +374,7 @@ function ProjectOverlay({
             </div>
           </div>
 
-          <div className="px-5 sm:px-7 pt-4 pb-[80px] space-y-6">
+          <div className="px-4 sm:px-7 pt-4 pb-16 sm:pb-[80px] space-y-6">
 
             {/* Title block */}
             <div style={stagger(0)}>
@@ -613,7 +614,7 @@ function ProjectCard({
   return (
     <div
       className={`group relative flex flex-col rounded-2xl border ${a.border} bg-[#111214] overflow-hidden cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30`}
-      style={cardStyle}
+      style={{ ...cardStyle, touchAction: "manipulation" }}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

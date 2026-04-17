@@ -44,7 +44,7 @@ function HomePage() {
       initial="initial"
       animate="animate"
       exit="exit"
-      className="min-h-screen overflow-x-hidden grain-bg relative"
+      className="min-h-screen overflow-x-clip grain-bg relative"
       style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}
     >
       <ParallaxBg />
