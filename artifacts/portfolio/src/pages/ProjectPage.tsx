@@ -446,7 +446,7 @@ export default function ProjectPage() {
   const colors = accentColors[project.accent] || accentColors.indigo;
 
   return (
-    <div className="min-h-screen overflow-x-hidden grain-bg relative" style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}>
+    <div className="min-h-screen grain-bg relative" style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)", overflowX: "clip" }}>
       <BackButton />
       <ProjectNav />
 
@@ -597,9 +597,7 @@ export default function ProjectPage() {
               </div>
             </ScrollReveal>
 
-            <ScrollReveal delay={100}>
-              <FeatureShowcase features={project.features} colors={colors} />
-            </ScrollReveal>
+            <FeatureShowcase features={project.features} colors={colors} />
           </div>
         </section>
       )}
