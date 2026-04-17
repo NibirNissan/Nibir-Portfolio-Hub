@@ -1,6 +1,10 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { getProjectBySlug } from "@/data/projects";
+import type { ProjectData } from "@/data/projects";
+import type { FirestoreProject } from "@/lib/firestoreTypes";
+import { db, isFirebaseConfigured } from "@/lib/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { trackEvent } from "@/lib/analytics";
 import NebulaBg from "@/components/NebulaBg";
 import ScanLine from "@/components/ScanLine";
@@ -8,6 +12,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 import BackButton from "@/components/BackButton";
 import ProjectNav from "@/components/ProjectNav";
 import { Sparkles, AlertTriangle, Cpu, Zap } from "lucide-react";
+
+type PageProject = Omit<ProjectData, "icon"> | FirestoreProject;
 
 const accentColors: Record<string, { rgb: string; tw: string; twBg: string; twBorder: string }> = {
   indigo: { rgb: "99, 102, 241", tw: "text-indigo-400", twBg: "bg-indigo-500/10", twBorder: "border-indigo-500/20" },
@@ -413,7 +419,45 @@ function FeatureShowcase({
 export default function ProjectPage() {
   const params = useParams<{ slug: string }>();
   const [, setLocation] = useLocation();
-  const project = getProjectBySlug(params.slug || "");
+  const [project, setProject] = useState<PageProject | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  /* ── Fetch project: Firestore first, static data as fallback ── */
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setProject(null);
+
+    const slug = params.slug || "";
+
+    async function fetchProject() {
+      // 1. Try Firestore (covers all Admin-created projects)
+      if (isFirebaseConfigured && db) {
+        try {
+          const q = query(collection(db, "projects"), where("slug", "==", slug));
+          const snap = await getDocs(q);
+          if (!snap.empty && !cancelled) {
+            const doc = snap.docs[0];
+            setProject({ id: doc.id, ...doc.data() } as FirestoreProject);
+            setLoading(false);
+            return;
+          }
+        } catch {
+          // Firestore unavailable — fall through to static data
+        }
+      }
+
+      // 2. Fall back to static hardcoded data (covers pre-existing projects)
+      if (!cancelled) {
+        const staticProject = getProjectBySlug(slug);
+        setProject(staticProject ?? null);
+        setLoading(false);
+      }
+    }
+
+    fetchProject();
+    return () => { cancelled = true; };
+  }, [params.slug]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -430,6 +474,21 @@ export default function ProjectPage() {
       trackEvent({ eventType: "page_leave", eventTarget: title, timeSpent });
     };
   }, [project?.slug]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* Loading state — prevents premature "Not Found" flash */
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "var(--theme-bg)" }}>
+        <div className="flex flex-col items-center gap-4">
+          <div
+            className="w-10 h-10 rounded-full border-2 border-transparent animate-spin"
+            style={{ borderTopColor: "var(--theme-accent)", borderRightColor: "rgba(var(--theme-accent-rgb),0.3)" }}
+          />
+          <p className="text-neutral-500 text-sm font-mono tracking-widest uppercase">Loading</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!project) {
     return (
