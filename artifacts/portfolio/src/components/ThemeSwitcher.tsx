@@ -122,7 +122,8 @@ const themes: Record<ThemeKey, ThemeConfig> = {
 };
 
 const THEME_KEYS = Object.keys(themes) as ThemeKey[];
-const STORAGE_KEY = "portfolio-theme";
+const STORAGE_KEY = "portfolio-theme-v3";
+const DEFAULT_THEME: ThemeKey = "midnight-royal";
 
 function generateFaviconSvg(color: string, bg: string, dimmed = false): string {
   const opacity = dimmed ? 0.4 : 1;
@@ -180,14 +181,15 @@ function applyTheme(key: ThemeKey) {
 }
 
 function getSavedTheme(): ThemeKey {
+  if (typeof window === "undefined") return DEFAULT_THEME;
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved && saved in themes) return saved as ThemeKey;
-  return "midnight-royal";
+  return DEFAULT_THEME;
 }
 
 export default function ThemeSwitcher() {
   const [open, setOpen] = useState(false);
-  const [current, setCurrent] = useState<ThemeKey>(getSavedTheme);
+  const [current, setCurrent] = useState<ThemeKey>(() => getSavedTheme() ?? DEFAULT_THEME);
   const [hovered, setHovered] = useState<ThemeKey | null>(null);
   const [wipe, setWipe] = useState<{ active: boolean; x: number; y: number; bg: string } | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);

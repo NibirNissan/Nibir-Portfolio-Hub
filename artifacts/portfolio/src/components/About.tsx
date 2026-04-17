@@ -321,7 +321,7 @@ function TimelineImage({
 
 function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.05 });
+  const inView = useInView(ref, { once: true, amount: 0 });
   const isLeft = index % 2 === 0;
 
   return (
@@ -380,7 +380,7 @@ export default function About() {
   const timelineRef = useRef<HTMLDivElement>(null);
   const [timeline, setTimeline] = useState<TimelineEntry[]>(DEFAULT_TIMELINE);
 
-  const lineInView = useInView(timelineRef, { once: true, amount: 0.05 });
+  const lineInView = useInView(timelineRef, { once: true, amount: 0 });
 
   /* Fetch timeline from Firestore — fall back to defaults if empty or error */
   useEffect(() => {
@@ -494,7 +494,7 @@ export default function About() {
               key={s.label}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.05 }}
+              viewport={{ once: true, amount: 0 }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               whileHover={{ y: -4, transition: { duration: 0.25 } }}
               className="group relative p-5 rounded-2xl border text-center overflow-hidden cursor-default"
