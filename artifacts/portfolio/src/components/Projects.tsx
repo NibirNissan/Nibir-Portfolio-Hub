@@ -284,11 +284,32 @@ export default function Projects() {
                 role="link"
                 tabIndex={0}
               >
-                {project.thumbnail && (
-                  <div className="w-full h-40 overflow-hidden bg-neutral-800">
-                    <img src={project.thumbnail} alt={project.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                )}
+                <div className="w-full h-40 overflow-hidden bg-neutral-800 shrink-0">
+                  {project.thumbnail ? (
+                    <img
+                      src={project.thumbnail}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className={`w-full h-full flex items-center justify-center relative ${a.bg}`}>
+                      <svg
+                        className="absolute inset-0 w-full h-full opacity-20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <defs>
+                          <pattern id={`grid-${project.slug}`} width="24" height="24" patternUnits="userSpaceOnUse">
+                            <path d="M 24 0 L 0 0 0 24" fill="none" stroke="currentColor" strokeWidth="0.5" className={a.text} />
+                          </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill={`url(#grid-${project.slug})`} />
+                      </svg>
+                      <div className={`relative z-10 w-14 h-14 rounded-2xl ${a.bg} border ${a.border} flex items-center justify-center shadow-lg`}>
+                        <Icon className={`w-7 h-7 ${a.text}`} />
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="flex flex-col flex-1 p-5 sm:p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.border} flex items-center justify-center`}>

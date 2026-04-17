@@ -335,19 +335,49 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
           <button type="button" onClick={closeForm} className="text-neutral-500 hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
+        {/* Project Image — dedicated section with live preview */}
+        <div className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 space-y-3">
+          <label className="block text-xs font-semibold text-neutral-300 tracking-wide uppercase">Project Image</label>
+          <div className="flex gap-4 items-start">
+            <div className="w-28 h-20 rounded-xl overflow-hidden shrink-0 bg-neutral-800 border border-neutral-700 flex items-center justify-center">
+              {form.thumbnail ? (
+                <img
+                  src={form.thumbnail}
+                  alt="Thumbnail preview"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-1.5 text-neutral-600">
+                  <Image className="w-6 h-6" />
+                  <span className="text-[10px]">No image</span>
+                </div>
+              )}
+            </div>
+            <div className="flex-1 space-y-1.5">
+              <input
+                value={form.thumbnail}
+                onChange={(e) => setField("thumbnail", e.target.value)}
+                placeholder="https://example.com/project-cover.jpg"
+                className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+              />
+              <p className="text-xs text-neutral-600">Paste any public image URL. Shown as the card thumbnail on the portfolio and at the top of the project detail page.</p>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {([
             ["title", "Project Title", "The Subspot"],
             ["slug", "Slug (auto-generated if blank)", "the-subspot"],
             ["subtitle", "Subtitle", "Digital Management Platform"],
-            ["thumbnail", "Thumbnail Image URL", "https://..."],
             ["year", "Year", "2025"],
             ["role", "Your Role", "Lead Developer"],
             ["liveLink", "Live URL", "https://..."],
             ["repoLink", "GitHub Repo URL", "https://github.com/..."],
             ["status", "Status", "Live"],
           ] as const).map(([key, label, placeholder]) => (
-            <div key={key} className={key === "thumbnail" || key === "slug" ? "md:col-span-2" : ""}>
+            <div key={key} className={key === "slug" ? "md:col-span-2" : ""}>
               <label className="block text-xs font-medium text-neutral-400 mb-1.5">{label}</label>
               <input
                 value={(form as Record<string, unknown>)[key] as string ?? ""}
@@ -506,8 +536,12 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
         <div className="space-y-3">
           {projects.map((p) => (
             <div key={p.id} className="flex items-center gap-4 bg-neutral-900 border border-neutral-800 rounded-xl p-4 hover:border-neutral-700 transition-colors group">
-              {p.thumbnail && (
+              {p.thumbnail ? (
                 <img src={p.thumbnail} alt={p.title} className="w-12 h-12 rounded-lg object-cover shrink-0 bg-neutral-800" />
+              ) : (
+                <div className="w-12 h-12 rounded-lg shrink-0 bg-neutral-800 border border-neutral-700 flex items-center justify-center">
+                  <Image className="w-5 h-5 text-neutral-600" />
+                </div>
               )}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
