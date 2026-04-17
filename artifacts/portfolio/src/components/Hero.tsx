@@ -44,16 +44,19 @@ export default function Hero() {
     if (longPressTimer.current !== null) {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
+      console.log("[hero-press] Timer cleared");
     }
     setPressing(false);
   };
 
   const startLongPress = () => {
     if (longPressTimer.current !== null) clearTimeout(longPressTimer.current);
+    console.log("[hero-press] Timer started");
     setPressing(true);
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
       setPressing(false);
+      console.log("[hero-press] Long-press complete → /admin");
       setLocation("/admin");
     }, LONG_PRESS_MS);
   };
@@ -227,34 +230,47 @@ export default function Hero() {
               />
               <div
                 className={`relative w-full lg:w-72 xl:w-80 aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl${pressing ? " hero-press-charging" : ""}`}
+                onPointerDown={(e) => {
+                  // Capture the pointer so we keep receiving events even if
+                  // the finger/cursor drifts onto a child element.
+                  e.currentTarget.setPointerCapture(e.pointerId);
+                  startLongPress();
+                }}
+                onPointerUp={cancelLongPress}
+                onPointerLeave={cancelLongPress}
+                onPointerCancel={cancelLongPress}
+                onContextMenu={(e) => { e.preventDefault(); cancelLongPress(); }}
                 style={{
                   border: `1px solid rgba(var(--theme-accent-rgb), 0.25)`,
                   boxShadow: `0 25px 50px -12px rgba(var(--theme-accent-rgb), 0.15)`,
-                }}
+                  // Block browser default gestures (scroll/zoom/long-press menu)
+                  // on this surface so our timer never gets interrupted.
+                  touchAction: "none",
+                  userSelect: "none",
+                  WebkitUserSelect: "none",
+                  WebkitTouchCallout: "none",
+                  cursor: "default",
+                } as React.CSSProperties}
               >
                 <img
                   src={imgSrc}
                   alt={profile.heroTitle || "Nibir Nissan"}
                   className="w-full h-full object-cover object-top"
                   draggable={false}
-                  onMouseDown={startLongPress}
-                  onMouseUp={cancelLongPress}
-                  onMouseLeave={cancelLongPress}
-                  onTouchStart={startLongPress}
-                  onTouchEnd={cancelLongPress}
-                  onTouchCancel={cancelLongPress}
-                  onTouchMove={cancelLongPress}
-                  onPointerCancel={cancelLongPress}
-                  onContextMenu={cancelLongPress}
                   onDragStart={(e) => e.preventDefault()}
                   style={{
+                    pointerEvents: "none",       // let the wrapper own all events
                     userSelect: "none",
                     WebkitUserSelect: "none",
                     WebkitTouchCallout: "none",
                     WebkitUserDrag: "none",
                   } as React.CSSProperties}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                {/* Decorative gradient — must NOT block pointer events */}
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                  style={{ pointerEvents: "none" }}
+                />
               </div>
 
               <div
