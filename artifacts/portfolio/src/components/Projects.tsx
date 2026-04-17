@@ -283,8 +283,8 @@ function ProjectOverlay({
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4"
-      style={backdropStyle}
+      className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style={{ ...backdropStyle, zIndex: 99999 }}
     >
       {/* Backdrop */}
       <div
@@ -297,74 +297,22 @@ function ProjectOverlay({
         className="relative z-10 w-full sm:max-w-2xl sm:mx-auto flex flex-col overflow-hidden sm:rounded-3xl rounded-t-3xl"
         style={{
           ...panelStyle,
-          maxHeight: "92dvh",
+          maxHeight: "90vh",
           background: "#0d0e10",
           border: "1px solid rgba(255,255,255,0.08)",
           boxShadow: `0 40px 120px -20px rgba(${a.glowRgb},0.22), 0 0 0 1px rgba(${a.glowRgb},0.12), 0 8px 40px rgba(0,0,0,0.8)`,
         }}
       >
-        {/* ── Hero Image ── */}
-        <div className="relative w-full aspect-video shrink-0 overflow-hidden bg-neutral-900">
-          {project.thumbnail ? (
-            <img
-              src={project.thumbnail}
-              alt={project.title}
-              className="w-full h-full object-cover"
-              style={anim("overlay-fade-in", "0.6s", "ease", "0.05s")}
-            />
-          ) : (
-            <div className={`w-full h-full flex items-center justify-center ${a.bg} relative`}>
-              <svg className="absolute inset-0 w-full h-full opacity-[0.10]" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern id={`ov-grid-${project.slug}`} width="32" height="32" patternUnits="userSpaceOnUse">
-                    <path d="M32 0L0 0 0 32" fill="none" stroke={a.gridStroke} strokeWidth="0.7" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill={`url(#ov-grid-${project.slug})`} />
-              </svg>
-              {/* Radial glow */}
-              <div
-                className="absolute inset-0"
-                style={{ background: `radial-gradient(ellipse at 50% 60%, rgba(${a.glowRgb},0.18) 0%, transparent 65%)` }}
-              />
-              <div
-                className="relative z-10 w-20 h-20 rounded-3xl flex items-center justify-center shadow-2xl"
-                style={{ background: `rgba(${a.glowRgb},0.12)`, border: `1px solid rgba(${a.glowRgb},0.3)`, boxShadow: `0 0 40px rgba(${a.glowRgb},0.2)` }}
-              >
-                <Icon className={`w-10 h-10 ${a.text}`} />
-              </div>
-            </div>
-          )}
+        {/* Close button — anchored to panel, always visible while scrolling */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/15 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-black/80 transition-all z-20"
+          style={anim("overlay-fade-in", "0.3s", "ease", "0.1s")}
+        >
+          <X className="w-4 h-4" />
+        </button>
 
-          {/* Gradient fade into panel bg */}
-          <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
-            style={{ background: "linear-gradient(to top, #0d0e10 0%, transparent 100%)" }} />
-
-          {/* Top badges */}
-          <div className="absolute top-3 left-3 right-3 flex items-start justify-between pointer-events-none" style={anim("overlay-fade-in", "0.4s", "ease", "0.15s")}>
-            <span
-              className={`px-2.5 py-1 rounded-full text-[11px] font-bold border tracking-wide ${a.statusBg} ${a.statusText}`}
-            >
-              {project.status}
-            </span>
-            {year && (
-              <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-black/50 backdrop-blur-sm text-neutral-400 border border-white/10">
-                {year}
-              </span>
-            )}
-          </div>
-
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/15 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-black/80 transition-all z-20"
-            style={anim("overlay-fade-in", "0.3s", "ease", "0.1s")}
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* ── Scrollable Content ── */}
+        {/* ── Single scroll container — image + text flow together ── */}
         <style>{`.overlay-scroll::-webkit-scrollbar { display: none; }`}</style>
         <div
           ref={contentRef}
@@ -374,7 +322,58 @@ function ProjectOverlay({
             WebkitOverflowScrolling: "touch",
           } as React.CSSProperties}
         >
-          <div className="px-5 sm:px-7 pt-4 pb-[120px] space-y-6">
+          {/* ── Hero Image — inside scroll so it moves with content ── */}
+          <div className="relative w-full aspect-video overflow-hidden bg-neutral-900">
+            {project.thumbnail ? (
+              <img
+                src={project.thumbnail}
+                alt={project.title}
+                className="w-full h-full object-cover"
+                style={anim("overlay-fade-in", "0.6s", "ease", "0.05s")}
+              />
+            ) : (
+              <div className={`w-full h-full flex items-center justify-center ${a.bg} relative`}>
+                <svg className="absolute inset-0 w-full h-full opacity-[0.10]" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id={`ov-grid-${project.slug}`} width="32" height="32" patternUnits="userSpaceOnUse">
+                      <path d="M32 0L0 0 0 32" fill="none" stroke={a.gridStroke} strokeWidth="0.7" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill={`url(#ov-grid-${project.slug})`} />
+                </svg>
+                <div
+                  className="absolute inset-0"
+                  style={{ background: `radial-gradient(ellipse at 50% 60%, rgba(${a.glowRgb},0.18) 0%, transparent 65%)` }}
+                />
+                <div
+                  className="relative z-10 w-20 h-20 rounded-3xl flex items-center justify-center shadow-2xl"
+                  style={{ background: `rgba(${a.glowRgb},0.12)`, border: `1px solid rgba(${a.glowRgb},0.3)`, boxShadow: `0 0 40px rgba(${a.glowRgb},0.2)` }}
+                >
+                  <Icon className={`w-10 h-10 ${a.text}`} />
+                </div>
+              </div>
+            )}
+
+            {/* Gradient fade into panel bg */}
+            <div className="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
+              style={{ background: "linear-gradient(to top, #0d0e10 0%, transparent 100%)" }} />
+
+            {/* Top badges — leave right-12 gap so close button is never covered */}
+            <div className="absolute top-3 left-3 right-12 flex items-start justify-between pointer-events-none" style={anim("overlay-fade-in", "0.4s", "ease", "0.15s")}>
+              <span
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold border tracking-wide ${a.statusBg} ${a.statusText}`}
+              >
+                {project.status}
+              </span>
+              {year && (
+                <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-black/50 backdrop-blur-sm text-neutral-400 border border-white/10">
+                  {year}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="px-5 sm:px-7 pt-4 pb-[80px] space-y-6">
 
             {/* Title block */}
             <div style={stagger(0)}>
