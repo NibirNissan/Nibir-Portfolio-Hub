@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { getProjectBySlug } from "@/data/projects";
 import NebulaBg from "@/components/NebulaBg";
@@ -85,6 +85,285 @@ function HeroMockup({ title, accent }: { title: string; accent: string }) {
         </div>
       </div>
     </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────── */
+/*  FeatureShowcase — Interactive split layout                      */
+/* ─────────────────────────────────────────────────────────────── */
+
+type FeatureItem = { title: string; description: string; imageUrl?: string };
+
+function FeatureShowcase({
+  features,
+  colors,
+}: {
+  features: FeatureItem[];
+  colors: { rgb: string; tw: string; twBg: string; twBorder: string };
+}) {
+  const [active, setActive] = useState(0);
+  const { rgb } = colors;
+
+  if (!features.length) return null;
+
+  return (
+    <>
+      {/* ── DESKTOP: split sticky layout ── */}
+      <div className="hidden lg:flex gap-10 xl:gap-14 items-start">
+
+        {/* LEFT — scrollable feature list */}
+        <div className="flex-1 min-w-0">
+          {features.map((f, i) => {
+            const isActive = i === active;
+            return (
+              <button
+                key={i}
+                onClick={() => setActive(i)}
+                onMouseEnter={() => setActive(i)}
+                className="w-full text-left focus-visible:outline-none group"
+              >
+                <div
+                  className="relative pl-7 pr-4 py-7 border-l-2 transition-all duration-400"
+                  style={{
+                    borderLeftColor: isActive
+                      ? `rgba(${rgb}, 0.75)`
+                      : "rgba(255,255,255,0.05)",
+                    opacity: isActive ? 1 : 0.4,
+                    transition: "opacity 0.35s ease, border-color 0.35s ease",
+                  }}
+                >
+                  {/* Glowing dot on the active border */}
+                  {isActive && (
+                    <span
+                      className="absolute left-[-5px] top-8 w-2.5 h-2.5 rounded-full"
+                      style={{
+                        background: `rgba(${rgb},1)`,
+                        boxShadow: `0 0 8px rgba(${rgb},0.7), 0 0 20px rgba(${rgb},0.35)`,
+                        transition: "opacity 0.3s ease",
+                      }}
+                    />
+                  )}
+
+                  {/* Index number */}
+                  <div
+                    className="text-[11px] font-black tracking-widest font-mono mb-2 transition-colors duration-300"
+                    style={{ color: isActive ? `rgba(${rgb},0.9)` : "rgba(255,255,255,0.18)" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+
+                  {/* Title */}
+                  <h3
+                    className="text-xl font-black leading-snug mb-2.5 transition-colors duration-300"
+                    style={{ color: isActive ? "#ffffff" : "rgba(255,255,255,0.45)" }}
+                  >
+                    {f.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p
+                    className="text-sm leading-relaxed transition-colors duration-300"
+                    style={{ color: isActive ? "rgba(163,163,163,0.9)" : "rgba(115,115,115,0.6)" }}
+                  >
+                    {f.description}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* RIGHT — sticky image panel */}
+        <div className="w-[52%] xl:w-[54%] shrink-0 sticky top-24 self-start">
+          {/* Image stage */}
+          <div
+            className="relative w-full overflow-hidden rounded-2xl"
+            style={{
+              aspectRatio: "4/3",
+              background: "#0c0d0f",
+              border: `1px solid rgba(${rgb},0.12)`,
+              boxShadow: `0 40px 90px -20px rgba(${rgb},0.18), 0 0 0 1px rgba(${rgb},0.07)`,
+            }}
+          >
+            {features.map((f, i) => (
+              <div
+                key={i}
+                className="absolute inset-0"
+                style={{
+                  opacity: i === active ? 1 : 0,
+                  transform: i === active ? "scale(1)" : "scale(1.04)",
+                  transition: "opacity 0.55s cubic-bezier(0.4,0,0.2,1), transform 0.55s cubic-bezier(0.4,0,0.2,1)",
+                  pointerEvents: i === active ? "auto" : "none",
+                  willChange: "opacity, transform",
+                }}
+              >
+                {f.imageUrl ? (
+                  <img src={f.imageUrl} alt={f.title} className="w-full h-full object-cover" />
+                ) : (
+                  /* Styled placeholder when no image is set */
+                  <div
+                    className="w-full h-full flex flex-col items-center justify-center gap-5 relative"
+                    style={{
+                      background: `linear-gradient(145deg, rgba(${rgb},0.07) 0%, #0c0d0f 60%)`,
+                    }}
+                  >
+                    <svg className="absolute inset-0 w-full h-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <pattern id={`fcg-${i}`} width="36" height="36" patternUnits="userSpaceOnUse">
+                          <path d="M36 0L0 0 0 36" fill="none" stroke={`rgba(${rgb},1)`} strokeWidth="0.7" />
+                        </pattern>
+                      </defs>
+                      <rect width="100%" height="100%" fill={`url(#fcg-${i})`} />
+                    </svg>
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: `radial-gradient(ellipse at 50% 55%, rgba(${rgb},0.14), transparent 60%)`,
+                      }}
+                    />
+                    <div
+                      className="relative z-10 w-24 h-24 rounded-3xl flex items-center justify-center text-4xl font-black"
+                      style={{
+                        background: `rgba(${rgb},0.08)`,
+                        border: `1px solid rgba(${rgb},0.22)`,
+                        color: `rgba(${rgb},0.85)`,
+                        boxShadow: `0 0 50px rgba(${rgb},0.18)`,
+                      }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
+                    <p
+                      className="relative z-10 text-sm font-semibold opacity-50 max-w-[65%] text-center leading-snug"
+                      style={{ color: `rgba(${rgb},1)` }}
+                    >
+                      {f.title}
+                    </p>
+                  </div>
+                )}
+
+                {/* Gradient + caption over real images */}
+                {f.imageUrl && (
+                  <div
+                    className="absolute inset-x-0 bottom-0 px-6 pb-5 pt-16 pointer-events-none"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%)" }}
+                  >
+                    <div
+                      className="text-[10px] font-black uppercase tracking-widest mb-1"
+                      style={{ color: `rgba(${rgb},0.8)` }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
+                    <div className="text-sm font-bold text-white">{f.title}</div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Pill nav dots */}
+            <div className="absolute bottom-4 right-4 flex gap-1.5 z-20">
+              {features.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActive(i)}
+                  aria-label={`Feature ${i + 1}`}
+                  style={{
+                    width: i === active ? "22px" : "6px",
+                    height: "6px",
+                    borderRadius: "3px",
+                    background:
+                      i === active ? `rgba(${rgb},0.95)` : "rgba(255,255,255,0.22)",
+                    transition: "width 0.35s cubic-bezier(0.4,0,0.2,1), background 0.25s ease",
+                    boxShadow: i === active ? `0 0 8px rgba(${rgb},0.5)` : "none",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Arrow controls + counter */}
+          <div className="flex items-center justify-between mt-4 px-1">
+            <span className="text-xs text-neutral-600 font-mono tracking-widest">
+              {String(active + 1).padStart(2, "0")} / {String(features.length).padStart(2, "0")}
+            </span>
+            <div className="flex gap-2">
+              {[
+                { label: "←", dir: -1 },
+                { label: "→", dir: 1 },
+              ].map(({ label, dir }) => {
+                const next = active + dir;
+                const disabled = next < 0 || next >= features.length;
+                return (
+                  <button
+                    key={label}
+                    onClick={() => !disabled && setActive(next)}
+                    disabled={disabled}
+                    className="w-8 h-8 rounded-full text-sm font-bold border flex items-center justify-center transition-all"
+                    style={{
+                      borderColor: disabled ? "rgba(255,255,255,0.06)" : `rgba(${rgb},0.25)`,
+                      color: disabled ? "rgba(255,255,255,0.15)" : `rgba(${rgb},0.8)`,
+                      background: disabled ? "transparent" : `rgba(${rgb},0.06)`,
+                    }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── MOBILE: feature text → feature image, stacked ── */}
+      <div className="lg:hidden space-y-8">
+        {features.map((f, i) => (
+          <div key={i} className="space-y-3">
+            {/* Text card */}
+            <div
+              className="rounded-2xl p-5 border relative overflow-hidden"
+              style={{
+                background: `rgba(${rgb},0.04)`,
+                borderColor: `rgba(${rgb},0.13)`,
+              }}
+            >
+              <div
+                className="absolute left-0 inset-y-0 w-[2px]"
+                style={{
+                  background: `linear-gradient(to bottom, rgba(${rgb},0.65), transparent)`,
+                }}
+              />
+              <div className="pl-4">
+                <div
+                  className="text-[11px] font-black tracking-widest font-mono mb-2"
+                  style={{ color: `rgba(${rgb},0.7)` }}
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </div>
+                <h3 className="text-base font-black text-white mb-1.5 leading-snug">{f.title}</h3>
+                <p className="text-sm text-neutral-400 leading-relaxed">{f.description}</p>
+              </div>
+            </div>
+
+            {/* Image (if provided) */}
+            {f.imageUrl && (
+              <div
+                className="w-full overflow-hidden rounded-2xl border"
+                style={{
+                  aspectRatio: "16/9",
+                  borderColor: `rgba(${rgb},0.12)`,
+                  boxShadow: `0 16px 40px -8px rgba(${rgb},0.14)`,
+                }}
+              >
+                <img
+                  src={f.imageUrl}
+                  alt={f.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -244,54 +523,31 @@ export default function ProjectPage() {
 
       <ScanLine />
 
-      {/* Features Grid */}
-      <section id="features" className="py-16 md:py-24 relative">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <ScrollReveal>
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
-                <span className="icon-duotone"><Zap className="w-4 h-4" /></span>
-                Features
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4">
-                Key <span className="text-gradient">Capabilities</span>
-              </h2>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {project.features.map((feature, idx) => (
-              <ScrollReveal key={feature.title} delay={idx * 100}>
-                <div
-                  className="p-5 sm:p-6 rounded-2xl border transition-all duration-300 hover:scale-[1.02] h-full"
-                  style={{
-                    background: "rgba(var(--theme-surface-rgb), 0.5)",
-                    borderColor: `rgba(${colors.rgb}, 0.15)`,
-                    boxShadow: `0 0 0 0 rgba(${colors.rgb}, 0)`,
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(${colors.rgb}, 0.4)`;
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 8px 30px rgba(${colors.rgb}, 0.1)`;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(${colors.rgb}, 0.15)`;
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 0 0 rgba(${colors.rgb}, 0)`;
-                  }}
-                >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 text-lg font-black"
-                    style={{ background: `rgba(${colors.rgb}, 0.1)`, color: `rgba(${colors.rgb}, 0.7)` }}
-                  >
-                    {String(idx + 1).padStart(2, "0")}
-                  </div>
-                  <h3 className="text-base font-bold text-white mb-2">{feature.title}</h3>
-                  <p className="text-neutral-400 text-sm leading-relaxed">{feature.description}</p>
+      {/* Features — Interactive Showcase */}
+      {project.features.length > 0 && (
+        <section id="features" className="py-16 md:py-24 relative">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <ScrollReveal>
+              <div className="mb-12 lg:mb-16">
+                <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
+                  <span className="icon-duotone"><Zap className="w-4 h-4" /></span>
+                  Features
                 </div>
-              </ScrollReveal>
-            ))}
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-3">
+                  Key <span className="text-gradient">Capabilities</span>
+                </h2>
+                <p className="text-neutral-500 text-sm max-w-md">
+                  Click or hover any feature to explore it.
+                </p>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal delay={100}>
+              <FeatureShowcase features={project.features} colors={colors} />
+            </ScrollReveal>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <ScanLine />
 
