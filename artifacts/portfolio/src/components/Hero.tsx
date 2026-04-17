@@ -37,6 +37,7 @@ export default function Hero() {
   const [profile, setProfile] = useState<FirestoreProfile>(defaultProfile);
   const [socials, setSocials] = useState<FirestoreSocial[]>(defaultSocials);
   const [, setLocation] = useLocation();
+  const [pressing, setPressing] = useState(false);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const cancelLongPress = () => {
@@ -44,17 +45,24 @@ export default function Hero() {
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
+    setPressing(false);
   };
 
   const startLongPress = () => {
-    cancelLongPress();
+    if (longPressTimer.current !== null) clearTimeout(longPressTimer.current);
+    setPressing(true);
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
+      setPressing(false);
       setLocation("/admin");
     }, LONG_PRESS_MS);
   };
 
-  useEffect(() => cancelLongPress, []);
+  useEffect(() => {
+    return () => {
+      if (longPressTimer.current !== null) clearTimeout(longPressTimer.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isFirebaseConfigured || !db) return;
@@ -218,7 +226,7 @@ export default function Hero() {
                 style={{ background: `linear-gradient(135deg, var(--theme-accent), var(--theme-accent))` }}
               />
               <div
-                className="relative w-full lg:w-72 xl:w-80 aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl"
+                className={`relative w-full lg:w-72 xl:w-80 aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl${pressing ? " hero-press-charging" : ""}`}
                 style={{
                   border: `1px solid rgba(var(--theme-accent-rgb), 0.25)`,
                   boxShadow: `0 25px 50px -12px rgba(var(--theme-accent-rgb), 0.15)`,
@@ -236,6 +244,7 @@ export default function Hero() {
                   onTouchEnd={cancelLongPress}
                   onTouchCancel={cancelLongPress}
                   onTouchMove={cancelLongPress}
+                  onPointerCancel={cancelLongPress}
                   onContextMenu={cancelLongPress}
                   onDragStart={(e) => e.preventDefault()}
                   style={{
