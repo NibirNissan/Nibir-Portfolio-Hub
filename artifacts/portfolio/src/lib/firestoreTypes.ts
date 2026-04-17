@@ -76,6 +76,12 @@ export interface FirestoreService {
   description: string;
   iconUrl: string;
   price?: string;
+  badge?: string;
+  color?: string;
+  process?: Array<{ title: string; description: string }>;
+  deliverables?: Array<{ title: string; description: string }>;
+  packages?: Array<{ name: string; subtitle: string; price?: string; features: string[] }>;
+  faqs?: Array<{ question: string; answer: string }>;
   order?: number;
   createdAt?: number;
 }
