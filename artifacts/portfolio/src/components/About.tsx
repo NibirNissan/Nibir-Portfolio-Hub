@@ -1,15 +1,52 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import {
   Code2, Figma, Video, Bot, Star,
   GraduationCap, Sparkles, Rocket,
+  Briefcase, Globe, Zap, Award, Trophy,
+  Flame, Heart, Terminal, Users, Lightbulb,
+  Camera, Laptop2, Package,
 } from "lucide-react";
+import { db, isFirebaseConfigured } from "@/lib/firebase";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import type { FirestoreTimeline } from "@/lib/firestoreTypes";
 
 /* ─────────────────────────────────────────────────────────── */
-/*  Timeline data — edit freely                                */
+/*  Icon map — string key from Firestore → React component     */
 /* ─────────────────────────────────────────────────────────── */
 
-const timeline = [
+export const TIMELINE_ICON_MAP: Record<
+  string,
+  React.ComponentType<{ className?: string; style?: React.CSSProperties }>
+> = {
+  Code2, Figma, Video, Bot, Star,
+  GraduationCap, Sparkles, Rocket,
+  Briefcase, Globe, Zap, Award, Trophy,
+  Flame, Heart, Terminal, Users, Lightbulb,
+  Camera, Laptop2, Package,
+};
+
+export const TIMELINE_ICON_NAMES = Object.keys(TIMELINE_ICON_MAP);
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Timeline entry type (runtime, with resolved icon)          */
+/* ─────────────────────────────────────────────────────────── */
+
+interface TimelineEntry {
+  year: string;
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  rgb: string;
+  tag: string;
+  imageUrl?: string;
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Hardcoded fallback data                                     */
+/* ─────────────────────────────────────────────────────────── */
+
+const DEFAULT_TIMELINE: TimelineEntry[] = [
   {
     year: "2019",
     title: "Started Coding",
@@ -73,7 +110,23 @@ const timeline = [
     rgb: "20,184,166",
     tag: "Now",
   },
-] as const;
+];
+
+function firestoreToEntry(doc: FirestoreTimeline): TimelineEntry {
+  return {
+    year: doc.year,
+    title: doc.title,
+    description: doc.description,
+    icon: TIMELINE_ICON_MAP[doc.icon] ?? Sparkles,
+    rgb: doc.rgb,
+    tag: doc.tag,
+    imageUrl: doc.imageUrl,
+  };
+}
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Stats row data (static)                                    */
+/* ─────────────────────────────────────────────────────────── */
 
 const stats = [
   { icon: Code2,       value: "4+",  label: "Years in Web Dev",   rgb: "16,185,129" },
@@ -86,9 +139,7 @@ const stats = [
 /*  Sub-components                                             */
 /* ─────────────────────────────────────────────────────────── */
 
-type Entry = (typeof timeline)[number];
-
-function TimelineDot({ entry, inView }: { entry: Entry; inView: boolean }) {
+function TimelineDot({ entry, inView }: { entry: TimelineEntry; inView: boolean }) {
   return (
     <motion.div
       initial={{ scale: 0, opacity: 0 }}
@@ -104,7 +155,6 @@ function TimelineDot({ entry, inView }: { entry: Entry; inView: boolean }) {
       <entry.icon
         style={{ color: `rgba(${entry.rgb},0.9)`, width: "18px", height: "18px" }}
       />
-      {/* Pulse ring */}
       <motion.span
         className="absolute inset-0 rounded-full pointer-events-none"
         style={{ border: `1px solid rgba(${entry.rgb},0.5)` }}
@@ -115,7 +165,7 @@ function TimelineDot({ entry, inView }: { entry: Entry; inView: boolean }) {
   );
 }
 
-function YearBadge({ entry, inView, delay = 0.2 }: { entry: Entry; inView: boolean; delay?: number }) {
+function YearBadge({ entry, inView, delay = 0.2 }: { entry: TimelineEntry; inView: boolean; delay?: number }) {
   return (
     <motion.span
       initial={{ opacity: 0, y: 8 }}
@@ -139,7 +189,7 @@ function TimelineCard({
   direction,
   align,
 }: {
-  entry: Entry;
+  entry: TimelineEntry;
   inView: boolean;
   direction: "left" | "right";
   align: "start" | "end";
@@ -174,6 +224,7 @@ function TimelineCard({
               : `radial-gradient(ellipse at top left, rgba(${entry.rgb},0.08), transparent 60%)`,
         }}
       />
+
       {/* Tag */}
       <div
         className="text-[10px] font-black uppercase tracking-widest mb-2"
@@ -181,12 +232,28 @@ function TimelineCard({
       >
         {entry.tag}
       </div>
+
       {/* Title */}
       <h3 className="text-base sm:text-[17px] font-black text-white leading-snug mb-2">
         {entry.title}
       </h3>
+
       {/* Description */}
       <p className="text-sm text-neutral-400 leading-relaxed">{entry.description}</p>
+
+      {/* Milestone image — rendered only when imageUrl is provided */}
+      {entry.imageUrl && (
+        <div className="mt-4 -mx-5 sm:-mx-6 -mb-5 sm:-mb-6">
+          <img
+            src={entry.imageUrl}
+            alt={entry.title}
+            className="w-full h-40 object-cover"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+        </div>
+      )}
 
       {/* Hover accent bottom bar */}
       <motion.div
@@ -204,7 +271,7 @@ function TimelineCard({
 /*  Single timeline row                                        */
 /* ─────────────────────────────────────────────────────────── */
 
-function TimelineRow({ entry, index }: { entry: Entry; index: number }) {
+function TimelineRow({ entry, index }: { entry: TimelineEntry; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-60px 0px" });
   const isLeft = index % 2 === 0;
@@ -224,18 +291,13 @@ function TimelineRow({ entry, index }: { entry: Entry; index: number }) {
 
       {/* ── Desktop layout (lg+): alternating 3-col grid ── */}
       <div className="hidden lg:grid items-center gap-6" style={{ gridTemplateColumns: "1fr 80px 1fr" }}>
-        {/* Left col */}
         <div className="flex justify-end">
           {isLeft && <TimelineCard entry={entry} inView={inView} direction="left" align="end" />}
         </div>
-
-        {/* Center col: dot + year */}
         <div className="flex flex-col items-center gap-2.5 py-4">
           <TimelineDot entry={entry} inView={inView} />
           <YearBadge entry={entry} inView={inView} delay={0.22} />
         </div>
-
-        {/* Right col */}
         <div className="flex justify-start">
           {!isLeft && <TimelineCard entry={entry} inView={inView} direction="right" align="start" />}
         </div>
@@ -250,9 +312,38 @@ function TimelineRow({ entry, index }: { entry: Entry; index: number }) {
 
 export default function About() {
   const timelineRef = useRef<HTMLDivElement>(null);
+  const [timeline, setTimeline] = useState<TimelineEntry[]>(DEFAULT_TIMELINE);
 
-  /* Line drawing: triggers once when the timeline enters the viewport */
   const lineInView = useInView(timelineRef, { once: true, margin: "-5% 0px" });
+
+  /* Fetch timeline from Firestore — fall back to defaults if empty or error */
+  useEffect(() => {
+    if (!isFirebaseConfigured || !db) return;
+    (async () => {
+      try {
+        const q = query(collection(db!, "timeline"), orderBy("order", "asc"));
+        const snap = await getDocs(q);
+        if (!snap.empty) {
+          setTimeline(
+            snap.docs.map((d) =>
+              firestoreToEntry({ id: d.id, ...d.data() } as FirestoreTimeline)
+            )
+          );
+        }
+      } catch {
+        try {
+          const snap = await getDocs(collection(db!, "timeline"));
+          if (!snap.empty) {
+            setTimeline(
+              snap.docs.map((d) =>
+                firestoreToEntry({ id: d.id, ...d.data() } as FirestoreTimeline)
+              )
+            );
+          }
+        } catch { /* stay with defaults */ }
+      }
+    })();
+  }, []);
 
   return (
     <section id="about" className="py-20 md:py-28 relative overflow-hidden">
@@ -281,17 +372,12 @@ export default function About() {
         {/* The drawing vertical line */}
         <div
           className="absolute top-0 bottom-0 w-px pointer-events-none"
-          style={{
-            left: "calc(20px + 1rem)",   /* mobile: centre of the 40px dot column (accounting for px-4) */
-            ["--lg-left" as string]: "50%",
-          }}
+          style={{ left: "calc(20px + 1rem)" }}
         >
-          {/* Faint full-height background track */}
           <div
             className="absolute inset-0"
             style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.04) 80%, transparent)" }}
           />
-          {/* Animated coloured fill — draws down when timeline enters view */}
           <motion.div
             className="absolute inset-x-0 top-0 origin-top"
             initial={{ scaleY: 0 }}
@@ -305,7 +391,7 @@ export default function About() {
           />
         </div>
 
-        {/* Desktop center line (separate element for correct centering) */}
+        {/* Desktop center line */}
         <div
           className="absolute top-0 bottom-0 w-px pointer-events-none hidden lg:block"
           style={{ left: "50%", transform: "translateX(-0.5px)" }}
@@ -326,16 +412,10 @@ export default function About() {
             }}
           />
         </div>
-        {/* Hide mobile line on desktop */}
-        <div
-          className="absolute top-0 bottom-0 w-px pointer-events-none lg:hidden"
-          style={{ left: "calc(20px + 1rem)" }}
-        />
 
-        {/* Items — spaced with gap-0, letting each card's padding define the rhythm */}
         <div className="space-y-2 lg:space-y-0">
           {timeline.map((entry, i) => (
-            <TimelineRow key={entry.year} entry={entry} index={i} />
+            <TimelineRow key={entry.year + i} entry={entry} index={i} />
           ))}
         </div>
       </div>
@@ -357,7 +437,6 @@ export default function About() {
                 borderColor: `rgba(${s.rgb},0.14)`,
               }}
             >
-              {/* Hover radial glow */}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 rounded-2xl pointer-events-none"
                 style={{ background: `radial-gradient(ellipse at 50% 100%, rgba(${s.rgb},0.1), transparent 70%)` }}

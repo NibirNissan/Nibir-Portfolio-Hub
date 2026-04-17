@@ -88,3 +88,15 @@ export interface FirestoreInquiry {
   read?: boolean;
   createdAt?: number;
 }
+
+export interface FirestoreTimeline {
+  id?: string;
+  year: string;
+  title: string;
+  description: string;
+  icon: string;
+  rgb: string;
+  tag: string;
+  imageUrl?: string;
+  order?: number;
+}
