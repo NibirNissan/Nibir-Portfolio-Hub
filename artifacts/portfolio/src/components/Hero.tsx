@@ -39,6 +39,15 @@ export default function Hero() {
   const [, setLocation] = useLocation();
   const [pressing, setPressing] = useState(false);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Keep a stable ref to the blocker so we can remove the exact same fn
+  const contextBlocker = useRef<((e: Event) => void) | null>(null);
+
+  const removeContextBlocker = () => {
+    if (contextBlocker.current) {
+      document.removeEventListener("contextmenu", contextBlocker.current);
+      contextBlocker.current = null;
+    }
+  };
 
   const cancelLongPress = () => {
     if (longPressTimer.current !== null) {
@@ -46,16 +55,34 @@ export default function Hero() {
       longPressTimer.current = null;
       console.log("[hero-press] Timer cleared");
     }
+    removeContextBlocker();
     setPressing(false);
   };
 
   const startLongPress = () => {
-    if (longPressTimer.current !== null) clearTimeout(longPressTimer.current);
+    // Guard: if a timer is already running (e.g. both touchstart + pointerdown
+    // fired for the same gesture), don't restart — just keep the first timer.
+    if (longPressTimer.current !== null) return;
+
+    // Haptic pulse so the user feels the press register
+    if (navigator.vibrate) navigator.vibrate(50);
+
+    // Mount a document-level context-menu blocker for the duration of the
+    // press — this catches the OS-level popup on Android before React sees it
+    removeContextBlocker();
+    const blocker = (e: Event) => e.preventDefault();
+    contextBlocker.current = blocker;
+    document.addEventListener("contextmenu", blocker, { capture: true });
+
     console.log("[hero-press] Timer started");
     setPressing(true);
+
     longPressTimer.current = setTimeout(() => {
       longPressTimer.current = null;
+      removeContextBlocker();
       setPressing(false);
+      // Double-buzz pattern confirms the secret trigger
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
       console.log("[hero-press] Long-press complete → /admin");
       setLocation("/admin");
     }, LONG_PRESS_MS);
@@ -64,6 +91,7 @@ export default function Hero() {
   useEffect(() => {
     return () => {
       if (longPressTimer.current !== null) clearTimeout(longPressTimer.current);
+      removeContextBlocker();
     };
   }, []);
 
@@ -230,21 +258,24 @@ export default function Hero() {
               />
               <div
                 className={`relative w-full lg:w-72 xl:w-80 aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl${pressing ? " hero-press-charging" : ""}`}
+                // ── Pointer events (mouse + stylus + modern touch) ──────────
                 onPointerDown={(e) => {
-                  // Capture the pointer so we keep receiving events even if
-                  // the finger/cursor drifts onto a child element.
                   e.currentTarget.setPointerCapture(e.pointerId);
                   startLongPress();
                 }}
                 onPointerUp={cancelLongPress}
                 onPointerLeave={cancelLongPress}
                 onPointerCancel={cancelLongPress}
+                // ── Touch events (belt-and-suspenders for older iOS/Android) ─
+                onTouchStart={(e) => { e.preventDefault(); startLongPress(); }}
+                onTouchEnd={(e) => { e.preventDefault(); cancelLongPress(); }}
+                onTouchCancel={cancelLongPress}
+                onTouchMove={cancelLongPress}
+                // ── Context menu: preventDefault in React AND document-level ─
                 onContextMenu={(e) => { e.preventDefault(); cancelLongPress(); }}
                 style={{
                   border: `1px solid rgba(var(--theme-accent-rgb), 0.25)`,
                   boxShadow: `0 25px 50px -12px rgba(var(--theme-accent-rgb), 0.15)`,
-                  // Block browser default gestures (scroll/zoom/long-press menu)
-                  // on this surface so our timer never gets interrupted.
                   touchAction: "none",
                   userSelect: "none",
                   WebkitUserSelect: "none",
