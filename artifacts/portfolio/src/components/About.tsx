@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import {
   Code2, Figma, Video, Bot, Star,
   GraduationCap, Sparkles, Rocket,
@@ -251,12 +251,8 @@ function TimelineRow({ entry, index }: { entry: Entry; index: number }) {
 export default function About() {
   const timelineRef = useRef<HTMLDivElement>(null);
 
-  /* Scroll-driven line drawing */
-  const { scrollYProgress } = useScroll({
-    target: timelineRef,
-    offset: ["start 90%", "end 20%"],
-  });
-  const lineScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  /* Line drawing: triggers once when the timeline enters the viewport */
+  const lineInView = useInView(timelineRef, { once: true, margin: "-5% 0px" });
 
   return (
     <section id="about" className="py-20 md:py-28 relative overflow-hidden">
@@ -295,11 +291,13 @@ export default function About() {
             className="absolute inset-0"
             style={{ background: "linear-gradient(to bottom, transparent, rgba(255,255,255,0.04) 20%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.04) 80%, transparent)" }}
           />
-          {/* Scroll-driven coloured fill */}
+          {/* Animated coloured fill — draws down when timeline enters view */}
           <motion.div
             className="absolute inset-x-0 top-0 origin-top"
+            initial={{ scaleY: 0 }}
+            animate={lineInView ? { scaleY: 1 } : {}}
+            transition={{ duration: 3.6, ease: "linear" }}
             style={{
-              scaleY: lineScaleY,
               height: "100%",
               background: "linear-gradient(to bottom, var(--theme-accent), rgba(var(--theme-accent-rgb),0.3) 60%, transparent)",
               opacity: 0.6,
@@ -318,8 +316,10 @@ export default function About() {
           />
           <motion.div
             className="absolute inset-x-0 top-0 origin-top"
+            initial={{ scaleY: 0 }}
+            animate={lineInView ? { scaleY: 1 } : {}}
+            transition={{ duration: 3.6, ease: "linear" }}
             style={{
-              scaleY: lineScaleY,
               height: "100%",
               background: "linear-gradient(to bottom, var(--theme-accent), rgba(var(--theme-accent-rgb),0.3) 60%, transparent)",
               opacity: 0.6,
