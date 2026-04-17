@@ -15,7 +15,7 @@ export interface FirestoreProject {
   problem: string;
   solution: string;
   tags: string[];
-  features: Array<{ title: string; description: string }>;
+  features: Array<{ title: string; description: string; imageUrl?: string }>;
   stats: Array<{ value: string; label: string }>;
   detailSections: Array<{ type: "text" | "image"; content: string }>;
   createdAt?: number;

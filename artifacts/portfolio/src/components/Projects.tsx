@@ -485,22 +485,38 @@ function ProjectOverlay({
                 <div className={`flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest mb-3 ${a.text}`}>
                   <Zap className="w-3 h-3" /> Key Features
                 </div>
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   {features.slice(0, 4).map((f, i) => (
                     <div
                       key={f.title}
-                      className="flex gap-3 items-start rounded-xl p-3.5 border"
+                      className="rounded-xl border overflow-hidden"
                       style={{ background: `rgba(${a.glowRgb},0.04)`, borderColor: `rgba(${a.glowRgb},0.12)` }}
                     >
-                      <div
-                        className="w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center shrink-0 mt-px"
-                        style={{ background: `rgba(${a.glowRgb},0.15)`, color: `rgba(${a.glowRgb},1)` }}
-                      >
-                        {String(i + 1).padStart(2, "0")}
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold text-white leading-tight">{f.title}</div>
-                        <div className="text-xs text-neutral-500 mt-0.5 leading-relaxed">{f.description}</div>
+                      {/* Feature image (if provided) */}
+                      {f.imageUrl && (
+                        <div className="w-full h-36 sm:h-44 overflow-hidden bg-neutral-900">
+                          <img
+                            src={f.imageUrl}
+                            alt={f.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).parentElement!.style.display = "none"; }}
+                          />
+                        </div>
+                      )}
+                      {/* Text row */}
+                      <div className="flex gap-3 items-start p-3.5">
+                        <div
+                          className="w-6 h-6 rounded-lg text-[10px] font-black flex items-center justify-center shrink-0 mt-px"
+                          style={{ background: `rgba(${a.glowRgb},0.15)`, color: `rgba(${a.glowRgb},1)` }}
+                        >
+                          {String(i + 1).padStart(2, "0")}
+                        </div>
+                        <div>
+                          <div className="text-sm font-semibold text-white leading-tight">{f.title}</div>
+                          {f.description && (
+                            <div className="text-xs text-neutral-500 mt-0.5 leading-relaxed">{f.description}</div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}

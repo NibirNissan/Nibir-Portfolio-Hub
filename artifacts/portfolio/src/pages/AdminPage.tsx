@@ -308,9 +308,9 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
     setDeleting(null);
   };
 
-  const addFeature = () => setForm((f) => ({ ...f, features: [...f.features, { title: "", description: "" }] }));
+  const addFeature = () => setForm((f) => ({ ...f, features: [...f.features, { title: "", description: "", imageUrl: "" }] }));
   const removeFeature = (i: number) => setForm((f) => ({ ...f, features: f.features.filter((_, idx) => idx !== i) }));
-  const setFeature = (i: number, key: "title" | "description", val: string) =>
+  const setFeature = (i: number, key: "title" | "description" | "imageUrl", val: string) =>
     setForm((f) => ({ ...f, features: f.features.map((feat, idx) => idx === i ? { ...feat, [key]: val } : feat) }));
 
   const addStat = () => setForm((f) => ({ ...f, stats: [...f.stats, { value: "", label: "" }] }));
@@ -430,18 +430,89 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
 
         <div>
           <div className="flex items-center justify-between mb-3">
-            <label className="text-xs font-medium text-neutral-400">Features</label>
-            <button type="button" onClick={addFeature} className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300">
+            <label className="text-xs font-semibold text-neutral-300 tracking-wide uppercase">Features / Key Capabilities</label>
+            <button type="button" onClick={addFeature} className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 transition-colors">
               <Plus className="w-3.5 h-3.5" /> Add Feature
             </button>
           </div>
-          {form.features.map((feat, i) => (
-            <div key={i} className="flex gap-2 mb-2">
-              <input value={feat.title} onChange={(e) => setFeature(i, "title", e.target.value)} placeholder="Title" className="w-1/3 bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500/50" />
-              <input value={feat.description} onChange={(e) => setFeature(i, "description", e.target.value)} placeholder="Description" className="flex-1 bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500/50" />
-              <button type="button" onClick={() => removeFeature(i)} className="text-neutral-600 hover:text-red-400"><X className="w-4 h-4" /></button>
-            </div>
-          ))}
+          <div className="space-y-3">
+            {form.features.map((feat, i) => (
+              <div key={i} className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 space-y-3">
+                {/* Card header */}
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold text-neutral-500 uppercase tracking-widest">Feature {i + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeFeature(i)}
+                    className="text-neutral-600 hover:text-red-400 transition-colors"
+                    title="Remove feature"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Title */}
+                <div>
+                  <label className="block text-[11px] font-medium text-neutral-500 mb-1">Title</label>
+                  <input
+                    value={feat.title}
+                    onChange={(e) => setFeature(i, "title", e.target.value)}
+                    placeholder="e.g. Real-time Notifications"
+                    className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                  />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label className="block text-[11px] font-medium text-neutral-500 mb-1">Description</label>
+                  <textarea
+                    rows={2}
+                    value={feat.description}
+                    onChange={(e) => setFeature(i, "description", e.target.value)}
+                    placeholder="Briefly describe what this feature does and why it matters."
+                    className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors resize-none"
+                  />
+                </div>
+
+                {/* Feature Image URL + live preview */}
+                <div>
+                  <label className="block text-[11px] font-medium text-neutral-500 mb-1">Feature Image URL <span className="text-neutral-600 normal-case font-normal">(optional)</span></label>
+                  <div className="flex gap-3 items-start">
+                    {/* Preview thumbnail */}
+                    <div className="w-20 h-14 rounded-lg overflow-hidden shrink-0 bg-neutral-800 border border-neutral-700 flex items-center justify-center">
+                      {feat.imageUrl ? (
+                        <img
+                          src={feat.imageUrl}
+                          alt={`Feature ${i + 1} preview`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center gap-1 text-neutral-700">
+                          <Image className="w-5 h-5" />
+                          <span className="text-[9px]">No image</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <input
+                        value={feat.imageUrl ?? ""}
+                        onChange={(e) => setFeature(i, "imageUrl", e.target.value)}
+                        placeholder="https://example.com/feature-screenshot.jpg"
+                        className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                      />
+                      <p className="text-[10px] text-neutral-600">Shown alongside the feature in the project overlay and case study page.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            {form.features.length === 0 && (
+              <div className="rounded-xl border border-dashed border-neutral-800 py-8 text-center text-neutral-600 text-sm">
+                No features added yet — click <span className="text-emerald-500">Add Feature</span> to start.
+              </div>
+            )}
+          </div>
         </div>
 
         <div>
