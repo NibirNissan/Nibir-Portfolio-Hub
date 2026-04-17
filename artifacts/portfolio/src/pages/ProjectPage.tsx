@@ -688,53 +688,57 @@ export default function ProjectPage() {
         </section>
       )}
 
-      <ScanLine />
+      {project.stats.length > 0 && (
+        <>
+          <ScanLine />
 
-      {/* Results / Impact */}
-      <section id="results" className="py-16 md:py-24 relative overflow-hidden">
-        <NebulaBg variant="green" />
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
-          <ScrollReveal>
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
-                <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
-                Results
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4">
-                Real <span className="text-gradient">Impact</span>
-              </h2>
-            </div>
-          </ScrollReveal>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {project.stats.map((stat, idx) => (
-              <ScrollReveal key={stat.label} delay={idx * 100} direction="scale">
-                <div
-                  className="text-center p-6 sm:p-8 rounded-2xl border relative overflow-hidden group"
-                  style={{
-                    background: "rgba(var(--theme-surface-rgb), 0.6)",
-                    borderColor: `rgba(${colors.rgb}, 0.15)`,
-                  }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{ background: `radial-gradient(circle at center, rgba(${colors.rgb}, 0.08), transparent 70%)` }}
-                  />
-                  <div
-                    className="text-3xl sm:text-4xl font-black mb-2 relative"
-                    style={{ color: `rgba(${colors.rgb}, 1)` }}
-                  >
-                    {stat.value}
+          {/* Results / Impact */}
+          <section id="results" className="py-16 md:py-24 relative overflow-hidden">
+            <NebulaBg variant="green" />
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
+              <ScrollReveal>
+                <div className="text-center mb-12">
+                  <div className="inline-flex items-center gap-2 accent-text text-sm font-semibold tracking-widest uppercase mb-4">
+                    <span className="icon-duotone"><Sparkles className="w-4 h-4" /></span>
+                    Results
                   </div>
-                  <div className="text-neutral-400 text-xs sm:text-sm font-medium relative">{stat.label}</div>
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4">
+                    Real <span className="text-gradient">Impact</span>
+                  </h2>
                 </div>
               </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <ScanLine />
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                {project.stats.map((stat, idx) => (
+                  <ScrollReveal key={stat.label} delay={idx * 100} direction="scale">
+                    <div
+                      className="text-center p-6 sm:p-8 rounded-2xl border relative overflow-hidden group"
+                      style={{
+                        background: "rgba(var(--theme-surface-rgb), 0.6)",
+                        borderColor: `rgba(${colors.rgb}, 0.15)`,
+                      }}
+                    >
+                      <div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style={{ background: `radial-gradient(circle at center, rgba(${colors.rgb}, 0.08), transparent 70%)` }}
+                      />
+                      <div
+                        className="text-3xl sm:text-4xl font-black mb-2 relative"
+                        style={{ color: `rgba(${colors.rgb}, 1)` }}
+                      >
+                        {stat.value}
+                      </div>
+                      <div className="text-neutral-400 text-xs sm:text-sm font-medium relative">{stat.label}</div>
+                    </div>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <ScanLine />
+        </>
+      )}
 
       {/* CTA Footer */}
       <section className="py-16 md:py-20">
