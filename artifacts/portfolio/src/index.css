@@ -95,10 +95,6 @@ html {
   .cursor-ring {
     pointer-events: none !important;
   }
-  /* Dot fades out when hovering a clickable element (ring expands instead) */
-  .cursor-dot.cursor-hovering {
-    opacity: 0 !important;
-  }
   /* Ring expands + glows on hover */
   .cursor-ring.cursor-hovering {
     border-color: rgba(var(--theme-accent-rgb), 0.3);
