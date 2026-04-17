@@ -104,6 +104,43 @@ function FeatureShowcase({
 }) {
   const [active, setActive] = useState(0);
   const { rgb } = colors;
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const userClickedRef = useRef(false);
+  const clickResetRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* Scroll-spy: IntersectionObserver watches each left-side feature row.
+     When a row crosses the centre band of the viewport it becomes active. */
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (userClickedRef.current) return; // honour explicit click for 800 ms
+        let best: { ratio: number; idx: number } = { ratio: 0, idx: -1 };
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > best.ratio) {
+            best = {
+              ratio: entry.intersectionRatio,
+              idx: Number(entry.target.getAttribute("data-spy-idx")),
+            };
+          }
+        });
+        if (best.idx !== -1) setActive(best.idx);
+      },
+      {
+        threshold: [0.25, 0.5, 0.75],
+        rootMargin: "-25% 0px -25% 0px", // fire only in the middle 50% of viewport
+      }
+    );
+    itemRefs.current.forEach((el) => { if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, [features.length]);
+
+  const handleClick = (i: number) => {
+    userClickedRef.current = true;
+    setActive(i);
+    if (clickResetRef.current) clearTimeout(clickResetRef.current);
+    clickResetRef.current = setTimeout(() => { userClickedRef.current = false; }, 800);
+  };
 
   if (!features.length) return null;
 
@@ -119,10 +156,15 @@ function FeatureShowcase({
             return (
               <button
                 key={i}
-                onClick={() => setActive(i)}
-                onMouseEnter={() => setActive(i)}
+                onClick={() => handleClick(i)}
+                onMouseEnter={() => handleClick(i)}
                 className="w-full text-left focus-visible:outline-none group"
               >
+                <div
+                  ref={(el) => { itemRefs.current[i] = el; }}
+                  data-spy-idx={i}
+                  className="pointer-events-none"
+                />
                 <div
                   className="relative pl-7 pr-4 py-7 border-l-2 transition-all duration-400"
                   style={{
@@ -175,7 +217,7 @@ function FeatureShowcase({
         </div>
 
         {/* RIGHT — sticky image panel */}
-        <div className="w-[52%] xl:w-[54%] shrink-0 sticky top-24 self-start">
+        <div className="w-[52%] xl:w-[54%] shrink-0 sticky top-[120px] self-start">
           {/* Image stage */}
           <div
             className="relative w-full overflow-hidden rounded-2xl"
