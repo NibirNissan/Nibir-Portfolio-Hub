@@ -4,6 +4,7 @@ export interface FirestoreProject {
   slug: string;
   subtitle: string;
   thumbnail: string;
+  mockupImage?: string;
   techStack: string[];
   liveLink: string;
   repoLink: string;

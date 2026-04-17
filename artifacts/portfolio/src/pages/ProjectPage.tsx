@@ -24,7 +24,7 @@ const accentColors: Record<string, { rgb: string; tw: string; twBg: string; twBo
   violet: { rgb: "139, 92, 246", tw: "text-violet-400", twBg: "bg-violet-500/10", twBorder: "border-violet-500/20" },
 };
 
-function HeroMockup({ title, accent }: { title: string; accent: string }) {
+function HeroMockup({ title, accent, mockupImage }: { title: string; accent: string; mockupImage?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const rectRef = useRef<DOMRect | null>(null);
   const rafRef = useRef<number>(0);
@@ -67,30 +67,53 @@ function HeroMockup({ title, accent }: { title: string; accent: string }) {
         transformStyle: "preserve-3d",
         willChange: "transform",
         borderColor: `rgba(${colors.rgb}, 0.2)`,
-        background: `linear-gradient(135deg, rgba(${colors.rgb}, 0.05), rgba(var(--theme-surface-rgb), 0.8))`,
+        background: mockupImage
+          ? "transparent"
+          : `linear-gradient(135deg, rgba(${colors.rgb}, 0.05), rgba(var(--theme-surface-rgb), 0.8))`,
         boxShadow: `0 20px 60px rgba(${colors.rgb}, 0.1), 0 0 0 1px rgba(${colors.rgb}, 0.08)`,
       }}
     >
-      <div className="aspect-video flex items-center justify-center relative">
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(circle at 30% 40%, rgba(${colors.rgb}, 0.3), transparent 50%), radial-gradient(circle at 70% 60%, rgba(${colors.rgb}, 0.15), transparent 40%)`,
-          }}
-        />
-        <div className="relative text-center p-8">
-          <div
-            className="w-20 h-20 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-            style={{ background: `rgba(${colors.rgb}, 0.12)`, border: `1px solid rgba(${colors.rgb}, 0.25)` }}
-          >
-            <span className="text-3xl font-black" style={{ color: `rgba(${colors.rgb}, 0.8)` }}>
-              {title.charAt(0)}
-            </span>
-          </div>
-          <div className="font-mono text-xs text-neutral-500 tracking-wider">PROJECT MOCKUP</div>
-          <div className={`text-sm font-semibold mt-1 ${colors.tw}`}>{title}</div>
+      {mockupImage ? (
+        /* ── Real mockup image provided ── */
+        <div className="aspect-video w-full overflow-hidden">
+          <img
+            src={mockupImage}
+            alt={`${title} mockup`}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              /* If image fails to load, fall back to the placeholder */
+              const wrapper = (e.currentTarget as HTMLImageElement).closest(".aspect-video") as HTMLElement | null;
+              if (wrapper) {
+                wrapper.innerHTML = "";
+                wrapper.className = "aspect-video flex items-center justify-center relative";
+                wrapper.style.background = `linear-gradient(135deg, rgba(${colors.rgb}, 0.05), rgba(0,0,0,0.8))`;
+              }
+            }}
+          />
         </div>
-      </div>
+      ) : (
+        /* ── Animated placeholder — no mockup image set ── */
+        <div className="aspect-video flex items-center justify-center relative">
+          <div
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `radial-gradient(circle at 30% 40%, rgba(${colors.rgb}, 0.3), transparent 50%), radial-gradient(circle at 70% 60%, rgba(${colors.rgb}, 0.15), transparent 40%)`,
+            }}
+          />
+          <div className="relative text-center p-8">
+            <div
+              className="w-20 h-20 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+              style={{ background: `rgba(${colors.rgb}, 0.12)`, border: `1px solid rgba(${colors.rgb}, 0.25)` }}
+            >
+              <span className="text-3xl font-black" style={{ color: `rgba(${colors.rgb}, 0.8)` }}>
+                {title.charAt(0)}
+              </span>
+            </div>
+            <div className="font-mono text-xs text-neutral-500 tracking-wider">PROJECT MOCKUP</div>
+            <div className={`text-sm font-semibold mt-1 ${colors.tw}`}>{title}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -546,7 +569,11 @@ export default function ProjectPage() {
           </ScrollReveal>
 
           <ScrollReveal delay={200}>
-            <HeroMockup title={project.title} accent={project.accent} />
+            <HeroMockup
+              title={project.title}
+              accent={project.accent}
+              mockupImage={"mockupImage" in project ? (project as { mockupImage?: string }).mockupImage : undefined}
+            />
           </ScrollReveal>
 
           <ScrollReveal delay={300}>

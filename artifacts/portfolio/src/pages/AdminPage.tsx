@@ -180,7 +180,7 @@ function AdminLogin({ onLogin }: { onLogin: (user: User) => void }) {
 }
 
 const emptyProject: Omit<FirestoreProject, "id"> = {
-  title: "", slug: "", subtitle: "", thumbnail: "", techStack: [],
+  title: "", slug: "", subtitle: "", thumbnail: "", mockupImage: "", techStack: [],
   liveLink: "", repoLink: "", status: "Live", year: new Date().getFullYear().toString(),
   role: "", accent: "indigo", heroDescription: "", problem: "", solution: "",
   tags: [], features: [], stats: [], detailSections: [], createdAt: Date.now(), order: 0,
@@ -366,6 +366,37 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
                 className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
               />
               <p className="text-xs text-neutral-600">Paste any public image URL. Shown as the card thumbnail on the portfolio and at the top of the project detail page.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Mockup / Hero Image — shown on the Case Study page hero section */}
+        <div className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 space-y-3">
+          <label className="block text-xs font-semibold text-neutral-300 tracking-wide uppercase">Mockup / Hero Image</label>
+          <div className="flex gap-4 items-start">
+            <div className="w-28 h-20 rounded-xl overflow-hidden shrink-0 bg-neutral-800 border border-neutral-700 flex items-center justify-center">
+              {form.mockupImage ? (
+                <img
+                  src={form.mockupImage}
+                  alt="Mockup preview"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-1.5 text-neutral-600">
+                  <Image className="w-6 h-6" />
+                  <span className="text-[10px]">No image</span>
+                </div>
+              )}
+            </div>
+            <div className="flex-1 space-y-1.5">
+              <input
+                value={form.mockupImage ?? ""}
+                onChange={(e) => setField("mockupImage", e.target.value)}
+                placeholder="https://example.com/project-mockup.jpg"
+                className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
+              />
+              <p className="text-xs text-neutral-600">Displayed as the large hero image on the full Case Study page. If left blank, an animated placeholder is shown instead.</p>
             </div>
           </div>
         </div>
