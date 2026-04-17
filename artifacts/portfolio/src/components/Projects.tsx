@@ -283,7 +283,7 @@ function ProjectOverlay({
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4"
+      className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4"
       style={backdropStyle}
     >
       {/* Backdrop */}
@@ -365,8 +365,16 @@ function ProjectOverlay({
         </div>
 
         {/* ── Scrollable Content ── */}
-        <div ref={contentRef} className="flex-1 overflow-y-auto overscroll-contain" style={{ scrollbarWidth: "thin", scrollbarColor: `rgba(${a.glowRgb},0.3) transparent` }}>
-          <div className="px-5 sm:px-7 pt-4 pb-8 space-y-6">
+        <style>{`.overlay-scroll::-webkit-scrollbar { display: none; }`}</style>
+        <div
+          ref={contentRef}
+          className="overlay-scroll flex-1 overflow-y-auto overscroll-contain"
+          style={{
+            scrollbarWidth: "none",
+            WebkitOverflowScrolling: "touch",
+          } as React.CSSProperties}
+        >
+          <div className="px-5 sm:px-7 pt-4 pb-[120px] space-y-6">
 
             {/* Title block */}
             <div style={stagger(0)}>
