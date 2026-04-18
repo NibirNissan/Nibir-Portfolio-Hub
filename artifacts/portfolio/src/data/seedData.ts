@@ -3,6 +3,7 @@ import type {
   FirestoreSkill,
   FirestoreTimeline,
   FirestoreService,
+  FirestoreSocial,
 } from "@/lib/firestoreTypes";
 
 /* ─────────────────────────────────────────────────────────────
@@ -345,11 +346,14 @@ export const seedTimeline: Omit<FirestoreTimeline, "id">[] = [
 ];
 
 /* ─────────────────────────────────────────────────────────────
-   SERVICES  (mapped from servicesData to FirestoreService shape)
-   iconUrl is empty — admin can add an image URL later.
-   The rich modal content (process/deliverables/FAQ/pricing) stays
-   in servicesData and is shown via slug-based lookup on the frontend.
+   SOCIAL LINKS  (matches the defaultSocials in Hero.tsx)
 ───────────────────────────────────────────────────────────── */
+export const seedSocials: Omit<FirestoreSocial, "id">[] = [
+  { name: "GitHub",    icon: "Github",        url: "https://github.com/NibirNissan",          order: 0 },
+  { name: "Telegram",  icon: "MessageCircle", url: "https://t.me/nibir_nissan",               order: 1 },
+  { name: "WhatsApp",  icon: "Phone",         url: "https://wa.me/8801976816697",              order: 2 },
+];
+
 export const seedServices: Omit<FirestoreService, "id">[] = [
   {
     title: "Custom AI Agent & Workflow Building",

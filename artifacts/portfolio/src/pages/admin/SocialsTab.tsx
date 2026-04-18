@@ -49,17 +49,25 @@ export function SocialsTab({
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const fetchSocials = useCallback(async () => {
-    if (!db) return;
     setLoading(true);
+    if (!db) { console.warn("[Admin/Socials] Firestore not initialised"); setLoading(false); return; }
     try {
+      console.log("[Admin/Socials] Fetching social links…");
       const q = query(collection(db, "socials"), orderBy("order", "asc"));
       const snap = await getDocs(q);
-      setSocials(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSocial)));
-    } catch {
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSocial));
+      console.log(`[Admin/Socials] Fetched ${items.length} links`);
+      setSocials(items);
+    } catch (err) {
+      console.warn("[Admin/Socials] orderBy query failed, retrying without order:", err);
       try {
         const snap = await getDocs(collection(db, "socials"));
-        setSocials(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSocial)));
-      } catch { /* empty */ }
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSocial));
+        console.log(`[Admin/Socials] Fetched ${items.length} links (no order)`);
+        setSocials(items);
+      } catch (err2) {
+        console.error("[Admin/Socials] Fetch failed entirely:", err2);
+      }
     }
     setLoading(false);
   }, []);

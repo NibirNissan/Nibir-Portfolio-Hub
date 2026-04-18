@@ -58,17 +58,25 @@ export function SkillsTab({
   const [filterCat, setFilterCat] = useState<string>("All");
 
   const fetchSkills = useCallback(async () => {
-    if (!db) return;
     setLoading(true);
+    if (!db) { console.warn("[Admin/Skills] Firestore not initialised"); setLoading(false); return; }
     try {
+      console.log("[Admin/Skills] Fetching skills…");
       const q = query(collection(db, "skills"), orderBy("order", "asc"));
       const snap = await getDocs(q);
-      setSkills(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill)));
-    } catch {
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill));
+      console.log(`[Admin/Skills] Fetched ${items.length} skills`);
+      setSkills(items);
+    } catch (err) {
+      console.warn("[Admin/Skills] orderBy query failed, retrying without order:", err);
       try {
         const snap = await getDocs(collection(db, "skills"));
-        setSkills(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill)));
-      } catch { /* empty */ }
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill));
+        console.log(`[Admin/Skills] Fetched ${items.length} skills (no order)`);
+        setSkills(items);
+      } catch (err2) {
+        console.error("[Admin/Skills] Fetch failed entirely:", err2);
+      }
     }
     setLoading(false);
   }, []);

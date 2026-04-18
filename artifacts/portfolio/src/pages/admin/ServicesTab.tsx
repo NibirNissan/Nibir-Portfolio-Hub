@@ -76,19 +76,26 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
+    if (!db) { console.warn("[Admin/Services] Firestore not initialised"); setItems([]); setLoading(false); return; }
     try {
-      if (!db) { setItems([]); return; }
+      console.log("[Admin/Services] Fetching services…");
+      const q = query(collection(db, "services"), orderBy("order", "asc"));
+      const snap = await getDocs(q);
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService));
+      console.log(`[Admin/Services] Fetched ${items.length} services`);
+      setItems(items);
+    } catch (err) {
+      console.warn("[Admin/Services] orderBy query failed, retrying without order:", err);
       try {
-        const q = query(collection(db, "services"), orderBy("order", "asc"));
-        const snap = await getDocs(q);
-        setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService)));
-      } catch {
-        try {
-          const snap = await getDocs(collection(db, "services"));
-          setItems(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService)));
-        } catch { /* empty */ }
+        const snap = await getDocs(collection(db, "services"));
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService));
+        console.log(`[Admin/Services] Fetched ${items.length} services (no order)`);
+        setItems(items);
+      } catch (err2) {
+        console.error("[Admin/Services] Fetch failed entirely:", err2);
       }
-    } finally { setLoading(false); }
+    }
+    setLoading(false);
   }, []);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);

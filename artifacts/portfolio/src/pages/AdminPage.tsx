@@ -254,17 +254,25 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const fetchProjects = useCallback(async () => {
-    if (!db) return;
     setLoading(true);
+    if (!db) { console.warn("[Admin/Projects] Firestore not initialised"); setLoading(false); return; }
     try {
+      console.log("[Admin/Projects] Fetching projects…");
       const q = query(collection(db, "projects"), orderBy("order", "asc"));
       const snap = await getDocs(q);
-      setProjects(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProject)));
-    } catch {
+      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProject));
+      console.log(`[Admin/Projects] Fetched ${items.length} projects`);
+      setProjects(items);
+    } catch (err) {
+      console.warn("[Admin/Projects] orderBy query failed, retrying without order:", err);
       try {
         const snap = await getDocs(collection(db, "projects"));
-        setProjects(snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProject)));
-      } catch { /* empty */ }
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProject));
+        console.log(`[Admin/Projects] Fetched ${items.length} projects (no order)`);
+        setProjects(items);
+      } catch (err2) {
+        console.error("[Admin/Projects] Fetch failed entirely:", err2);
+      }
     }
     setLoading(false);
   }, []);
@@ -895,6 +903,9 @@ function AdminDashboard({ user }: { user: User }) {
   const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
   const [visitCount, setVisitCount] = useState<number | null>(null);
   const [biometricBanner, setBiometricBanner] = useState<"idle" | "enrolling" | "success" | "hidden">("idle");
+  /* Incrementing this key remounts the active tab, forcing a fresh fetch */
+  const [refreshKey, setRefreshKey] = useState(0);
+  const handleSyncComplete = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   useEffect(() => {
     getVisitCount().then(setVisitCount);
@@ -1085,16 +1096,16 @@ function AdminDashboard({ user }: { user: User }) {
           ))}
         </div>
 
-        {tab === "inbox" && <InboxTab showToast={showToast} />}
-        {tab === "settings" && <SettingsTab showToast={showToast} />}
-        {tab === "socials" && <SocialsTab showToast={showToast} />}
-        {tab === "skills" && <SkillsTab showToast={showToast} />}
-        {tab === "testimonials" && <TestimonialsTab showToast={showToast} />}
-        {tab === "services" && <ServicesTab showToast={showToast} />}
-        {tab === "projects" && <ProjectsTab showToast={showToast} />}
-        {tab === "blogs" && <BlogsTab showToast={showToast} />}
-        {tab === "timeline" && <TimelineTab showToast={showToast} />}
-        {tab === "analytics" && <AnalyticsTab showToast={showToast} />}
+        {tab === "inbox"        && <InboxTab        key={refreshKey} showToast={showToast} />}
+        {tab === "settings"     && <SettingsTab     key={refreshKey} showToast={showToast} onSyncComplete={handleSyncComplete} />}
+        {tab === "socials"      && <SocialsTab      key={refreshKey} showToast={showToast} />}
+        {tab === "skills"       && <SkillsTab       key={refreshKey} showToast={showToast} />}
+        {tab === "testimonials" && <TestimonialsTab key={refreshKey} showToast={showToast} />}
+        {tab === "services"     && <ServicesTab     key={refreshKey} showToast={showToast} />}
+        {tab === "projects"     && <ProjectsTab     key={refreshKey} showToast={showToast} />}
+        {tab === "blogs"        && <BlogsTab        key={refreshKey} showToast={showToast} />}
+        {tab === "timeline"     && <TimelineTab     key={refreshKey} showToast={showToast} />}
+        {tab === "analytics"    && <AnalyticsTab    key={refreshKey} showToast={showToast} />}
       </div>
 
       {toast && <Toast message={toast.message} type={toast.type} />}
