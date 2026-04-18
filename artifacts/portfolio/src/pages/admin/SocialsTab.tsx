@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   collection,
-  getDocs,
+  onSnapshot,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -48,33 +48,30 @@ export function SocialsTab({
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  const fetchSocials = useCallback(async () => {
-    setLoading(true);
-    if (!db) { console.warn("[Admin/Socials] Firestore not initialised"); setLoading(false); return; }
-    try {
-      console.log("[Admin/Socials] Fetching social links…");
-      const q = query(collection(db, "socials"), orderBy("order", "asc"));
-      const snap = await getDocs(q);
-      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSocial));
-      console.log(`[Admin/Socials] Fetched ${items.length} links`);
-      setSocials(items);
-    } catch (err) {
-      console.warn("[Admin/Socials] orderBy query failed, retrying without order:", err);
-      try {
-        const snap = await getDocs(collection(db, "socials"));
-        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSocial));
-        console.log(`[Admin/Socials] Fetched ${items.length} links (no order)`);
-        setSocials(items);
-      } catch (err2) {
-        console.error("[Admin/Socials] Fetch failed entirely:", err2);
-      }
-    }
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    fetchSocials();
-  }, [fetchSocials]);
+    setLoading(true);
+    if (!db) {
+      console.warn("[Admin/Socials] Firestore not initialised");
+      setLoading(false);
+      return;
+    }
+
+    const q = query(collection(db, "socials"), orderBy("order", "asc"));
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSocial));
+        console.log(`[Admin/Socials] Real-time update: ${items.length} links`);
+        setSocials(items);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("[Admin/Socials] Snapshot error:", err);
+        setLoading(false);
+      }
+    );
+    return () => unsub();
+  }, []);
 
   const openAdd = () => {
     setEditing(null);
@@ -103,7 +100,6 @@ export function SocialsTab({
         await addDoc(collection(db, "socials"), form);
         showToast("Link added!", "success");
       }
-      await fetchSocials();
       closeForm();
     } catch (err) {
       showToast(
@@ -120,7 +116,6 @@ export function SocialsTab({
     try {
       await deleteDoc(doc(db, "socials", id));
       showToast("Link deleted", "success");
-      await fetchSocials();
     } catch {
       showToast("Delete failed", "error");
     }

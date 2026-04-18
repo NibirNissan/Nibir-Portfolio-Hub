@@ -8,6 +8,7 @@ import {
 import {
   collection,
   getDocs,
+  onSnapshot,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -253,31 +254,29 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  const fetchProjects = useCallback(async () => {
+  useEffect(() => {
     setLoading(true);
-    if (!db) { console.warn("[Admin/Projects] Firestore not initialised"); setLoading(false); return; }
-    try {
-      console.log("[Admin/Projects] Fetching projects…");
-      const q = query(collection(db, "projects"), orderBy("order", "asc"));
-      const snap = await getDocs(q);
-      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProject));
-      console.log(`[Admin/Projects] Fetched ${items.length} projects`);
-      setProjects(items);
-    } catch (err) {
-      console.warn("[Admin/Projects] orderBy query failed, retrying without order:", err);
-      try {
-        const snap = await getDocs(collection(db, "projects"));
-        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProject));
-        console.log(`[Admin/Projects] Fetched ${items.length} projects (no order)`);
-        setProjects(items);
-      } catch (err2) {
-        console.error("[Admin/Projects] Fetch failed entirely:", err2);
-      }
+    if (!db) {
+      console.warn("[Admin/Projects] Firestore not initialised");
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+    const q = query(collection(db, "projects"), orderBy("order", "asc"));
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreProject));
+        console.log(`[Admin/Projects] Real-time update: ${items.length} projects`);
+        setProjects(items);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("[Admin/Projects] Snapshot error:", err);
+        setLoading(false);
+      }
+    );
+    return () => unsub();
   }, []);
-
-  useEffect(() => { fetchProjects(); }, [fetchProjects]);
 
   const openAdd = () => { setEditing(null); setForm({ ...emptyProject, createdAt: Date.now() }); setFormOpen(true); };
   const openEdit = (p: FirestoreProject) => { setEditing(p); setForm({ ...p }); setFormOpen(true); };
@@ -299,7 +298,6 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
         await addDoc(collection(db, "projects"), data);
         showToast("Project added!", "success");
       }
-      await fetchProjects();
       closeForm();
     } catch (err) {
       showToast("Save failed: " + (err instanceof Error ? err.message : "Unknown error"), "error");
@@ -313,7 +311,6 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
     try {
       await deleteDoc(doc(db, "projects", id));
       showToast("Project deleted", "success");
-      await fetchProjects();
     } catch {
       showToast("Delete failed", "error");
     }

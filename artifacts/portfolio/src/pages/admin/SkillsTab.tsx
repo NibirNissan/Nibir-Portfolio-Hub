@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   collection,
-  getDocs,
+  onSnapshot,
   addDoc,
   updateDoc,
   deleteDoc,
@@ -57,33 +57,30 @@ export function SkillsTab({
   const [deleting, setDeleting] = useState<string | null>(null);
   const [filterCat, setFilterCat] = useState<string>("All");
 
-  const fetchSkills = useCallback(async () => {
-    setLoading(true);
-    if (!db) { console.warn("[Admin/Skills] Firestore not initialised"); setLoading(false); return; }
-    try {
-      console.log("[Admin/Skills] Fetching skills…");
-      const q = query(collection(db, "skills"), orderBy("order", "asc"));
-      const snap = await getDocs(q);
-      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill));
-      console.log(`[Admin/Skills] Fetched ${items.length} skills`);
-      setSkills(items);
-    } catch (err) {
-      console.warn("[Admin/Skills] orderBy query failed, retrying without order:", err);
-      try {
-        const snap = await getDocs(collection(db, "skills"));
-        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill));
-        console.log(`[Admin/Skills] Fetched ${items.length} skills (no order)`);
-        setSkills(items);
-      } catch (err2) {
-        console.error("[Admin/Skills] Fetch failed entirely:", err2);
-      }
-    }
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    fetchSkills();
-  }, [fetchSkills]);
+    setLoading(true);
+    if (!db) {
+      console.warn("[Admin/Skills] Firestore not initialised");
+      setLoading(false);
+      return;
+    }
+
+    const q = query(collection(db, "skills"), orderBy("order", "asc"));
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreSkill));
+        console.log(`[Admin/Skills] Real-time update: ${items.length} skills`);
+        setSkills(items);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("[Admin/Skills] Snapshot error:", err);
+        setLoading(false);
+      }
+    );
+    return () => unsub();
+  }, []);
 
   const openAdd = () => {
     setEditing(null);
@@ -112,7 +109,6 @@ export function SkillsTab({
         await addDoc(collection(db, "skills"), form);
         showToast("Skill added!", "success");
       }
-      await fetchSkills();
       closeForm();
     } catch (err) {
       showToast(
@@ -129,7 +125,6 @@ export function SkillsTab({
     try {
       await deleteDoc(doc(db, "skills", id));
       showToast("Skill deleted", "success");
-      await fetchSkills();
     } catch {
       showToast("Delete failed", "error");
     }

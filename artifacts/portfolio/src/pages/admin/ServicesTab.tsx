@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
-  collection, getDocs, addDoc, updateDoc, deleteDoc,
+  collection, onSnapshot, addDoc, updateDoc, deleteDoc,
   doc, orderBy, query,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -74,31 +74,30 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
-  const fetchItems = useCallback(async () => {
+  useEffect(() => {
     setLoading(true);
-    if (!db) { console.warn("[Admin/Services] Firestore not initialised"); setItems([]); setLoading(false); return; }
-    try {
-      console.log("[Admin/Services] Fetching services…");
-      const q = query(collection(db, "services"), orderBy("order", "asc"));
-      const snap = await getDocs(q);
-      const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService));
-      console.log(`[Admin/Services] Fetched ${items.length} services`);
-      setItems(items);
-    } catch (err) {
-      console.warn("[Admin/Services] orderBy query failed, retrying without order:", err);
-      try {
-        const snap = await getDocs(collection(db, "services"));
-        const items = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService));
-        console.log(`[Admin/Services] Fetched ${items.length} services (no order)`);
-        setItems(items);
-      } catch (err2) {
-        console.error("[Admin/Services] Fetch failed entirely:", err2);
-      }
+    if (!db) {
+      console.warn("[Admin/Services] Firestore not initialised");
+      setItems([]);
+      setLoading(false);
+      return;
     }
-    setLoading(false);
+    const q = query(collection(db, "services"), orderBy("order", "asc"));
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const data = snap.docs.map((d) => ({ id: d.id, ...d.data() } as FirestoreService));
+        console.log(`[Admin/Services] Real-time update: ${data.length} services`);
+        setItems(data);
+        setLoading(false);
+      },
+      (err) => {
+        console.error("[Admin/Services] Snapshot error:", err);
+        setLoading(false);
+      }
+    );
+    return () => unsub();
   }, []);
-
-  useEffect(() => { fetchItems(); }, [fetchItems]);
 
   const openAdd = () => {
     setEditing(null);
@@ -153,7 +152,6 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
         await addDoc(collection(db, "services"), { ...payload, createdAt: Date.now() });
         showToast("Service added!", "success");
       }
-      await fetchItems();
       closeForm();
     } catch (err) {
       showToast("Save failed: " + (err instanceof Error ? err.message : "Unknown"), "error");
@@ -167,7 +165,6 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
     try {
       await deleteDoc(doc(db, "services", id));
       showToast("Service deleted", "success");
-      await fetchItems();
     } catch { showToast("Delete failed", "error"); }
     setDeleting(null);
   };
@@ -197,8 +194,8 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-400 mb-1.5">Icon URL <span className="text-red-400">*</span></label>
-            <input required value={form.iconUrl} onChange={(e) => setForm(f => ({ ...f, iconUrl: e.target.value }))}
+            <label className="block text-xs font-medium text-neutral-400 mb-1.5">Icon URL <span className="text-neutral-600">(optional)</span></label>
+            <input value={form.iconUrl} onChange={(e) => setForm(f => ({ ...f, iconUrl: e.target.value }))}
               placeholder="https://... (svg or png)" className={inputCls} />
             {form.iconUrl && (
               <div className="mt-2 w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center overflow-hidden p-2">
