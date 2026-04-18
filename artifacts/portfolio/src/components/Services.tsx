@@ -507,9 +507,11 @@ function PremiumServiceCard({ service }: { service: typeof glassServices[number]
 function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: number }) {
   const { state, hovered, onEnter, onMove, onLeave } = useTiltSpotlight();
   const rgb = colorKeyToRgb[service.color || "indigo"] || "99, 102, 241";
+  const isFeatured = bentoSpans[idx % bentoSpans.length] === "lg:col-span-2";
 
   return (
     <div
+      className={`${bentoSpans[idx % bentoSpans.length]} relative`}
       style={{ perspective: "1000px", willChange: "transform" }}
       onMouseEnter={onEnter}
       onMouseMove={onMove}
@@ -556,7 +558,7 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
             className="absolute bottom-3 right-4 select-none pointer-events-none font-black leading-none"
             aria-hidden="true"
             style={{
-              fontSize: "5.5rem",
+              fontSize: isFeatured ? "7rem" : "5.5rem",
               color: `rgba(${rgb},1)`,
               opacity: hovered ? 0.07 : 0.035,
               fontFamily: "var(--app-font-display, system-ui)",
@@ -570,19 +572,28 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
           <div className="relative z-10 flex items-start justify-between gap-3 mb-5">
             <div
               style={{
-                width: 48, height: 48, borderRadius: 14,
+                width: isFeatured ? 52 : 46,
+                height: isFeatured ? 52 : 46,
+                borderRadius: 14,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 flexShrink: 0,
                 background: `rgba(${rgb},0.1)`,
                 border: `1px solid rgba(${rgb},0.28)`,
-                boxShadow: hovered ? `0 0 24px rgba(${rgb},0.3)` : "none",
+                boxShadow: hovered ? `0 0 24px rgba(${rgb},0.3), inset 0 0 12px rgba(${rgb},0.08)` : "none",
                 animation: hovered ? "svc-float 2.8s ease-in-out infinite" : "none",
                 transition: "box-shadow 0.3s ease",
+                overflow: "hidden",
               }}
             >
               {service.iconUrl
-                ? <img src={service.iconUrl} alt="" className="max-w-full max-h-full object-contain" style={{ maxWidth: 24, maxHeight: 24 }} />
-                : <ImageIcon className="w-5 h-5" style={{ color: `rgba(${rgb},1)` }} />
+                ? <img
+                    src={service.iconUrl}
+                    alt={service.title}
+                    style={{ width: isFeatured ? 28 : 24, height: isFeatured ? 28 : 24, objectFit: "contain" }}
+                  />
+                : <ImageIcon
+                    style={{ width: isFeatured ? 22 : 20, height: isFeatured ? 22 : 20, color: `rgba(${rgb},1)` }}
+                  />
               }
             </div>
             {(service.badge || service.price) && (
@@ -591,7 +602,10 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
           </div>
 
           {/* Title */}
-          <h3 className="relative z-10 text-base sm:text-lg font-black text-white mb-3 leading-snug">
+          <h3
+            className="relative z-10 font-black text-white mb-3 leading-snug"
+            style={{ fontSize: isFeatured ? "1.15rem" : "1rem" }}
+          >
             {service.title}
           </h3>
 
@@ -707,8 +721,8 @@ export default function Services() {
         </div>
 
         {useDynamic ? (
-          /* ── Firestore dynamic layout ── */
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          /* ── Firestore dynamic layout — bento grid matching static layout ── */
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
             {dynamicServices.map((service, idx) => (
               <DynamicServiceCard key={service.id} service={service} idx={idx} />
             ))}
