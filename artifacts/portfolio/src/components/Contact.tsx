@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Send, Github, MessageCircle, Mail, MapPin,
   Phone, ArrowRight, Linkedin, Sparkles,
@@ -85,6 +85,30 @@ function glowHandlers(el: HTMLElement | null, on: boolean) {
 /* ─────────────────────────────────────────────────────────── */
 
 export default function Contact() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  /* Trigger fade-up animations when 25% of the section is visible */
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  /* Returns fade-up animation styles only once the section is in-view */
+  const anim = (ms: number): React.CSSProperties =>
+    inView ? { ...FADE_UP, ...delay(ms) } : { opacity: 0 };
+
   const [form, setForm] = useState({
     name: "", email: "", subject: "", message: "",
   });
@@ -135,7 +159,12 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 md:py-32 relative z-10 overflow-hidden">
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="pt-24 md:pt-32 relative z-10"
+      style={{ height: "auto", paddingBottom: 140 }}
+    >
       {/* keyframes */}
       <style>{`
         @keyframes contact-fade-up {
@@ -163,7 +192,7 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
 
         {/* ── Section header ── */}
-        <div className="text-center mb-16 md:mb-20" style={{ ...FADE_UP, ...delay(0) }}>
+        <div className="text-center mb-16 md:mb-20" style={anim(0)}>
           <div className="inline-flex items-center gap-2 accent-text text-xs font-bold tracking-widest uppercase mb-4">
             <span className="icon-duotone"><Sparkles className="w-3.5 h-3.5" /></span>
             Get In Touch
@@ -181,7 +210,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-start">
 
           {/* ══ LEFT COLUMN — heading + contact cards ══ */}
-          <div className="space-y-6" style={{ ...FADE_UP, ...delay(80) }}>
+          <div className="space-y-6" style={anim(80)}>
 
             {/* Contact channels */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -196,7 +225,7 @@ export default function Contact() {
               style={{
                 background: "rgba(255,255,255,0.03)",
                 borderColor: "rgba(255,255,255,0.08)",
-                ...FADE_UP, ...delay(380),
+                ...anim(380),
               }}
             >
               <div
@@ -220,7 +249,7 @@ export default function Contact() {
               style={{
                 background: "rgba(56,189,248,0.04)",
                 borderColor: "rgba(56,189,248,0.15)",
-                ...FADE_UP, ...delay(440),
+                ...anim(440),
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(56,189,248,0.35)";
@@ -248,7 +277,7 @@ export default function Contact() {
           </div>
 
           {/* ══ RIGHT COLUMN — frosted glass form ══ */}
-          <div style={{ ...FADE_UP, ...delay(160) }}>
+          <div style={anim(160)}>
             {submitted ? (
               <SuccessState onReset={() => { setSubmitted(false); setForm({ name: "", email: "", subject: "", message: "" }); }} />
             ) : (
