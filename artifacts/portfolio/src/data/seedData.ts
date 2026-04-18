@@ -186,6 +186,7 @@ export const seedServices: Omit<FirestoreService, "id">[] = servicesData.map(
       price:    tier.price,
       features: [...tier.features],
     })),
+    features: s.deliverables.slice(0, 4).map((d) => d.title),
     faqs: s.faq.map((f) => ({
       question: f.question,
       answer:   f.answer,

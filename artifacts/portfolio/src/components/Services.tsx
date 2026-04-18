@@ -596,9 +596,39 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
           </h3>
 
           {/* Description */}
-          <p className="relative z-10 text-xs leading-relaxed mb-5 flex-1" style={{ color: "rgba(163,163,163,0.85)" }}>
+          <p className="relative z-10 text-xs leading-relaxed mb-5" style={{ color: "rgba(163,163,163,0.85)" }}>
             {service.description}
           </p>
+
+          {/* Feature bullet points */}
+          {(service.features?.length ?? 0) > 0 && (
+            <ul className="relative z-10 space-y-2 mb-5 flex-1">
+              {service.features!.slice(0, 4).map((feat, i) => (
+                <li key={i} className="flex items-center gap-2.5">
+                  <span
+                    style={{
+                      width: 18, height: 18, borderRadius: 5, flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: `rgba(${rgb},0.1)`,
+                      border: `1px solid rgba(${rgb},0.22)`,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 5, height: 5, borderRadius: "50%",
+                        background: `rgba(${rgb},1)`,
+                        boxShadow: `0 0 5px rgba(${rgb},0.8)`,
+                      }}
+                    />
+                  </span>
+                  <span className="text-xs font-medium" style={{ color: "rgba(212,212,212,0.9)" }}>
+                    {feat}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {(service.features?.length ?? 0) === 0 && <div className="flex-1" />}
 
           {/* Divider + CTA */}
           <div style={{ height: 1, background: `rgba(${rgb},0.12)`, marginBottom: 14 }} />

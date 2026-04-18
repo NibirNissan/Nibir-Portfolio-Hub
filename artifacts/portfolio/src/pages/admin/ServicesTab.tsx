@@ -29,6 +29,7 @@ interface FormState {
   badge: string;
   color: string;
   order: number;
+  features: string[];
   process: ProcessItem[];
   deliverables: DeliverableItem[];
   packages: PackageItem[];
@@ -37,7 +38,7 @@ interface FormState {
 
 const emptyForm: FormState = {
   title: "", description: "", iconUrl: "", price: "", badge: "", color: "indigo",
-  order: 0, process: [], deliverables: [], packages: [], faqs: [],
+  order: 0, features: [], process: [], deliverables: [], packages: [], faqs: [],
 };
 
 function SectionBlock({
@@ -115,6 +116,7 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
       badge: s.badge ?? "",
       color: s.color ?? "indigo",
       order: s.order ?? 0,
+      features: [...(s.features ?? [])],
       process: (s.process ?? []).map((p) => ({ title: p.title, description: p.description })),
       deliverables: (s.deliverables ?? []).map((d) => ({ title: d.title, description: d.description })),
       packages: (s.packages ?? []).map((p) => ({ name: p.name, subtitle: p.subtitle, price: p.price ?? "", features: [...p.features] })),
@@ -138,6 +140,7 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
         badge: form.badge.trim(),
         color: form.color,
         order: form.order,
+        features: form.features.map((f) => f.trim()).filter(Boolean),
         process: form.process.filter((p) => p.title.trim()),
         deliverables: form.deliverables.filter((d) => d.title.trim()),
         packages: form.packages
@@ -241,6 +244,38 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
             </div>
           </div>
         </div>
+
+        {/* ── Card Bullet Points (features) ── */}
+        <SectionBlock title="Card Bullet Points" count={form.features.length} defaultOpen>
+          <p className="text-[11px] text-neutral-500 -mt-1 mb-1">
+            These short labels appear as bullet points on the service card (max 4 shown). Keep them concise — 3–5 words.
+          </p>
+          {form.features.map((feat, i) => (
+            <div key={i} className="flex gap-2 items-center">
+              <span className="text-xs text-neutral-600 w-4 shrink-0">{i + 1}</span>
+              <input
+                value={feat}
+                onChange={(e) => setForm(f => ({ ...f, features: f.features.map((v, j) => j === i ? e.target.value : v) }))}
+                placeholder={`Bullet point ${i + 1} (e.g. "24/7 Lead Response")`}
+                className={inputCls + " flex-1"}
+              />
+              <button
+                type="button"
+                onClick={() => setForm(f => ({ ...f, features: f.features.filter((_, j) => j !== i) }))}
+                className="text-neutral-600 hover:text-red-400 shrink-0 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => setForm(f => ({ ...f, features: [...f.features, ""] }))}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-dashed border-neutral-700 text-neutral-500 hover:text-white hover:border-neutral-500 text-sm transition-colors"
+          >
+            <Plus className="w-4 h-4" /> Add Bullet Point
+          </button>
+        </SectionBlock>
 
         {/* ── Process Steps ── */}
         <SectionBlock title="Process Steps" count={form.process.length}>
@@ -419,6 +454,7 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
                     </div>
                     <p className="text-xs text-neutral-500 line-clamp-2 mt-1">{s.description}</p>
                     <div className="flex items-center gap-3 mt-2 text-[10px] text-neutral-600">
+                      {(s.features?.length ?? 0) > 0 && <span>{s.features!.length} bullets</span>}
                       {(s.process?.length ?? 0) > 0 && <span>{s.process!.length} steps</span>}
                       {(s.deliverables?.length ?? 0) > 0 && <span>{s.deliverables!.length} deliverables</span>}
                       {(s.packages?.length ?? 0) > 0 && <span>{s.packages!.length} packages</span>}
