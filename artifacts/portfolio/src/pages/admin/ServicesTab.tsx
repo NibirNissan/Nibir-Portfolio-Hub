@@ -4,6 +4,7 @@ import {
   doc, orderBy, query,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import {
   Plus, Pencil, Trash2, X, Loader2, Briefcase, ImageIcon, ChevronDown, ChevronUp,
 } from "lucide-react";
@@ -73,6 +74,7 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
   const [editing, setEditing] = useState<FirestoreService | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
@@ -197,14 +199,14 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-neutral-400 mb-1.5">Icon URL <span className="text-neutral-600">(optional)</span></label>
-            <input value={form.iconUrl} onChange={(e) => setForm(f => ({ ...f, iconUrl: e.target.value }))}
-              placeholder="https://... (svg or png)" className={inputCls} />
-            {form.iconUrl && (
-              <div className="mt-2 w-12 h-12 rounded-xl bg-neutral-900 border border-neutral-800 flex items-center justify-center overflow-hidden p-2">
-                <img src={form.iconUrl} alt="icon preview" className="max-w-full max-h-full object-contain" />
-              </div>
-            )}
+            <ImageUploader
+              label="Service Icon / Image (optional)"
+              value={form.iconUrl}
+              onChange={(url) => setForm(f => ({ ...f, iconUrl: url }))}
+              onUploading={setUploadingImage}
+              hint="Shown as the service card icon. PNG, SVG, WebP all supported."
+              previewHeight={120}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -389,10 +391,10 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
         </SectionBlock>
 
         <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={saving}
+          <button type="submit" disabled={saving || uploadingImage}
             className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">
-            {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-            {saving ? "Saving…" : editing ? "Update Service" : "Add Service"}
+            {(saving || uploadingImage) && <Loader2 className="w-4 h-4 animate-spin" />}
+            {uploadingImage ? "Uploading image…" : saving ? "Saving…" : editing ? "Update Service" : "Add Service"}
           </button>
           <button type="button" onClick={closeForm}
             className="px-5 py-2.5 rounded-lg text-sm text-neutral-400 border border-neutral-800 hover:border-neutral-700 transition-colors">

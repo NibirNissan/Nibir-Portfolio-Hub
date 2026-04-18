@@ -28,6 +28,7 @@ import { ServicesTab } from "@/pages/admin/ServicesTab";
 import { AnalyticsTab } from "@/pages/admin/AnalyticsTab";
 import { TimelineTab } from "@/pages/admin/TimelineTab";
 import { getVisitCount } from "@/lib/analytics";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 import {
   LogOut,
   Plus,
@@ -252,6 +253,7 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
   const [editing, setEditing] = useState<FirestoreProject | null>(null);
   const [form, setForm] = useState<Omit<FirestoreProject, "id">>(emptyProject);
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
@@ -344,66 +346,28 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
           <button type="button" onClick={closeForm} className="text-neutral-500 hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
-        {/* Project Image — dedicated section with live preview */}
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 space-y-3">
-          <label className="block text-xs font-semibold text-neutral-300 tracking-wide uppercase">Project Image</label>
-          <div className="flex gap-4 items-start">
-            <div className="w-28 h-20 rounded-xl overflow-hidden shrink-0 bg-neutral-800 border border-neutral-700 flex items-center justify-center">
-              {form.thumbnail ? (
-                <img
-                  src={form.thumbnail}
-                  alt="Thumbnail preview"
-                  className="w-full h-full object-cover"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                />
-              ) : (
-                <div className="flex flex-col items-center gap-1.5 text-neutral-600">
-                  <Image className="w-6 h-6" />
-                  <span className="text-[10px]">No image</span>
-                </div>
-              )}
-            </div>
-            <div className="flex-1 space-y-1.5">
-              <input
-                value={form.thumbnail}
-                onChange={(e) => setField("thumbnail", e.target.value)}
-                placeholder="https://example.com/project-cover.jpg"
-                className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
-              />
-              <p className="text-xs text-neutral-600">Paste any public image URL. Shown as the card thumbnail on the portfolio and at the top of the project detail page.</p>
-            </div>
-          </div>
+        {/* Project Image */}
+        <div className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-4">
+          <ImageUploader
+            label="Project Image"
+            value={form.thumbnail}
+            onChange={(url) => setField("thumbnail", url)}
+            onUploading={setUploadingImage}
+            hint="Shown as the card thumbnail on the portfolio and at the top of the project detail page."
+            previewHeight={150}
+          />
         </div>
 
-        {/* Mockup / Hero Image — shown on the Case Study page hero section */}
-        <div className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-4 space-y-3">
-          <label className="block text-xs font-semibold text-neutral-300 tracking-wide uppercase">Mockup / Hero Image</label>
-          <div className="flex gap-4 items-start">
-            <div className="w-28 h-20 rounded-xl overflow-hidden shrink-0 bg-neutral-800 border border-neutral-700 flex items-center justify-center">
-              {form.mockupImage ? (
-                <img
-                  src={form.mockupImage}
-                  alt="Mockup preview"
-                  className="w-full h-full object-cover"
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
-                />
-              ) : (
-                <div className="flex flex-col items-center gap-1.5 text-neutral-600">
-                  <Image className="w-6 h-6" />
-                  <span className="text-[10px]">No image</span>
-                </div>
-              )}
-            </div>
-            <div className="flex-1 space-y-1.5">
-              <input
-                value={form.mockupImage ?? ""}
-                onChange={(e) => setField("mockupImage", e.target.value)}
-                placeholder="https://example.com/project-mockup.jpg"
-                className="w-full bg-neutral-800 border border-neutral-700 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 transition-colors"
-              />
-              <p className="text-xs text-neutral-600">Displayed as the large hero image on the full Case Study page. If left blank, an animated placeholder is shown instead.</p>
-            </div>
-          </div>
+        {/* Mockup / Hero Image */}
+        <div className="rounded-xl border border-neutral-800 bg-neutral-900/60 p-4">
+          <ImageUploader
+            label="Mockup / Hero Image"
+            value={form.mockupImage ?? ""}
+            onChange={(url) => setField("mockupImage", url)}
+            onUploading={setUploadingImage}
+            hint="Displayed as the large hero image on the full Case Study page. If left blank, an animated placeholder is shown instead."
+            previewHeight={150}
+          />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -612,11 +576,11 @@ function ProjectsTab({ showToast }: { showToast: (msg: string, type: "success" |
         <div className="flex gap-3 pt-2">
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || uploadingImage}
             className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-black font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors"
           >
-            {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-            {saving ? "Saving…" : editing ? "Update Project" : "Add Project"}
+            {(saving || uploadingImage) && <Loader2 className="w-4 h-4 animate-spin" />}
+            {uploadingImage ? "Uploading image…" : saving ? "Saving…" : editing ? "Update Project" : "Add Project"}
           </button>
           <button type="button" onClick={closeForm} className="px-5 py-2.5 rounded-lg text-sm text-neutral-400 hover:text-white border border-neutral-800 hover:border-neutral-700 transition-colors">
             Cancel
