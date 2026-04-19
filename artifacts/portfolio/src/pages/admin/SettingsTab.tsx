@@ -12,6 +12,10 @@ const defaultProfile: FirestoreProfile = {
   profileImageUrl: "",
   resumeLink: "",
   availability: "Available for freelance work",
+  aboutTitle: "Who is Nibir Nissan?",
+  aboutBio:
+    "CST student turned full-stack developer & AI automation expert. I build digital products, automate complex workflows with n8n, and craft premium visual experiences — from raw code to polished brand identity.\n\nEntrepreneurship runs through everything I do. From launching The Subspot (a subscription platform with 2,000+ users) to designing systems that scale, I operate at the intersection of creativity, engineering, and strategy.",
+  aboutImage: "",
 };
 
 /* ── Seed helpers ────────────────────────────────────────────── */

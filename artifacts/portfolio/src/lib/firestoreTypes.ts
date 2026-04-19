@@ -42,6 +42,9 @@ export interface FirestoreProfile {
   profileImageUrl?: string;
   resumeLink?: string;
   availability?: string;
+  aboutTitle?: string;
+  aboutBio?: string;
+  aboutImage?: string;
 }
 
 export interface FirestoreSocial {
