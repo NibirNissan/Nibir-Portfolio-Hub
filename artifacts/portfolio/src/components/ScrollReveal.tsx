@@ -22,7 +22,10 @@ export default function ScrollReveal({ children, className = "", delay = 0, dire
           observer.unobserve(el);
         }
       },
-      { threshold: 0, rootMargin: "0px 0px 0px 0px" }
+      /* Pre-trigger: element is considered "visible" as soon as it
+         is within 200px of the bottom of the viewport, preventing
+         delayed flicker when the user scrolls at normal speed      */
+      { threshold: 0, rootMargin: "0px 0px 200px 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();

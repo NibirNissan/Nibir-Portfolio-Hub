@@ -88,7 +88,7 @@ export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
-  /* Trigger fade-up animations when 25% of the section is visible */
+  /* Trigger fade-up animations as soon as any part of the section scrolls into view */
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -99,7 +99,10 @@ export default function Contact() {
           observer.unobserve(el);
         }
       },
-      { threshold: 0.25 }
+      /* amount: 0 + generous bottom margin so the contact section
+         starts animating the instant any pixel scrolls into view,
+         even before the full section enters the viewport          */
+      { threshold: 0, rootMargin: "0px 0px 200px 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
