@@ -83,8 +83,13 @@ function fromFirestore(s: FirestoreService): NormalizedService {
   const c = colorMap[colorKey] || colorMap.indigo;
   return {
     slug: s.id || "",
-    iconNode: s.iconUrl
-      ? <img src={s.iconUrl} alt="" className={`w-7 h-7 object-contain ${c.tw}`} />
+    iconNode: (s.iconUrl || s.icon)
+      ? <img
+          src={(s.iconUrl || s.icon)!}
+          alt={s.title}
+          className={`w-7 h-7 object-contain rounded-md ${c.tw}`}
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+        />
       : null,
     title: s.title,
     headline: s.title,

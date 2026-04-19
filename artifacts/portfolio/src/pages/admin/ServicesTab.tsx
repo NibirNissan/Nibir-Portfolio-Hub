@@ -113,7 +113,7 @@ export function ServicesTab({ showToast }: { showToast: (msg: string, type: "suc
     setForm({
       title: s.title,
       description: s.description,
-      iconUrl: s.iconUrl,
+      iconUrl: s.iconUrl || s.icon || "",
       price: s.price ?? "",
       badge: s.badge ?? "",
       color: s.color ?? "indigo",

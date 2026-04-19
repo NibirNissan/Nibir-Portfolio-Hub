@@ -508,6 +508,10 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
   const { state, hovered, onEnter, onMove, onLeave } = useTiltSpotlight();
   const rgb = colorKeyToRgb[service.color || "indigo"] || "99, 102, 241";
   const isFeatured = bentoSpans[idx % bentoSpans.length] === "lg:col-span-2";
+  /* Resolve icon URL from either field name */
+  const iconSrc = (service.iconUrl || service.icon || "").trim();
+  /* Normalise features — guard against missing field */
+  const features: string[] = Array.isArray(service.features) ? service.features : [];
 
   return (
     <div
@@ -585,11 +589,13 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
                 overflow: "hidden",
               }}
             >
-              {service.iconUrl
+              {iconSrc
                 ? <img
-                    src={service.iconUrl}
+                    src={iconSrc}
                     alt={service.title}
-                    style={{ width: isFeatured ? 28 : 24, height: isFeatured ? 28 : 24, objectFit: "contain" }}
+                    className="rounded-md object-contain"
+                    style={{ width: isFeatured ? 28 : 24, height: isFeatured ? 28 : 24 }}
+                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                   />
                 : <ImageIcon
                     style={{ width: isFeatured ? 22 : 20, height: isFeatured ? 22 : 20, color: `rgba(${rgb},1)` }}
@@ -615,13 +621,14 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
           </p>
 
           {/* Feature bullet points */}
-          {(service.features?.length ?? 0) > 0 && (
-            <ul className="relative z-10 space-y-2 mb-5 flex-1">
-              {service.features!.slice(0, 4).map((feat, i) => (
-                <li key={i} className="flex items-center gap-2.5">
+          {features.length > 0 && (
+            <ul className="relative z-10 mt-4 space-y-2 mb-5 flex-1">
+              {features.slice(0, 4).map((feat, i) => (
+                <li key={i} className="flex items-center gap-2.5 text-sm text-gray-300">
                   <span
+                    className="shrink-0"
                     style={{
-                      width: 18, height: 18, borderRadius: 5, flexShrink: 0,
+                      width: 18, height: 18, borderRadius: 5,
                       display: "flex", alignItems: "center", justifyContent: "center",
                       background: `rgba(${rgb},0.1)`,
                       border: `1px solid rgba(${rgb},0.22)`,
@@ -629,20 +636,18 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
                   >
                     <span
                       style={{
-                        width: 5, height: 5, borderRadius: "50%",
+                        width: 6, height: 6, borderRadius: "50%",
                         background: `rgba(${rgb},1)`,
-                        boxShadow: `0 0 5px rgba(${rgb},0.8)`,
+                        boxShadow: `0 0 8px rgba(${rgb},0.8)`,
                       }}
                     />
                   </span>
-                  <span className="text-xs font-medium" style={{ color: "rgba(212,212,212,0.9)" }}>
-                    {feat}
-                  </span>
+                  {feat}
                 </li>
               ))}
             </ul>
           )}
-          {(service.features?.length ?? 0) === 0 && <div className="flex-1" />}
+          {features.length === 0 && <div className="flex-1" />}
 
           {/* Divider + CTA */}
           <div style={{ height: 1, background: `rgba(${rgb},0.12)`, marginBottom: 14 }} />

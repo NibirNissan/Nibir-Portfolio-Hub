@@ -74,7 +74,10 @@ export interface FirestoreService {
   id?: string;
   title: string;
   description: string;
-  iconUrl: string;
+  /** Primary icon field — URL string (PNG, SVG, WebP) */
+  iconUrl?: string;
+  /** Legacy alias — some documents store the URL under `icon` */
+  icon?: string;
   price?: string;
   badge?: string;
   color?: string;
