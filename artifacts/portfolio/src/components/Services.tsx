@@ -2,14 +2,22 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import {
   Bot, Code2, Video, ShoppingBag, Zap, TrendingUp,
   Globe, LayoutDashboard, Rocket, ArrowRight, ImageIcon,
+  type LucideIcon,
 } from "lucide-react";
+
 import { Link } from "wouter";
 import NebulaBg from "./NebulaBg";
 import { db, isFirebaseConfigured } from "@/lib/firebase";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import type { FirestoreService } from "@/lib/firestoreTypes";
 
-/* ── color maps ─────────────────────────────────────────────── */
+/* ── Lucide icon name → component (for legacy docs that store a name string) ── */
+const lucideIconMap: Record<string, LucideIcon> = {
+  Bot, Code2, Video, ShoppingBag, Zap, TrendingUp,
+  Globe, LayoutDashboard, Rocket, ImageIcon,
+};
+
+/* ── colour maps ─────────────────────────────────────────────── */
 const colorToRgb: Record<string, string> = {
   "text-emerald-400": "16, 185, 129",
   "text-indigo-400":  "99, 102, 241",
@@ -508,10 +516,27 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
   const { state, hovered, onEnter, onMove, onLeave } = useTiltSpotlight();
   const rgb = colorKeyToRgb[service.color || "indigo"] || "99, 102, 241";
   const isFeatured = bentoSpans[idx % bentoSpans.length] === "lg:col-span-2";
-  /* Resolve icon URL from either field name */
-  const iconSrc = (service.iconUrl || service.icon || "").trim();
-  /* Normalise features — guard against missing field */
-  const features: string[] = Array.isArray(service.features) ? service.features : [];
+  /* ── Icon resolution ───────────────────────────────────────
+     Priority: iconUrl field → icon field (legacy)
+     If the value starts with http(s) → render <img>
+     If the value is a known Lucide name  → render that component
+     Otherwise → render ImageIcon fallback                       */
+  const iconRaw = (service.iconUrl || service.icon || "").trim();
+  const iconIsUrl = iconRaw.startsWith("http://") || iconRaw.startsWith("https://");
+  const IconComponent: LucideIcon | null = !iconIsUrl && iconRaw
+    ? (lucideIconMap[iconRaw] ?? null)
+    : null;
+
+  /* ── Features ── strip accidental URL pastes, ensure array ── */
+  const features: string[] = (Array.isArray(service.features) ? service.features : [])
+    .filter((f) => typeof f === "string" && f.trim().length > 0
+      && !f.startsWith("http://") && !f.startsWith("https://"));
+
+  /* ── Badge ── never render a raw URL as badge text ────────── */
+  const badgeLabel = (service.badge || "").trim();
+  const showBadge = badgeLabel.length > 0
+    && !badgeLabel.startsWith("http://")
+    && !badgeLabel.startsWith("https://");
 
   return (
     <div
@@ -589,21 +614,21 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
                 overflow: "hidden",
               }}
             >
-              {iconSrc
+              {iconIsUrl
                 ? <img
-                    src={iconSrc}
+                    src={iconRaw}
                     alt={service.title}
                     className="rounded-md object-contain"
                     style={{ width: isFeatured ? 28 : 24, height: isFeatured ? 28 : 24 }}
                     onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                   />
-                : <ImageIcon
-                    style={{ width: isFeatured ? 22 : 20, height: isFeatured ? 22 : 20, color: `rgba(${rgb},1)` }}
-                  />
+                : IconComponent
+                  ? <IconComponent style={{ width: isFeatured ? 22 : 20, height: isFeatured ? 22 : 20, color: `rgba(${rgb},1)` }} />
+                  : <ImageIcon style={{ width: isFeatured ? 22 : 20, height: isFeatured ? 22 : 20, color: `rgba(${rgb},1)` }} />
               }
             </div>
-            {(service.badge || service.price) && (
-              <NeonBadge label={service.badge || service.price || ""} rgb={rgb} />
+            {showBadge && (
+              <NeonBadge label={badgeLabel} rgb={rgb} />
             )}
           </div>
 
