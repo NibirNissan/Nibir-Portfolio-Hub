@@ -104,11 +104,11 @@ function NodeCluster({
     const s = scrollProgress.get();
     const t = clock.getElapsedTime();
 
-    // Central icosahedron — slow spin + gentle breathing
+    // Central icosahedron — scroll drives rotation, slow auto-spin layered on
     if (centerRef.current) {
-      centerRef.current.rotation.y = t * 0.18 + s * Math.PI * 0.6;
-      centerRef.current.rotation.x = t * 0.09 + s * Math.PI * 0.3;
-      centerRef.current.rotation.z = t * 0.04;
+      centerRef.current.rotation.y = s * Math.PI * 4 + t * 0.08;
+      centerRef.current.rotation.x = s * Math.PI * 2 + t * 0.04;
+      centerRef.current.rotation.z = s * Math.PI * 1.2 + t * 0.02;
 
       const breathe = 1 + Math.sin(t * 0.6) * 0.04;
       centerRef.current.scale.setScalar(breathe);
