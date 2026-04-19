@@ -1,5 +1,6 @@
-import { useRef, useMemo } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment } from "@react-three/drei";
 import { useScroll } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 import * as THREE from "three";
@@ -10,89 +11,158 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-/* ─── Main knot: rotates + drifts across screen on scroll ───── */
+function readCssVar(name: string, fallback: string): string {
+  if (typeof window === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+  return v || fallback;
+}
 
-function TorusKnotMesh({
+/** Subscribe to changes of the active theme via the `data-theme` attribute. */
+function useThemeColors() {
+  const [colors, setColors] = useState(() => ({
+    accent: readCssVar("--theme-accent", "#8b5cf6"),
+    accentLight: readCssVar("--theme-accent-light", "#a78bfa"),
+    secondary: readCssVar("--theme-secondary", "#ec4899"),
+  }));
+
+  useEffect(() => {
+    const update = () => {
+      setColors({
+        accent: readCssVar("--theme-accent", "#8b5cf6"),
+        accentLight: readCssVar("--theme-accent-light", "#a78bfa"),
+        secondary: readCssVar("--theme-secondary", "#ec4899"),
+      });
+    };
+    update();
+    const observer = new MutationObserver(update);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "style"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  return colors;
+}
+
+/* ─── Cluster: central icosahedron + orbiting octahedrons ───── */
+
+interface SatelliteSpec {
+  radius: number;
+  speed: number;
+  tilt: number;
+  phase: number;
+  size: number;
+  altSpeed: number;
+}
+
+const SATELLITES: SatelliteSpec[] = [
+  { radius: 1.9, speed: 0.35,  tilt: 0.0, phase: 0.0, size: 0.22, altSpeed: 1.30 },
+  { radius: 2.2, speed: -0.28, tilt: 1.1, phase: 1.7, size: 0.18, altSpeed: 1.05 },
+  { radius: 2.5, speed: 0.22,  tilt: 2.2, phase: 3.4, size: 0.16, altSpeed: 0.85 },
+  { radius: 1.7, speed: -0.42, tilt: 0.6, phase: 5.0, size: 0.20, altSpeed: 1.45 },
+  { radius: 2.8, speed: 0.18,  tilt: 1.7, phase: 2.2, size: 0.14, altSpeed: 0.70 },
+];
+
+function NodeCluster({
   scrollProgress,
+  accent,
+  accentLight,
+  secondary,
 }: {
   scrollProgress: MotionValue<number>;
+  accent: string;
+  accentLight: string;
+  secondary: string;
 }) {
-  const meshRef = useRef<THREE.Mesh>(null!);
+  const centerRef = useRef<THREE.Mesh>(null!);
+  const satRefs = useRef<(THREE.Mesh | null)[]>([]);
 
   useFrame(({ clock }) => {
     const s = scrollProgress.get();
     const t = clock.getElapsedTime();
 
-    meshRef.current.rotation.y = s * Math.PI * 5 + t * 0.07;
-    meshRef.current.rotation.x = s * Math.PI * 2 + t * 0.035;
-    meshRef.current.rotation.z = t * 0.018;
+    // Central icosahedron — slow spin + gentle breathing
+    if (centerRef.current) {
+      centerRef.current.rotation.y = t * 0.18 + s * Math.PI * 0.6;
+      centerRef.current.rotation.x = t * 0.09 + s * Math.PI * 0.3;
+      centerRef.current.rotation.z = t * 0.04;
 
-    const scale = 1 + Math.sin(s * Math.PI) * 0.32;
-    meshRef.current.scale.setScalar(scale);
+      const breathe = 1 + Math.sin(t * 0.6) * 0.04;
+      centerRef.current.scale.setScalar(breathe);
 
-    meshRef.current.position.x = lerp(2.6, -2.6, s);
-    meshRef.current.position.y = lerp(0.9, -0.9, s);
-    meshRef.current.position.z = lerp(0, -0.8, s);
+      centerRef.current.position.x = lerp(2.4, -2.4, s);
+      centerRef.current.position.y = lerp(0.7, -0.9, s);
+      centerRef.current.position.z = lerp(0, -0.6, s);
+    }
+
+    // Satellites orbit the center
+    const cx = centerRef.current?.position.x ?? 0;
+    const cy = centerRef.current?.position.y ?? 0;
+    const cz = centerRef.current?.position.z ?? 0;
+
+    for (let i = 0; i < SATELLITES.length; i++) {
+      const sat = satRefs.current[i];
+      if (!sat) continue;
+      const spec = SATELLITES[i];
+      const angle = t * spec.speed + spec.phase;
+
+      const x = Math.cos(angle) * spec.radius;
+      const z = Math.sin(angle) * spec.radius;
+      const y = Math.sin(angle * spec.altSpeed + spec.tilt) * spec.radius * 0.35;
+
+      sat.position.set(cx + x, cy + y, cz + z);
+      sat.rotation.x = t * 0.6 + i;
+      sat.rotation.y = t * 0.4 + i;
+    }
   });
 
   return (
-    <mesh ref={meshRef} position={[2.6, 0.9, 0]}>
-      <torusKnotGeometry args={[1, 0.33, 180, 18, 2, 3]} />
-      <meshStandardMaterial
-        color="#7c3aed"
-        emissive="#4c1d95"
-        emissiveIntensity={1.8}
-        wireframe
-        transparent
-        opacity={0.82}
-      />
-    </mesh>
+    <>
+      <mesh ref={centerRef} position={[2.4, 0.7, 0]}>
+        <icosahedronGeometry args={[1.05, 0]} />
+        <meshStandardMaterial
+          color={accent}
+          emissive={accentLight}
+          emissiveIntensity={0.35}
+          roughness={0.2}
+          metalness={0.8}
+          envMapIntensity={1.4}
+        />
+      </mesh>
+
+      {SATELLITES.map((spec, i) => (
+        <mesh
+          key={i}
+          ref={(el) => {
+            satRefs.current[i] = el;
+          }}
+        >
+          <octahedronGeometry args={[spec.size, 0]} />
+          <meshStandardMaterial
+            color={i % 2 === 0 ? accentLight : secondary}
+            emissive={i % 2 === 0 ? accent : secondary}
+            emissiveIntensity={0.5}
+            roughness={0.2}
+            metalness={0.8}
+            envMapIntensity={1.2}
+          />
+        </mesh>
+      ))}
+    </>
   );
 }
 
-/* ─── Secondary accent ring ─────────────────────────────────── */
-
-function AccentRing({
-  scrollProgress,
-}: {
-  scrollProgress: MotionValue<number>;
-}) {
-  const meshRef = useRef<THREE.Mesh>(null!);
-
-  useFrame(({ clock }) => {
-    const s = scrollProgress.get();
-    const t = clock.getElapsedTime();
-
-    meshRef.current.rotation.x = t * 0.055 + s * Math.PI * 1.5;
-    meshRef.current.rotation.y = t * 0.04 + s * Math.PI;
-
-    meshRef.current.position.x = lerp(-3, 3, s);
-    meshRef.current.position.y = lerp(-1, 1, s);
-
-    const scale = 0.7 + Math.sin(s * Math.PI * 2) * 0.25;
-    meshRef.current.scale.setScalar(scale);
-  });
-
-  return (
-    <mesh ref={meshRef} position={[-3, -1, -2]}>
-      <torusGeometry args={[0.9, 0.04, 12, 80]} />
-      <meshStandardMaterial
-        color="#10b981"
-        emissive="#064e3b"
-        emissiveIntensity={2}
-        transparent
-        opacity={0.65}
-      />
-    </mesh>
-  );
-}
-
-/* ─── Particle cloud ────────────────────────────────────────── */
+/* ─── Particle cloud (themed) ───────────────────────────────── */
 
 function ParticleCloud({
   scrollProgress,
+  color,
 }: {
   scrollProgress: MotionValue<number>;
+  color: string;
 }) {
   const pointsRef = useRef<THREE.Points>(null!);
 
@@ -125,50 +195,12 @@ function ParticleCloud({
     <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial
         size={0.022}
-        color="#a78bfa"
+        color={color}
         transparent
         opacity={0.5}
         sizeAttenuation
       />
     </points>
-  );
-}
-
-/* ─── Floating icosahedron (top-left counter-motion) ─────────── */
-
-function FloatingIco({
-  scrollProgress,
-}: {
-  scrollProgress: MotionValue<number>;
-}) {
-  const meshRef = useRef<THREE.Mesh>(null!);
-
-  useFrame(({ clock }) => {
-    const s = scrollProgress.get();
-    const t = clock.getElapsedTime();
-
-    meshRef.current.rotation.x = t * 0.06 - s * Math.PI * 1.2;
-    meshRef.current.rotation.y = t * 0.09 - s * Math.PI * 0.8;
-
-    meshRef.current.position.x = lerp(-3.5, 2.5, s);
-    meshRef.current.position.y = lerp(2.2, -2.2, s);
-
-    const scale = 0.5 + Math.cos(s * Math.PI) * 0.18;
-    meshRef.current.scale.setScalar(Math.max(0.2, scale));
-  });
-
-  return (
-    <mesh ref={meshRef} position={[-3.5, 2.2, -3]}>
-      <icosahedronGeometry args={[0.6, 0]} />
-      <meshStandardMaterial
-        color="#6366f1"
-        emissive="#3730a3"
-        emissiveIntensity={1.5}
-        wireframe
-        transparent
-        opacity={0.7}
-      />
-    </mesh>
   );
 }
 
@@ -179,16 +211,25 @@ function Scene({
 }: {
   scrollProgress: MotionValue<number>;
 }) {
+  const { accent, accentLight, secondary } = useThemeColors();
+
   return (
     <>
-      <ambientLight intensity={0.08} />
-      <pointLight position={[-5, 4, 3]}  color="#7c3aed" intensity={18} />
-      <pointLight position={[5, -3, -1]} color="#10b981" intensity={12} />
-      <pointLight position={[0, 0, 5]}   color="#6366f1" intensity={8}  />
-      <TorusKnotMesh scrollProgress={scrollProgress} />
-      <AccentRing    scrollProgress={scrollProgress} />
-      <FloatingIco   scrollProgress={scrollProgress} />
-      <ParticleCloud scrollProgress={scrollProgress} />
+      <ambientLight intensity={0.18} />
+      <pointLight position={[-5, 4, 3]}  color={accent}      intensity={18} />
+      <pointLight position={[5, -3, -1]} color={secondary}   intensity={12} />
+      <pointLight position={[0, 0, 5]}   color={accentLight} intensity={8} />
+
+      {/* Provides reflections for the metallic surfaces */}
+      <Environment preset="city" />
+
+      <NodeCluster
+        scrollProgress={scrollProgress}
+        accent={accent}
+        accentLight={accentLight}
+        secondary={secondary}
+      />
+      <ParticleCloud scrollProgress={scrollProgress} color={accentLight} />
     </>
   );
 }
