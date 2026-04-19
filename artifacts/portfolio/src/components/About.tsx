@@ -8,6 +8,7 @@ import { db, isFirebaseConfigured } from "@/lib/firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import type { FirestoreTimeline } from "@/lib/firestoreTypes";
 import { TIMELINE_ICON_MAP } from "@/lib/timelineIcons";
+import AboutMe from "@/components/AboutMe";
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Timeline entry type (runtime, with resolved icon)          */
@@ -413,6 +414,9 @@ export default function About() {
 
   return (
     <section id="about" className="py-20 md:py-28 relative overflow-hidden">
+
+      {/* ── About Me card (image + bio) ── */}
+      <AboutMe />
 
       {/* ── Section header ── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 mb-14 md:mb-20">

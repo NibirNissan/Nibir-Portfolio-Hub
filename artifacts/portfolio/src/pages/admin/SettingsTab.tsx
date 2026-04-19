@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { doc, getDoc, setDoc, collection, getDocs, addDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Loader2, Save, User2, DatabaseZap, CheckCircle2, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
+import { Loader2, Save, User2, UserCircle2, DatabaseZap, CheckCircle2, AlertCircle, RefreshCw, Trash2 } from "lucide-react";
 import type { FirestoreProfile } from "@/lib/firestoreTypes";
 import { seedProjects, seedSkills, seedTimeline, seedServices, seedSocials } from "@/data/seedData";
 
@@ -230,6 +230,63 @@ export function SettingsTab({
             placeholder="Write your bio here..."
             className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-emerald-500/50 resize-none transition-colors"
           />
+        </div>
+
+        {/* ── About Me section ── */}
+        <div className="pt-2 pb-1">
+          <div className="border-t border-neutral-800 mb-6" />
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-9 h-9 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
+              <UserCircle2 className="w-4 h-4 text-violet-400" />
+            </div>
+            <h2 className="text-lg font-bold text-white">About Me Content</h2>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-neutral-400 mb-1.5">Section Title</label>
+              <input
+                value={form.aboutTitle ?? ""}
+                onChange={(e) => setField("aboutTitle", e.target.value)}
+                placeholder="Who is Nibir Nissan?"
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-violet-500/50 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-neutral-400 mb-1.5">
+                About Image URL{" "}
+                <span className="text-neutral-600 font-normal">(leave blank to show placeholder)</span>
+              </label>
+              <input
+                value={form.aboutImage ?? ""}
+                onChange={(e) => setField("aboutImage", e.target.value)}
+                placeholder="https://example.com/photo.jpg"
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-violet-500/50 transition-colors"
+              />
+              {form.aboutImage && (
+                <img
+                  src={form.aboutImage}
+                  alt="About preview"
+                  className="mt-2 w-20 h-24 rounded-xl object-cover border border-neutral-700"
+                />
+              )}
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-neutral-400 mb-1.5">
+                Bio / Story{" "}
+                <span className="text-neutral-600 font-normal">(separate paragraphs with a blank line)</span>
+              </label>
+              <textarea
+                rows={7}
+                value={form.aboutBio ?? ""}
+                onChange={(e) => setField("aboutBio", e.target.value)}
+                placeholder="Write your About Me bio here..."
+                className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-white text-sm placeholder:text-neutral-600 focus:outline-none focus:border-violet-500/50 resize-none transition-colors"
+              />
+            </div>
+          </div>
         </div>
 
         <button
