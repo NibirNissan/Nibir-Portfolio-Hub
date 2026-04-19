@@ -1,9 +1,29 @@
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo, useEffect, useState, Component } from "react";
+import type { ReactNode, ErrorInfo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
 import { useScroll } from "framer-motion";
 import type { MotionValue } from "framer-motion";
 import * as THREE from "three";
+
+/* ─── Error boundary (silently swallows WebGL failures) ──────── */
+
+class CanvasErrorBoundary extends Component<
+  { children: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidCatch(_err: Error, _info: ErrorInfo) {
+    // intentionally silent — WebGL unavailable is non-fatal
+  }
+  render() {
+    if (this.state.failed) return null;
+    return this.props.children;
+  }
+}
 
 /* ─── Helpers ───────────────────────────────────────────────── */
 
@@ -234,10 +254,29 @@ function Scene({
   );
 }
 
+/* ─── WebGL capability check ─────────────────────────────────── */
+
+function isWebGLAvailable(): boolean {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+    );
+  } catch {
+    return false;
+  }
+}
+
 /* ─── Root export ────────────────────────────────────────────── */
 
 export default function Scroll3DBackground() {
   const { scrollYProgress } = useScroll();
+  const [supported] = useState(() =>
+    typeof window !== "undefined" ? isWebGLAvailable() : false
+  );
+
+  if (!supported) return null;
 
   return (
     <div
@@ -245,14 +284,21 @@ export default function Scroll3DBackground() {
       style={{ zIndex: 0 }}
       aria-hidden="true"
     >
-      <Canvas
-        dpr={[1, 1.5]}
-        camera={{ position: [0, 0, 7.5], fov: 52 }}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: "transparent" }}
-      >
-        <Scene scrollProgress={scrollYProgress} />
-      </Canvas>
+      <CanvasErrorBoundary>
+        <Canvas
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0, 7.5], fov: 52 }}
+          gl={{ antialias: true, alpha: true }}
+          style={{ background: "transparent" }}
+          onCreated={({ gl }) => {
+            gl.domElement.addEventListener("webglcontextlost", (e) => {
+              e.preventDefault();
+            });
+          }}
+        >
+          <Scene scrollProgress={scrollYProgress} />
+        </Canvas>
+      </CanvasErrorBoundary>
     </div>
   );
 }
