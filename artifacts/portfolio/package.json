@@ -75,9 +75,13 @@
     "zod": "catalog:"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.0",
     "@types/quill": "^2.0.14",
+    "@types/three": "^0.175.0",
     "firebase": "^12.12.0",
     "gsap": "^3.14.2",
-    "quill": "^2.0.3"
+    "quill": "^2.0.3",
+    "three": "^0.175.0"
   }
 }

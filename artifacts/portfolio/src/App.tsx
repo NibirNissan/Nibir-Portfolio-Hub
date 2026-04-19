@@ -21,6 +21,7 @@ import ScrollSkew from "@/components/ScrollSkew";
 import ParallaxBg from "@/components/ParallaxBg";
 import CustomCursor from "@/components/CustomCursor";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import Scroll3DBackground from "@/components/Scroll3DBackground";
 import ProjectPage from "@/pages/ProjectPage";
 import ServicePage from "@/pages/ServicePage";
 import AdminPage from "@/pages/AdminPage";
@@ -45,7 +46,7 @@ function HomePage() {
       animate="animate"
       exit="exit"
       className="min-h-screen overflow-x-clip grain-bg relative"
-      style={{ backgroundColor: "var(--theme-bg)", color: "var(--theme-text)" }}
+      style={{ color: "var(--theme-text)" }}
     >
       <ParallaxBg />
       <Nav />
@@ -110,9 +111,15 @@ function AnimatedBlogPost() {
 function App() {
   const [location] = useLocation();
   const isAdmin = location.startsWith("/admin");
+  const isHome  = location === "/";
 
   return (
     <>
+      {/* 3-D background: fixed canvas behind all page content.
+          Must live here — outside <AnimatePresence> — so the
+          motion.div page transitions (scale transform) don't pull
+          the fixed canvas into a local stacking/transform context. */}
+      {isHome && !isAdmin && <Scroll3DBackground />}
       {!isAdmin && <CustomCursor />}
       {!isAdmin && <ThemeSwitcher />}
       <AnimatePresence mode="wait">
