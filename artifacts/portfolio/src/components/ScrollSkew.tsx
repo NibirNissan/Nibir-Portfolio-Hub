@@ -17,62 +17,54 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
     if (!el) return;
 
     const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) {
-      el.style.opacity = "1";
-      el.style.transform = "none";
-      return;
-    }
+    if (prefersReduced) return;
 
     const isMobile = window.innerWidth < 768;
 
-    const ctx = gsap.context(() => {
-      /* ── Section entrance animation ─────────────────────────────
-         Use a plain duration-based tween (no scrub) so the section
-         snaps to its final state rather than hovering half-visible
-         and creating DOM-height blank gaps between sections.
-         Removed rotateX and scale — those transforms keep the
-         element at less-than-full visual height while it still
-         occupies its full DOM height, creating the phantom gaps. */
-      gsap.fromTo(
-        el,
-        {
-          opacity: 0,
-          y: isMobile ? 40 : 60,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.85,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 92%",
-            toggleActions: "play none none none",
-            onEnter: () => { el.style.willChange = "transform, opacity"; },
-            onLeaveBack: () => { el.style.willChange = "auto"; },
-          },
-          onComplete: () => { el.style.willChange = "auto"; },
-        }
-      );
+    // If the section is already in or past the viewport on mount,
+    // skip the entrance animation entirely so it never gets stuck invisible.
+    const rect = el.getBoundingClientRect();
+    const alreadyInView = rect.top < window.innerHeight;
 
-      /* ── Staggered card reveals inside the section ───────────── */
+    const ctx = gsap.context(() => {
+      if (alreadyInView) {
+        gsap.set(el, { opacity: 1, y: 0 });
+      } else {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: isMobile ? 30 : 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: "power2.out",
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom-=50",
+              toggleActions: "play none none none",
+              onEnter: () => { el.style.willChange = "transform, opacity"; },
+            },
+            onComplete: () => { el.style.willChange = "auto"; },
+          }
+        );
+      }
+
       const cards = el.querySelectorAll<HTMLElement>(".reveal-card");
       if (cards.length > 0) {
         gsap.fromTo(
           cards,
-          {
-            opacity: 0,
-            y: isMobile ? 30 : 50,
-          },
+          { opacity: 0, y: isMobile ? 20 : 35 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
-            ease: "power3.out",
-            stagger: 0.1,
+            duration: 0.5,
+            ease: "power2.out",
+            stagger: 0.07,
+            immediateRender: false,
             scrollTrigger: {
               trigger: el,
-              start: "top 88%",
+              start: "top bottom-=20",
               toggleActions: "play none none none",
             },
             onComplete: () => {
@@ -83,15 +75,26 @@ export default function ScrollSkew({ children, className = "" }: ScrollSkewProps
       }
     }, el);
 
-    return () => ctx.revert();
+    // Recompute trigger positions once the layout settles (images/fonts loaded)
+    const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 250);
+
+    // Safety net: if for any reason a trigger doesn't fire within 1.2s,
+    // force the section visible so the page never has phantom gaps.
+    const safetyId = window.setTimeout(() => {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.95) {
+        gsap.to(el, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
+      }
+    }, 1200);
+
+    return () => {
+      window.clearTimeout(refreshId);
+      window.clearTimeout(safetyId);
+      ctx.revert();
+    };
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={`scroll-skew-section ${className}`}
-      style={{ opacity: 0 }}
-    >
+    <div ref={ref} className={`scroll-skew-section ${className}`}>
       {children}
     </div>
   );
