@@ -178,8 +178,9 @@ export default function AboutMe() {
             className="relative rounded-3xl overflow-hidden"
             style={{
               background:
-                "linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(10,10,10,0.9) 40%, rgba(16,185,129,0.05) 100%)",
-              backdropFilter: "blur(16px)",
+                "linear-gradient(135deg, rgba(20,15,35,0.96) 0%, rgba(10,10,10,0.97) 40%, rgba(15,30,25,0.96) 100%)",
+              backdropFilter: "blur(20px)",
+              WebkitBackdropFilter: "blur(20px)",
             }}
           >
             {/* Spotlight that follows the cursor (Services pattern) */}

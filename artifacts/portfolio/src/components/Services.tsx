@@ -248,7 +248,7 @@ function BentoServiceCard({
           className="relative h-full flex flex-col p-6 sm:p-7 overflow-hidden"
           style={{
             borderRadius: "19px",
-            background: "rgba(8,8,14,0.88)",
+            background: "rgba(8,8,14,0.95)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
           }}
@@ -391,7 +391,7 @@ function PremiumServiceCard({ service }: { service: typeof glassServices[number]
           className="relative overflow-hidden p-6 sm:p-8"
           style={{
             borderRadius: "21px",
-            background: "rgba(8,8,14,0.9)",
+            background: "rgba(8,8,14,0.95)",
             backdropFilter: "blur(28px)",
             WebkitBackdropFilter: "blur(28px)",
           }}
@@ -565,7 +565,7 @@ function DynamicServiceCard({ service, idx }: { service: FirestoreService; idx: 
           className="relative h-full flex flex-col p-6 sm:p-7 overflow-hidden"
           style={{
             borderRadius: "19px",
-            background: "rgba(8,8,14,0.88)",
+            background: "rgba(8,8,14,0.95)",
             backdropFilter: "blur(24px)",
             WebkitBackdropFilter: "blur(24px)",
           }}
