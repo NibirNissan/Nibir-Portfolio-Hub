@@ -151,7 +151,7 @@ export default function AboutMe() {
       <motion.div
         initial={{ opacity: 0, y: 48 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0, margin: "0px 0px 200px 0px" }}
+        viewport={{ once: false, amount: 0.15 }}
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         style={{ perspective: "1200px", willChange: "transform" }}
         onMouseEnter={onEnter}
@@ -221,7 +221,7 @@ export default function AboutMe() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0, margin: "0px 0px 200px 0px" }}
+                  viewport={{ once: false, amount: 0.15 }}
                   transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
                   className="w-full"
                 >
@@ -236,7 +236,7 @@ export default function AboutMe() {
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0, margin: "0px 0px 200px 0px" }}
+                  viewport={{ once: false, amount: 0.15 }}
                   transition={{ duration: 0.5, ease: "easeOut", delay: 0.15 }}
                   className="inline-flex items-center gap-2 accent-text text-xs font-semibold tracking-widest uppercase self-start"
                 >
@@ -250,7 +250,7 @@ export default function AboutMe() {
                 <motion.h3
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0, margin: "0px 0px 200px 0px" }}
+                  viewport={{ once: false, amount: 0.15 }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
                   className="text-3xl sm:text-4xl font-black text-white leading-tight"
                 >
@@ -264,7 +264,7 @@ export default function AboutMe() {
                       key={i}
                       initial={{ opacity: 0, y: 12 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0, margin: "0px 0px 200px 0px" }}
+                      viewport={{ once: false, amount: 0.15 }}
                       transition={{
                         duration: 0.55,
                         ease: "easeOut",
@@ -281,7 +281,7 @@ export default function AboutMe() {
                 <motion.div
                   initial={{ scaleX: 0, opacity: 0 }}
                   whileInView={{ scaleX: 1, opacity: 1 }}
-                  viewport={{ once: true, amount: 0, margin: "0px 0px 200px 0px" }}
+                  viewport={{ once: false, amount: 0.15 }}
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
                   className="h-px w-16 origin-left"
                   style={{
